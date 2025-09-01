@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView,CreateView
 from django.http.response import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView
 from django.contrib.auth import login
 from django.urls import reverse_lazy
-
-from .forms import SignUpForm
-
+from .forms import SignUpForm, EmailLoginForm
+from django.contrib.auth.views import LoginView as BaseLoginView
+from django.contrib.auth.views import LogoutView as BaseLogoutView
 
 class IndexView(TemplateView):
     template_name = "accounts/index.html"
@@ -24,3 +23,11 @@ class SignUpView(CreateView):
         login(self.request, user)
         self.object = user
         return HttpResponseRedirect(self.get_success_url())
+
+class LoginView(BaseLoginView):
+    form_class = EmailLoginForm
+    template_name = "accounts/login.html"
+
+    
+class LogoutView(BaseLogoutView):
+    success_url = reverse_lazy("accounts:index")
