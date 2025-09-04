@@ -1,7 +1,3 @@
-{% extends "accounts/base.html" %}
-{% block title %}ホーム{% endblock %}
-
-{% block content %}
-<h1>ホーム</h1>
-<p>{{ user.username }}さんようこそ。</p>
-{% endblock %}
+<h2>ホーム</h2>
+<p>{{ user.email }} さん、ログイン中です。</p>
+<p><a href="{% url 'accounts:logout' %}">ログアウト</a></p>
