@@ -1,0 +1,16 @@
+body {
+  background-color: #244272;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.brand-header {
+    text-align: center;
+     font-family: 'Times New Roman', Times, serif;
+     font-size: 60px;
+     color: #eeb61a;
+     margin: 50px auto;
+}
