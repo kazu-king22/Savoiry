@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 <h2>ログイン</h2>
 <form method="post">
     {% csrf_token %}
@@ -5,3 +7,4 @@
     <button type="submit">ログイン</button>
 </form>
 <p><a href="{% url 'accounts:signup' %}">新規登録はこちら</a></p>
+{% endblock %}
