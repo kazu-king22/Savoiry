@@ -1,16 +1,19 @@
 body {
-  background-color: #244272;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
+    margin: 0;
+    background: #244272;
+    font-family: sans-serif;
 }
 
 .brand-header {
+    font-size: 60px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+    color: #eeb61a;
     text-align: center;
-     font-family: 'Times New Roman', Times, serif;
-     font-size: 60px;
-     color: #eeb61a;
-     margin: 50px auto;
+    padding: 40px 0 20px 0; /* 上下余白 */
+}
+
+.main-content {
+    display: flex;
+    justify-content: center; /* 横中央 */
 }
