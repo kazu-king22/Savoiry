@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts'
+    'accounts',
+    'restaurants'
 ]
 
 MIDDLEWARE = [
@@ -133,4 +134,6 @@ AUTH_USER_MODEL = 'accounts.User'
 
 LOGIN_URL = "accounts:login"      
 LOGIN_REDIRECT_URL = reverse_lazy('accounts:home')      
-LOGOUT_REDIRECT_URL = "accounts:login"      
+LOGOUT_REDIRECT_URL = "accounts:login"   
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')   
