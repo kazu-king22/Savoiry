@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>{{ restaurant.store_name }}</h2>
+
+  {% if restaurant.url %}
+    <p>URL: <a href="{{ restaurant.url }}" target="_blank">{{ restaurant.url }}</a></p>
+  {% endif %}
+
+  {% if restaurant.area %}
+    <p>エリア: {{ restaurant.area }}</p>
+  {% endif %}
+
+  {% if restaurant.companions %}
+    <p>グループ: {{ restaurant.companions }}</p>
+  {% endif %}
+
+  {% if restaurant.genre %}
+    <p>ジャンル: {{ restaurant.genre }}</p>
+  {% endif %}
+
+  {% if restaurant.scene %}
+    <p>シーン: {{ restaurant.scene }}</p>
+  {% endif %}
+
+  {% if restaurant.tags.all %}
+    <p>タグ:
+      {% for tag in restaurant.tags.all %}
+        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+
+  {% if restaurant.holiday %}
+    <p>休業日: {{ restaurant.holiday }}</p>
+  {% endif %}
+
+  <p>登録日: {{ restaurant.created_at|date:"Y-m-d H:i" }}</p>
+
+  <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
+
+    <hr>
+
+  <h3>このお店に行った記録を追加する</h3>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">行った</button>
+  </form>
+  
+ <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
+{% endblock %}

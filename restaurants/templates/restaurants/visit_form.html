@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>訪問記録を追加</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">登録</button>
+  </form>
+
+  <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
+{% endblock %}
