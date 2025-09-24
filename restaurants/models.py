@@ -3,6 +3,13 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+STATUS_CHOICES = [
+    ('want', '気になる'),
+    ('went', '行った'),
+]
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -19,6 +26,15 @@ class Restaurant(models.Model):
     scene = models.CharField(max_length=50, blank=True, null=True)
     holiday = models.CharField(max_length=50, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
+    
+    # Restaurantクラスの中に追加
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='want',
+        verbose_name='ステータス'
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

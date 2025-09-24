@@ -50,6 +50,10 @@ class RestaurantDetailView(LoginRequiredMixin, View):
             images = request.FILES.getlist('images')
             for image in images:
                 VisitImage.objects.create(visit=visit, image=image)
+                
+            if restaurant.status == 'want':
+                restaurant.status = 'went'
+                restaurant.save()
 
             return redirect("restaurants:restaurant_detail", pk=restaurant.pk)
         else:
