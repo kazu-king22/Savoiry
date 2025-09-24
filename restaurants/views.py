@@ -33,6 +33,7 @@ class RestaurantDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = VisitForm()
+        context['visits'] = Visit.objects.filter(restaurant=self.object).order_by('-date')
         return context
     
     def post(self, request, *args, **kwargs):
@@ -45,25 +46,15 @@ class RestaurantDetailView(DetailView):
             visit.save()
 
             images = request.FILES.getlist('images')
+            print("画像枚数:", len(images))
+            
             for image in images:
                 VisitImage.objects.create(visit=visit, image=image)
+                print("保存した画像:", image)  # ← デバッグ2
 
             return redirect('restaurants:restaurant_detail', pk=self.object.pk)
-        
-        context = self.get_context_data(form=form)
-        return self.render_to_response(context)
-
-
-class VisitCreateView(CreateView):
-    model = Visit
-    form_class = VisitForm
-    template_name = "restaurants/visit_form.html"
-
-    def form_valid(self, form):
-        restaurant_id = self.kwargs["restaurant_id"]
-        restaurant = Restaurant.objects.get(pk=restaurant_id)
-        form.instance.restaurant = restaurant 
-        return super().form_valid(form)
-    
-    def get_success_url(self):
-        return reverse_lazy("restaurants:restaurant_detail", kwargs={"pk": self.object.restaurant.pk})
+        else:
+            print(form.errors)
+            
+            context = self.get_context_data(form=form)
+            return self.render_to_response(context)

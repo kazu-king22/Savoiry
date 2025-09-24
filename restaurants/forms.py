@@ -1,5 +1,5 @@
 from django import forms
-from .models import Restaurant, Visit, VisitImage
+from .models import Restaurant, Visit
 from django.forms.widgets import FileInput
 
 
@@ -21,17 +21,15 @@ class RestaurantForm(forms.ModelForm):
         ]
 
 class VisitForm(forms.ModelForm):
-    images = forms.FileField(
+    images = forms.ImageField(
         widget=MultiFileInput(attrs={'multiple': True}),
         required=False,
         label="写真"
     )
-    
+
     class Meta:
         model = Visit
-        fields = [
-            "date", 
-            "comment", 
-            "rating", 
-            "feeling",
-        ] 
+        fields = ["date", "comment", "rating", "feeling"]
+        widgets = {
+            "date": forms.DateInput(attrs={"type": "date"}),  # ← ここ
+        }

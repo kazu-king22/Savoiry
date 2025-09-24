@@ -39,7 +39,7 @@
 
   <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
 
-    <hr>
+  <hr>
 
   <h3>このお店に行った記録を追加する</h3>
   <form method="post" enctype="multipart/form-data">
@@ -47,6 +47,31 @@
     {{ form.as_p }}
     <button type="submit">行った</button>
   </form>
-  
- <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
+
+  <hr>
+
+  <h3>行った記録</h3>
+  {% if visits %}
+    {% for visit in visits %}
+      <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+        <p><strong>訪問日:</strong> {{ visit.date }}</p>
+        <p><strong>コメント:</strong> {{ visit.comment }}</p>
+        <p><strong>評価:</strong> ★{{ visit.rating }}</p>
+        <p><strong>気持ち:</strong> {{ visit.get_feeling_display }}</p>
+
+        {% if visit.images.all %}
+          <div style="margin-top: 10px;">
+            <strong>画像:</strong><br>
+            {% for image in visit.images.all %}
+              <img src="{{ image.image.url }}" alt="訪問画像" style="width: 200px; margin-right: 10px; border-radius: 4px;">
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>まだ訪問記録はありません。</p>
+  {% endif %}
+
+  <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
 {% endblock %}
