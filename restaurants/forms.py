@@ -1,10 +1,12 @@
 from django import forms
 from .models import Restaurant, Visit
-from django.forms.widgets import FileInput
+from django.forms.widgets import  DateInput, ClearableFileInput
 
 
-class MultiFileInput(FileInput):
+# 画像を複数アップロードできるようにするカスタムWidget
+class MultiFileInput(ClearableFileInput):
     allow_multiple_selected = True
+
 
 class RestaurantForm(forms.ModelForm):
     class Meta:
@@ -20,16 +22,11 @@ class RestaurantForm(forms.ModelForm):
             "tags",
         ]
 
-class VisitForm(forms.ModelForm):
-    images = forms.ImageField(
-        widget=MultiFileInput(attrs={'multiple': True}),
-        required=False,
-        label="写真"
-    )
 
+class VisitForm(forms.ModelForm):
     class Meta:
         model = Visit
-        fields = ["date", "comment", "rating", "feeling"]
+        fields = ['date', 'comment', 'rating', 'feeling']
         widgets = {
-            "date": forms.DateInput(attrs={"type": "date"}),  # ← ここ
+            'date': forms.DateInput(attrs={'type': 'date'}),
         }

@@ -45,6 +45,10 @@
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
+
+    <label for="id_images">画像アップロード:</label>
+    <input type="file" name="images" id="id_images" multiple>
+
     <button type="submit">行った</button>
   </form>
 
