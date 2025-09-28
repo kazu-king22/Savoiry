@@ -1,19 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>登録したお店一覧</h2>
+  <h2>レストラン一覧</h2>
   <ul>
     {% for restaurant in restaurants %}
-      <li>
-        <a href="{% url 'restaurants:restaurant_detail' restaurant.pk %}">
-          {{ restaurant.store_name }}
-        </a>
-        ({{ restaurant.genre }})
-      </li>
+      <li>{{ restaurant.store_name }} - {{ restaurant.genre }} - {{ restaurant.area }}</li>
     {% empty %}
-      <li>まだお店が登録されていません。</li>
+      <li>まだレストランが登録されていません。</li>
     {% endfor %}
   </ul>
 
-  <a href="{% url 'restaurants:restaurant_add' %}">新しいお店を登録する</a>
+  <h3>タグで絞り込み</h3>
+<ul class="tag-filter">
+  <li><a href="{% url 'restaurants:restaurant_list' %}">すべて表示</a></li>
+  {% for tag in tags %}
+    <li>
+      <a href="{% url 'restaurants:restaurant_list' %}?tag={{ tag.name }}">{{ tag.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
 {% endblock %}
+

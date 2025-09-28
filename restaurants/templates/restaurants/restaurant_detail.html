@@ -38,7 +38,8 @@
   <p>登録日: {{ restaurant.created_at|date:"Y-m-d H:i" }}</p>
 
 
-  <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
+  <a href="{% url 'restaurants:restaurant_list_want' %}">一覧に戻る</a>
+
 
   <hr>
 
@@ -78,5 +79,6 @@
     <p>まだ訪問記録はありません。</p>
   {% endif %}
 
-  <a href="{% url 'restaurants:restaurant_list' %}">一覧に戻る</a>
+  <a href="{% url 'restaurants:restaurant_list_want' %}">一覧に戻る</a>
+
 {% endblock %}

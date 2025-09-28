@@ -11,7 +11,17 @@ STATUS_CHOICES = [
 
 
 class Tag(models.Model):
+    CATEGORY_CHOICES = [
+        ('genre', 'ジャンル'),
+        ('area', 'エリア'),
+        ('scene', 'シーン'),
+        ('group', 'グループ'),
+        ('custom', 'カスタム'),  
+    ]
+
     name = models.CharField(max_length=50, unique=True)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='custom')  
+
 
     def __str__(self):
         return self.name
@@ -27,7 +37,7 @@ class Restaurant(models.Model):
     holiday = models.CharField(max_length=50, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     
-    # Restaurantクラスの中に追加
+
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -73,4 +83,3 @@ class VisitImage(models.Model):
 
 
 
-# Create your models here.

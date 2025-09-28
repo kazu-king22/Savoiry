@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>お店の検索</h2>
+
+<form method="get">
+  <!-- エリア（必須） -->
+  <p>
+    <label>エリア（必須）</label><br>
+    <input type="text" name="area" value="{{ request.GET.area }}">
+  </p>
+
+  <!-- ジャンル（必須） -->
+  <p>
+    <label>ジャンル（必須）</label><br>
+    <input type="text" name="genre" value="{{ request.GET.genre }}">
+  </p>
+
+  <!-- グループ -->
+  <p>
+    <label>グループ</label><br>
+    <input type="text" name="companions" value="{{ request.GET.companions }}">
+  </p>
+
+  <!-- シーン -->
+  <p>
+    <label>シーン</label><br>
+    <input type="text" name="scene" value="{{ request.GET.scene }}">
+  </p>
+
+  <!-- 休業日 -->
+  <p>
+    <label>休業日</label><br>
+    <input type="text" name="closed_day" value="{{ request.GET.closed_day }}">
+  </p>
+
+  <!-- タグ -->
+  <p>
+    <label>タグ（カンマ区切り可）</label><br>
+    <input type="text" name="tag" value="{{ request.GET.tag }}">
+  </p>
+
+  <!-- ステータス選択 -->
+<form method="get" action="{% url 'restaurants:restaurant_search' %}">
+
+  <p>
+    <label><input type="radio" name="status" value="want" {% if request.GET.status == 'want' %}checked{% endif %}> 気になる</label>
+    <label><input type="radio" name="status" value="went" {% if request.GET.status == 'went' %}checked{% endif %}> 行った</label>
+  </p>
+
+  <!-- 検索ボタン -->
+  <p><button type="submit">検索</button></p>
+</form>
+
+<hr>
+
+<!-- 検索結果の表示 -->
+{% if restaurants %}
+  <h3>検索結果（{{ restaurants|length }}件）</h3>
+  <ul>
+    {% for restaurant in restaurants %}
+      <li>
+        <a href="{% url 'restaurants:restaurant_detail' restaurant.pk %}">
+          {{ restaurant.store_name }}
+        </a>
+        （{{ restaurant.genre }} / {{ restaurant.area }}）
+      </li>
+    {% endfor %}
+  </ul>
+
+{% elif request.GET %}
+  <p>該当するお店は見つかりませんでした。</p>
+{% endif %}
+
+<p><a href="{% url 'restaurants:restaurant_add' %}">← 一覧に戻る</a></p>
+
+{% endblock %}
+

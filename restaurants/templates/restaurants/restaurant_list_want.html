@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>気になるお店一覧</h2>
+
+  <ul>
+    {% for restaurant in restaurants %}
+      <li>
+        <a href="{% url 'restaurants:restaurant_detail' restaurant.pk %}">
+          {{ restaurant.store_name }}
+        </a>
+        ({{ restaurant.genre }})
+      </li>
+    {% empty %}
+      <li>まだ「気になる」お店は登録されていません。</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'restaurants:restaurant_add' %}">新しいお店を登録する</a>
+{% endblock %}
