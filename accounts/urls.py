@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SignUpView, CustomLoginView, HomeView, CustomLogoutView
+from .views import SignUpView, CustomLoginView, HomeView, CustomLogoutView, MyPageView
 
 app_name = "accounts"
 
@@ -8,4 +8,5 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name="login"),
     path('home/', HomeView.as_view(), name="home"),
     path('logout/', CustomLogoutView.as_view(), name="logout"),
+    path("mypage/", MyPageView.as_view(), name="mypage"),
 ]

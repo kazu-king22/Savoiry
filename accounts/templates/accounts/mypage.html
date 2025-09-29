@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>マイページ</h2>
+
+<section style="margin-bottom: 40px;">
+  <h3>月別訪問数</h3>
+  <img src="{% url 'restaurants:visit_chart_monthly' %}" 
+       alt="月別訪問グラフ" 
+       style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+</section>
+
+<section style="margin-bottom: 40px;">
+  <h3>人気トップ3ジャンル</h3>
+  <img src="{% url 'restaurants:visit_chart_top3_genre' %}" 
+       alt="ジャンルトップ3グラフ" 
+       style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+</section>
+{% endblock %}

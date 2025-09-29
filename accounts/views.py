@@ -24,3 +24,7 @@ class CustomLogoutView(LogoutView):
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "accounts/home.html"
+
+
+class MyPageView(TemplateView):
+    template_name = "accounts/mypage.html"
