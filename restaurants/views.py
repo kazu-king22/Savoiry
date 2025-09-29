@@ -5,6 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Restaurant, Visit, VisitImage, Tag
 from .forms import RestaurantForm, VisitForm
+import matplotlib
+matplotlib.use("Agg") 
+import matplotlib.pyplot as plt
+from django.http import HttpResponse
+import io
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
 
 
 class RestaurantCreateView(LoginRequiredMixin, CreateView):
@@ -143,3 +150,57 @@ class TagCreateView(LoginRequiredMixin, CreateView):
     fields = ['name', 'category']  
     template_name = 'restaurants/restaurant_tag_form.html'
     success_url = reverse_lazy('restaurants:restaurant_list')
+    
+    
+def visit_chart_monthly(request):
+    visits_by_month = (
+        Visit.objects
+        .filter(restaurant__user=request.user)   # 自分専用
+        .annotate(month=TruncMonth("date"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .order_by("month")
+    )
+
+    months = [v["month"].strftime("%Y-%m") for v in visits_by_month]
+    counts = [v["count"] for v in visits_by_month]
+
+    fig, ax = plt.subplots()
+    ax.bar(months, counts, color="skyblue")
+    ax.set_title("月別訪問数（自分専用）")
+    ax.set_xlabel("月")
+    ax.set_ylabel("訪問回数")
+    plt.xticks(rotation=45)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png", bbox_inches="tight")
+    plt.close(fig)
+    buf.seek(0)
+    return HttpResponse(buf.getvalue(), content_type="image/png")
+
+
+# ジャンル別訪問数（TOP3・自分専用）
+def visit_chart_top3_genre(request):
+    visits_by_genre = (
+        Visit.objects
+        .filter(restaurant__user=request.user)   # 自分専用
+        .values("restaurant__genre")
+        .annotate(count=Count("id"))
+        .order_by("-count")[:3]   # TOP3
+    )
+
+    genres = [v["restaurant__genre"] or "未分類" for v in visits_by_genre]
+    counts = [v["count"] for v in visits_by_genre]
+
+    fig, ax = plt.subplots()
+    ax.bar(genres, counts, color="orange")
+    ax.set_title("人気トップ3ジャンル（自分専用）")
+    ax.set_xlabel("ジャンル")
+    ax.set_ylabel("訪問回数")
+    plt.xticks(rotation=30, ha="right")
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png", bbox_inches="tight")
+    plt.close(fig)
+    buf.seek(0)
+    return HttpResponse(buf.getvalue(), content_type="image/png")
