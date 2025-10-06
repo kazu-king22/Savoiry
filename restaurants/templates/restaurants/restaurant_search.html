@@ -1,6 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/serach.css' %}">
+{% endblock %}
+
 {% block content %}
 
+<div class="search-page">
+
+<div class="status-box">
+  <p>気になる：{{ want_count }}件</p>
+  <p>行った：{{ went_count }}件</p>
+</div>
+
+<div class="search-form">
 <h2>お店の検索</h2>
 
 <form method="get">
@@ -36,23 +50,25 @@
 
   <!-- タグ -->
   <p>
-    <label>タグ（カンマ区切り可）</label><br>
+    <label>タグ</label><br>
     <input type="text" name="tag" value="{{ request.GET.tag }}">
   </p>
 
-  <!-- ステータス選択 -->
-<form method="get" action="{% url 'restaurants:restaurant_search' %}">
+ <!-- ステータス選択 -->
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="status" value="want" {% if request.GET.status == 'want' %}checked{% endif %}> 気になる
+      </label>
+      <label>
+        <input type="radio" name="status" value="went" {% if request.GET.status == 'went' %}checked{% endif %}> 行った
+      </label>
+    </div>
 
-  <p>
-    <label><input type="radio" name="status" value="want" {% if request.GET.status == 'want' %}checked{% endif %}> 気になる</label>
-    <label><input type="radio" name="status" value="went" {% if request.GET.status == 'went' %}checked{% endif %}> 行った</label>
-  </p>
+    <!-- 検索ボタン -->
+    <p><button type="submit">検索</button></p>
+  </form>
 
-  <!-- 検索ボタン -->
-  <p><button type="submit">検索</button></p>
-</form>
-
-<hr>
+</div>
 
 <!-- 検索結果の表示 -->
 {% if restaurants %}
@@ -71,8 +87,5 @@
 {% elif request.GET %}
   <p>該当するお店は見つかりませんでした。</p>
 {% endif %}
-
-<p><a href="{% url 'restaurants:restaurant_add' %}">← 一覧に戻る</a></p>
-
 {% endblock %}
 

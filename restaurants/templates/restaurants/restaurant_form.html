@@ -1,10 +1,33 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/register.css' %}">
+{% endblock %}
 
 {% block content %}
-  <h2>お店を登録する</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">登録</button>
-  </form>
+  <div class="register-container">
+    <h2>お店を登録する</h2>
+    <form method="post">
+      {% csrf_token %}
+      <p><label for="id_store_name">店名</label>{{ form.store_name }}</p>
+      <p><label for="id_url">URL</label>{{ form.url }}</p>
+      <p><label for="id_area">エリア</label>{{ form.area }}</p>
+      <p><label for="id_genre">ジャンル</label>{{ form.genre }}</p>
+      <p><label for="id_companions">グループ</label>{{ form.companions }}</p>
+      <p><label for="id_scene">シーン</label>{{ form.scene }}</p>
+      <p><label for="id_closed_day">休業日</label>{{ form.holiday }}</p>
+      <p><label for="id_tags">タグ</label>{{ form.tags }}</p>
+
+      <div id="tag-container">
+      <p><label>タグ</label><input type="text" name="tags" class="tag-input"></p>
+    </div>
+    <button type="button" id="add-tag">タグを追加</button>
+    
+      <button type="submit">登録</button>
+    </form>
+  </div>
+
+<script src="{% static 'restaurants/js/add_tag.js' %}"></script>
+
 {% endblock %}

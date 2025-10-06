@@ -21,6 +21,16 @@ class RestaurantForm(forms.ModelForm):
             "holiday",
             "tags",
         ]
+        labels = {
+            "store_name": "店舗名",
+            "url": "URL",
+            "area": "エリア",
+            "genre": "ジャンル",
+            "companions": "同行者",
+            "scene": "シーン",
+            "holiday": "定休日",
+            "tags": "タグ",
+        }
 
 
 class VisitForm(forms.ModelForm):

@@ -123,6 +123,14 @@ class RestaurantSearchView(LoginRequiredMixin, ListView):
 
         return queryset
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["want_count"] = Restaurant.objects.filter(user=user, status="want").count()
+        context["went_count"] = Restaurant.objects.filter(user=user, status="went").count()
+        return context
+
+    
 
 class RestaurantListView(LoginRequiredMixin, ListView):
     model = Restaurant
