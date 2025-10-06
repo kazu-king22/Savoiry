@@ -132,8 +132,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+# settings.py
+SESSION_COOKIE_AGE = 60 * 60 
+
 LOGIN_URL = "accounts:login"      
-LOGIN_REDIRECT_URL = reverse_lazy('accounts:home')      
+LOGIN_REDIRECT_URL = reverse_lazy('restaurants:restaurant_search')      
 LOGOUT_REDIRECT_URL = "accounts:login"   
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')   
