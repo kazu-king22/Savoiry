@@ -1,19 +1,43 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
+<div style="text-align:center; color:white;">
+  <a href="{% url 'restaurants:visit_chart_genre' %}" style="color:white;">
+ジャンルグラフへのリンク（テスト）
+</a>
 
-<h2>マイページ</h2>
+  <h2>マイページ</h2>
+<p style="color:yellow;">※テンプレート更新テスト</p>
 
-<section style="margin-bottom: 40px;">
+  <h3>ジャンル別訪問数</h3>
+  <img src="/restaurants/visit_chart/genre/" 
+     alt="ジャンル別訪問グラフ"
+     style="width:100%; max-width:500px; border-radius:8px; background:white; border:1px solid #ccc; padding:8px;">
+
   <h3>月別訪問数</h3>
-  <img src="{% url 'restaurants:visit_chart_monthly' %}" 
-       alt="月別訪問グラフ" 
-       style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-</section>
+  <img src="/restaurants/visit_chart/monthly/" 
+     alt="月別訪問グラフ"
+     style="width:90%; max-width:600px; background:white; border-radius:8px; padding:10px;">
 
-<section style="margin-bottom: 40px;">
-  <h3>人気トップ3ジャンル</h3>
-  <img src="{% url 'restaurants:visit_chart_top3_genre' %}" 
-       alt="ジャンルトップ3グラフ" 
-       style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-</section>
+  <h3>お気に入りのお店 TOP3</h3>
+<div class="top3-container">
+  {% for visit in top3_visits %}
+    <div class="top3-item">
+      <div class="rank">No.{{ forloop.counter }}</div>
+      <div class="info">
+        <div class="name">{{ visit.restaurant__store_name }}</div>
+        <div class="genre">{{ visit.restaurant__genre|default:"未分類" }}</div>
+      </div>
+      <div class="rating">
+        <span class="star">★</span>
+        <span class="score">{{ visit.avg_rating|floatformat:0 }}</span>
+      </div>
+    </div>
+  {% empty %}
+    <p style="color: gray;">データがありません</p>
+  {% endfor %}
+</div>
+
+</div>
 {% endblock %}
