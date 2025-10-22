@@ -133,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 
 # settings.py
-SESSION_COOKIE_AGE = 60 * 60 
+SESSION_COOKIE_AGE = 10800
 
 LOGIN_URL = "accounts:login"      
 LOGIN_REDIRECT_URL = reverse_lazy('restaurants:restaurant_search')      
