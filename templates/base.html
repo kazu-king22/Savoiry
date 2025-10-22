@@ -14,5 +14,48 @@
     <main class="main-content">
       {% block content %}{% endblock %}
     </main>
+
+    {% if user.is_authenticated %}
+    <nav class="bottom-nav">
+  <ul>
+    <li class="{% if request.resolver_match.url_name == 'restaurant_search' %}active{% endif %}">
+      <a href="{% url 'restaurants:restaurant_search' %}">
+        <img src="{% static 'icons/home.png' %}" 
+             data-active="{% static 'icons/home_color.png' %}" 
+             alt="ホーム" class="nav-icon"><br>ホーム
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'restaurant_add' %}active{% endif %}">
+      <a href="{% url 'restaurants:restaurant_add' %}">
+        <img src="{% static 'icons/recode.png' %}" 
+             data-active="{% static 'icons/recode_color.png' %}" 
+             alt="登録" class="nav-icon"><br>登録
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'restaurant_list_want' %}active{% endif %}">
+      <a href="{% url 'restaurants:restaurant_list_want' %}">
+        <img src="{% static 'icons/want.png' %}" 
+             data-active="{% static 'icons/want_color.png' %}" 
+             alt="気になる" class="nav-icon"><br>気になる
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'restaurant_list_went' %}active{% endif %}">
+      <a href="{% url 'restaurants:restaurant_list_went' %}">
+        <img src="{% static 'icons/went.png' %}" 
+             data-active="{% static 'icons/went_color.png' %}" 
+             alt="行った" class="nav-icon"><br>行った
+      </a>
+    </li>
+    <li class="{% if request.resolver_match.url_name == 'mypage' %}active{% endif %}">
+      <a href="{% url 'accounts:mypage' %}">
+        <img src="{% static 'icons/account.png' %}" 
+             data-active="{% static 'icons/account_color.png' %}" 
+             alt="アカウント" class="nav-icon"><br>アカウント
+      </a>
+      </li>
+    </ul>
+  </nav>
+  {% endif %}
+  <script src="{% static 'js/menu.js' %}"></script>
   </body>
 </html>
