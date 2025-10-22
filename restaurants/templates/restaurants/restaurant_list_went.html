@@ -1,20 +1,56 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/list_went.css' %}">
+{% endblock %}
 
 {% block content %}
-  <h2>行ったお店一覧</h2>
+<div class="list-container">
+  <h2>行ったお店</h2>
 
-  <ul>
+  {% if restaurants %}
     {% for restaurant in restaurants %}
-      <li>
-        <a href="{% url 'restaurants:restaurant_detail' restaurant.pk %}">
-          {{ restaurant.store_name }}
-        </a>
-        ({{ restaurant.genre }})
-      </li>
-    {% empty %}
-      <li>まだ「行った」お店は登録されていません。</li>
-    {% endfor %}
-  </ul>
+      {% with visit=restaurant.visits.last %}
+        <div class="restaurant-card">
+          {% if visit and visit.images.first %}
+            <img src="{{ visit.images.first.image.url }}" alt="{{ restaurant.store_name }}" class="thumbnail">
+          {% else %}
+            <div class="no-image">No Image</div>
+          {% endif %}
 
-  <a href="{% url 'restaurants:restaurant_add' %}">新しいお店を登録する</a>
+          <div class="info">
+            <h3>{{ restaurant.store_name }}</h3>
+
+            {% if visit %}
+              {% if visit.date %}
+                <p class="date">{{ visit.date|date:"Y年n月j日" }}</p>
+              {% endif %}
+
+              {% if visit.rating %}
+                <p class="stars">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= visit.rating %}
+                      ★
+                    {% else %}
+                      ☆
+                    {% endif %}
+                  {% endfor %}
+                </p>
+              {% endif %}
+
+              {% if visit.comment %}
+                <p class="comment">{{ visit.comment|truncatechars:30 }}</p>
+              {% endif %}
+            {% endif %}
+
+            <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" class="arrow">＞</a>
+          </div>
+        </div>
+      {% endwith %}
+    {% endfor %}
+  {% else %}
+    <p>まだ「行った」お店はありません。</p>
+  {% endif %}
+</div>
 {% endblock %}

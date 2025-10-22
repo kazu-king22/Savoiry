@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div style="text-align:center; color:white;">
+  <a href="{% url 'restaurants:visit_chart_genre' %}" style="color:white;">
+ジャンルグラフへのリンク（テスト）
+</a>
+
+  <h2>マイページ</h2>
+<p style="color:yellow;">※テンプレート更新テスト</p>
+
+  <h3>ジャンル別訪問数</h3>
+  <img src="{% url 'restaurants:visit_chart_genre' %}" 
+       alt="ジャンル別訪問グラフ"
+       style="width:100%; max-width:500px; border-radius:8px; background:white; border:1px solid #ccc; padding:8px;">
+
+  <h3>月別訪問数</h3>
+  <img src="{% url 'restaurants:visit_chart_monthly' %}" alt="月別訪問グラフ" style="width:90%; max-width:600px; background:white; border-radius:8px; padding:10px;">
+
+  <h3>人気トップ3ジャンル</h3>
+  <img src="{% url 'restaurants:visit_chart_top3_genre' %}" alt="ジャンル別グラフ" style="width:90%; max-width:600px; background:white; border-radius:8px; padding:10px;">
+</div>
+{% endblock %}

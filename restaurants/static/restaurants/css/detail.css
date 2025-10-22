@@ -1,0 +1,228 @@
+
+.detail-container {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  margin: 0 auto 40px auto;
+  text-align: center;
+  color: white;
+}
+
+
+.detail-card {
+  background-color: #fff;
+  color: black;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 360px; /* カードの最大幅 */
+}
+
+
+.restaurant-info h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+
+.instagram-media,
+.tiktok-embed {
+  width: 100%;
+  margin: 10px 0;
+}
+
+
+.restaurant-details {
+  text-align: left;
+  font-size: 15px;
+  
+}
+
+.restaurant-details .line {
+  margin: 7px 0;
+  word-spacing: 2px;
+}
+
+
+.back-link {
+  display: block;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-top: 15px;
+}
+
+
+.photo-upload {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.upload-label {
+  display: inline-block;
+  background-color: #fff;
+  color: #244272;
+  font-size: 30px;
+  font-weight: bold;
+  border: 2px solid #244272;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  line-height: 40px;
+  cursor: pointer;
+}
+
+.upload-text {
+  font-size: 13px;
+  color: #555;
+  margin-top: 8px;
+}
+
+
+.visit-date-section {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.visit-date-section label {
+  font-weight: bold;
+  font-size: 16px;
+  margin: -6px;
+  color: #333;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.visit-date {
+  width: 100%;
+  padding: 8px;
+  margin: -8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+
+/* コメント入力欄 */
+.comment-box {
+  width: 100%;
+  height: 80px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  margin: -8px;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+/* 星評価 */
+.rating {
+  margin: 15px 0;
+  font-size: 17px;
+  color: #444;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.star {
+  font-size: 28px;
+  color: #ccc;           
+  transition: color 0.2s;
+}
+
+.star.selected,
+.star.hovered {
+  color: #eeb61a;        
+}
+
+
+.feeling-select {
+  margin: 15px 0;
+  text-align: left;
+  font-size: 16px;
+  color: #333;
+}
+
+.feeling-select label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.feeling-select select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* ボタン配置 */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn-went,
+.btn-delete {
+  width: 48%;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 3px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+/* 「行った」ボタン */
+.btn-went {
+  background-color: #eeb61a;
+  color: black;
+}
+
+/* 「削除」ボタン */
+.btn-delete {
+  background-color: #d42f2f;
+  color: white;
+  margin-top: 10px;
+}
+
+.note {
+  font-size: 12px;
+  color: #333;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  color: white;
+  margin-top: 10px;
+  font-weight: bold;
+  text-decoration: underline;
+  width: 100%;
+}
+
+.back-link a {
+  color: white;
+  font-size: 25px; 
+}
+
+.back-link a:hover {
+  opacity: 0.8;
+}

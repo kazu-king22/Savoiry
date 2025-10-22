@@ -1,84 +1,132 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/detail.css' %}">
+{% endblock %}
 
 {% block content %}
-  <h2>{{ restaurant.store_name }}</h2>
+<div class="detail-container">
+  <div class="detail-card">
 
-  {% if restaurant.url %}
-    <p>URL: <a href="{{ restaurant.url }}" target="_blank">{{ restaurant.url }}</a></p>
-  {% endif %}
+  
+  <div class="restaurant-info">
+    <h2>{{ restaurant.store_name }}</h2>
 
-  {% if restaurant.area %}
-    <p>エリア: {{ restaurant.area }}</p>
-  {% endif %}
+    {% if restaurant.url %}
+      {% if "instagram.com" in restaurant.url %}
+        <blockquote class="instagram-media"
+                    data-instgrm-permalink="{{ restaurant.url }}"
+                    data-instgrm-version="14"></blockquote>
+        <script async src="//www.instagram.com/embed.js"></script>
+      {% elif "tiktok.com" in restaurant.url %}
+        <blockquote class="tiktok-embed" cite="{{ restaurant.url }}">
+          <a href="{{ restaurant.url }}">TikTokを開く</a>
+        </blockquote>
+        <script async src="https://www.tiktok.com/embed.js"></script>
+      {% else %}
+        <a href="{{ restaurant.url }}" target="_blank">{{ restaurant.url }}</a>
+      {% endif %}
+    {% endif %}
 
-  {% if restaurant.companions %}
-    <p>グループ: {{ restaurant.companions }}</p>
-  {% endif %}
-
-  {% if restaurant.genre %}
-    <p>ジャンル: {{ restaurant.genre }}</p>
-  {% endif %}
-
-  {% if restaurant.scene %}
-    <p>シーン: {{ restaurant.scene }}</p>
-  {% endif %}
+    <div class="restaurant-details">
+  <p class="line">
+    {% if restaurant.area %}{{ restaurant.area }}{% endif %}
+    {% if restaurant.genre %}　{{ restaurant.genre }}{% endif %}
+    {% if restaurant.scene %}　{{ restaurant.scene }}{% endif %}
+    {% if restaurant.companions %}　{{ restaurant.companions }}{% endif %}
+  </p>
 
   {% if restaurant.tags.all %}
-    <p>タグ:
-      {% for tag in restaurant.tags.all %}
-        {{ tag.name }}{% if not forloop.last %}, {% endif %}
-      {% endfor %}
-    </p>
+  <p class="line">
+    {% for tag in restaurant.tags.all %}
+      {{ tag.name }}{% if not forloop.last %}　{% endif %}
+    {% endfor %}
+  </p>
   {% endif %}
 
   {% if restaurant.holiday %}
-    <p>休業日: {{ restaurant.holiday }}</p>
+  <p class="line">休業日　{{ restaurant.holiday }}</p>
   {% endif %}
-
-  <p>登録日: {{ restaurant.created_at|date:"Y-m-d H:i" }}</p>
-
-
-  <a href="{% url 'restaurants:restaurant_list_want' %}">一覧に戻る</a>
+</div>
 
 
-  <hr>
+    <a href="{% url 'restaurants:restaurant_list_want' %}" class="back-link">← 一覧へ戻る</a>
+  </div>
 
-  <h3>このお店に行った記録を追加する</h3>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+  <!-- 訪問記録フォーム -->
+  <div class="visit-form-section">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
 
-    <label for="id_images">画像アップロード:</label>
-    <input type="file" name="images" id="id_images" multiple>
-
-    <button type="submit">行った</button>
-  </form>
-
-  <hr>
-
-  <h3>行った記録</h3>
-  {% if visits %}
-    {% for visit in visits %}
-      <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
-        <p><strong>訪問日:</strong> {{ visit.date }}</p>
-        <p><strong>コメント:</strong> {{ visit.comment }}</p>
-        <p><strong>評価:</strong> ★{{ visit.rating }}</p>
-        <p><strong>気持ち:</strong> {{ visit.get_feeling_display }}</p>
-
-        {% if visit.images.all %}
-          <div style="margin-top: 10px;">
-            <strong>画像:</strong><br>
-            {% for image in visit.images.all %}
-              <img src="{{ image.image.url }}" alt="訪問画像" style="width: 200px; margin-right: 10px; border-radius: 4px;">
-            {% endfor %}
-          </div>
-        {% endif %}
+      <div class="photo-upload">
+        <label for="id_images" class="upload-label">＋</label>
+        <input type="file" name="images" id="id_images" multiple hidden>
+        <p class="upload-text">写真を追加<br>(1回の訪問につき5枚まで)</p>
+        <div id="image-count" class="image-count"></div>
       </div>
-    {% endfor %}
-  {% else %}
-    <p>まだ訪問記録はありません。</p>
-  {% endif %}
 
-  <a href="{% url 'restaurants:restaurant_list_want' %}">一覧に戻る</a>
+      <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const imageInput = document.getElementById('id_images');
+  const imageCount = document.getElementById('image-count');
+  imageInput.addEventListener('change', function() {
+    const count = this.files.length;
+    imageCount.textContent = count > 0 ? `${count}枚選択中` : '';
+  });
+});
+</script>
+
+
+<div class="visit-date-section">
+  <label for="id_date">訪問日：</label>
+  <input type="date" name="date" id="id_date" class="visit-date">
+</div>
+
+
+      <textarea name="comment" placeholder="感想・思い出を入力" class="comment-box"></textarea>
+
+<div class="rating">
+  <p>お気に入り度：</p>
+  <div class="stars">
+    <span class="star" data-value="1">★</span>
+    <span class="star" data-value="2">★</span>
+    <span class="star" data-value="3">★</span>
+    <span class="star" data-value="4">★</span>
+    <span class="star" data-value="5">★</span>
+  </div>
+  <input type="hidden" name="rating" id="rating-value" value="0">
+</div>
+
+<div class="feeling-select">
+  <label for="id_feeling">気持ち評価</label>
+  <select name="feeling" id="id_feeling">
+    <option value="">選択してください</option>
+    <option value="again">また行きたい</option>
+    <option value="recommend">おすすめしたい</option>
+    <option value="no">もう行かない</option>
+  </select>
+</div>
+
+<button type="submit" class="btn-went">行った</button>
+</form>
+
+<form method="post" action="{% url 'restaurants:restaurant_delete' restaurant.pk %}">
+  {% csrf_token %}
+  <button type="submit" class="btn-delete">削除</button>
+</form>
+      
+
+      <p class="note">※このボタンを押すと、「気になる一覧」から削除されます。</p>
+    </form>
+  </div>
+ </div>
+</div>
+
+<div class="back-link">
+  <a href="{% url 'restaurants:restaurant_list_want' %}">一覧へ戻る</a>
+</div>
+
+<script src="{% static 'restaurants/js/star_rating.js' %}"></script>
 
 {% endblock %}

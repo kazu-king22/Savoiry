@@ -50,7 +50,7 @@
 .search-form input {
     width: 100%;
     padding: 8px;
-    margin: 1px;
+    margin: 1px -6px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }

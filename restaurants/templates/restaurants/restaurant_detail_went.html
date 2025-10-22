@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/detail_went.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+
+  <!-- 写真ギャラリー -->
+  <div class="photo-gallery">
+    {% if visits %}
+      {% for visit in visits %}
+        {% for image in visit.images.all %}
+          <img src="{{ image.image.url }}" alt="訪問画像" class="visit-photo">
+        {% empty %}
+          <p class="no-photo">写真はまだ登録されていません</p>
+        {% endfor %}
+      {% endfor %}
+    {% else %}
+      <p class="no-photo">まだ訪問履歴がありません</p>
+    {% endif %}
+  </div>
+
+  <!-- 店舗情報 -->
+  <div class="restaurant-info">
+    <h2>{{ restaurant.store_name }}</h2>
+
+    <p class="meta-line">
+      {% if restaurant.area %}{{ restaurant.area }}　{% endif %}
+      {% if restaurant.genre %}{{ restaurant.genre }}　{% endif %}
+      {% if restaurant.scene %}{{ restaurant.scene }}　{% endif %}
+      {% if restaurant.companions %}{{ restaurant.companions }}{% endif %}
+    </p>
+
+    {% if restaurant.tags.all %}
+      <p class="meta-line">
+        {% for tag in restaurant.tags.all %}
+          {{ tag.name }}{% if not forloop.last %}　{% endif %}
+        {% endfor %}
+      </p>
+    {% endif %}
+
+    {% if restaurant.holiday %}
+      <p class="meta-line">休業日　{{ restaurant.holiday }}</p>
+    {% endif %}
+    <!-- お店削除 -->
+  <form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}">
+  {% csrf_token %}
+  <button type="submit" class="btn-delete">削除</button>
+</form>
+  </div>
+
+  
+
+
+  <hr class="divider">
+
+  <!-- 訪問履歴カード -->
+  <div class="visit-history">
+    {% if visits %}
+      {% for visit in visits %}
+        <div class="visit-card">
+          <p class="meta-line">訪問日　{{ visit.date|date:"Y年 n月 j日" }}</p>
+          <p class="meta-line">評価　{{ visit.get_feeling_display }}</p>
+
+          <div class="stars">
+            {% for i in "12345" %}
+              {% if forloop.counter <= visit.rating %}
+                <span class="star filled">★</span>
+              {% else %}
+                <span class="star">★</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if visit.comment %}
+            <p class="comment">{{ visit.comment }}</p>
+          {% endif %}
+
+          <div class="visit-buttons">
+            <a href="{% url 'restaurants:visit_edit' visit.pk %}" class="btn-edit">編集</a>
+            <a href="{% url 'restaurants:visit_revisit' visit.pk %}" class="btn-revisit">再訪</a>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>まだ訪問履歴がありません。</p>
+    {% endif %}
+  </div>
+
+
+
+  <!-- 戻るリンク -->
+  <div class="back-link">
+    <a href="{% url 'restaurants:restaurant_list_went' %}">一覧へ戻る</a>
+  </div>
+</div>
+{% endblock %}

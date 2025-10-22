@@ -36,14 +36,7 @@ class Restaurant(models.Model):
     scene = models.CharField(max_length=50, blank=True, null=True)
     holiday = models.CharField(max_length=50, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
-    
-
-    status = models.CharField(
-        max_length=10,
-        choices=STATUS_CHOICES,
-        default='want',
-        verbose_name='ステータス'
-    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='want', verbose_name='ステータス')
 
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -52,7 +45,7 @@ class Restaurant(models.Model):
     
 class Visit(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="visits")
-    date = models.DateField()
+    date = models.DateField(null=True, blank=True)
     comment = models.TextField(blank=True)
     rating = models.IntegerField(
         choices=[(i, str(i)) for i in range(1, 6)],
