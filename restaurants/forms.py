@@ -4,7 +4,7 @@ from django.forms.widgets import  DateInput, ClearableFileInput
 from django import forms
 from .models import Tag
 
-# 画像を複数アップロードできるようにするカスタムWidget
+
 class MultiFileInput(ClearableFileInput):
     allow_multiple_selected = True
 

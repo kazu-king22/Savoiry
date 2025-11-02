@@ -13,6 +13,7 @@ from .views import (
     WentRestaurantDetailView,
     VisitUpdateView,
     VisitRevisitView,
+    RestaurantSearchResultView,
 )
 
 app_name = "restaurants"
@@ -24,7 +25,7 @@ urlpatterns = [
     path("went/<int:pk>/", WentRestaurantDetailView.as_view(), name="restaurant_detail_went"),
     path("<int:pk>/", RestaurantDetailView.as_view(), name="restaurant_detail"),
     path("search/", RestaurantSearchView.as_view(), name="restaurant_search"),
-    path('', RestaurantListView.as_view(), name='restaurant_list'),
+    path("search/results/", RestaurantSearchResultView.as_view(), name="restaurant_search_results"),
     path('tags/add/', TagCreateView.as_view(), name='tag_add'),
     path("visit_chart/monthly/", views.visit_chart_monthly, name="visit_chart_monthly"),
     path("visit_chart/genre_top3/", views.visit_chart_top3_genre, name="visit_chart_top3_genre"),
@@ -32,7 +33,6 @@ urlpatterns = [
     path("<int:pk>/reset/", RestaurantResetView.as_view(), name="restaurant_reset"),
     path("visit/<int:pk>/edit/", VisitUpdateView.as_view(), name="visit_edit"),
     path("visit/<int:pk>/revisit/", VisitRevisitView.as_view(), name="visit_revisit"),
-    path("sub_mypage/", views.mypage, name="sub_mypage"),
     path("visit_chart/genre/", views.visit_chart_genre, name="visit_chart_genre"),
 ]
 

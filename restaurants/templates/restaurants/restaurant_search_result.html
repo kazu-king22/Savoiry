@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/list_want.css' %}">
+<link rel="stylesheet" href="{% static 'restaurants/css/list_went.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+  <h2>検索結果</h2>
+
+  {% if restaurants %}
+    {% for restaurant in restaurants %}
+      {% if restaurant.status == 'want' %}
+        <!-- ▼ 気になるお店（list_want構造） -->
+        <div class="restaurant-card">
+          <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" class="card-link">
+            <div class="card-content">
+              <h3>{{ restaurant.store_name }}</h3>
+              <p class="meta-line">
+                {% if restaurant.area %}{{ restaurant.area }}　{% endif %}
+                {% if restaurant.genre %}{{ restaurant.genre }}　{% endif %}
+                {% if restaurant.scene %}{{ restaurant.scene }}　{% endif %}
+                {% if restaurant.companions %}{{ restaurant.companions }}{% endif %}
+              </p>
+
+              {% if restaurant.tags.exists %}
+                <p class="meta-line">
+                  {% for tag in restaurant.tags.all %}
+                    {{ tag.name }}{% if not forloop.last %}　{% endif %}
+                  {% endfor %}
+                </p>
+              {% endif %}
+
+              <p class="meta-line">休業日：{{ restaurant.holiday|default:"未設定" }}</p>
+            </div>
+            <span class="arrow">＞</span>
+          </a>
+        </div>
+
+      {% elif restaurant.status == 'went' %}
+        
+        {% with visit=restaurant.visits.last %}
+        <div class="restaurant-card">
+          {% if visit and visit.images.first %}
+            <img src="{{ visit.images.first.image.url }}" alt="{{ restaurant.store_name }}" class="thumbnail">
+          {% else %}
+            <div class="no-image">No Image</div>
+          {% endif %}
+
+          <div class="info">
+            <h3>{{ restaurant.store_name }}</h3>
+
+            {% if visit %}
+              {% if visit.date %}
+                <p class="date">{{ visit.date|date:"Y年n月j日" }}</p>
+              {% endif %}
+
+              {% if visit.rating %}
+                <p class="stars">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= visit.rating %}
+                      ★
+                    {% else %}
+                      ☆
+                    {% endif %}
+                  {% endfor %}
+                </p>
+              {% endif %}
+
+              {% if visit.comment %}
+                <p class="comment">{{ visit.comment|truncatechars:30 }}</p>
+              {% endif %}
+            {% endif %}
+
+            <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" class="arrow">＞</a>
+          </div>
+        </div>
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
+
+  {% else %}
+    <p class="no-data">該当するお店は見つかりませんでした。</p>
+  {% endif %}
+</div>
+{% endblock %}

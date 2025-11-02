@@ -15,8 +15,6 @@
         <div class="restaurant-card">
           {% if visit and visit.images.first %}
             <img src="{{ visit.images.first.image.url }}" alt="{{ restaurant.store_name }}" class="thumbnail">
-          {% else %}
-            <div class="no-image">No Image</div>
           {% endif %}
 
           <div class="info">

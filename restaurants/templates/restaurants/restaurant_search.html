@@ -2,90 +2,64 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'restaurants/css/serach.css' %}">
+<link rel="stylesheet" href="{% static 'restaurants/css/search.css' %}">
 {% endblock %}
 
 {% block content %}
-
 <div class="search-page">
 
-<div class="status-box">
-  <p>気になる：{{ want_count }}件</p>
-  <p>行った：{{ went_count }}件</p>
-</div>
+  <div class="status-box">
+    <p>気になる：{{ want_count|default:"(なし)" }}件</p>
+  <p>行った：{{ went_count|default:"(なし)" }}件</p>
+  </div>
 
-<div class="search-form">
-<h2>お店の検索</h2>
+  <div class="search-form">
+    <h2>お店の検索</h2>
 
-<form method="get">
-  <!-- エリア（必須） -->
-  <p>
-    <label>エリア（必須）</label><br>
-    <input type="text" name="area" value="{{ request.GET.area }}">
-  </p>
+    <form method="get" action="{% url 'restaurants:restaurant_search_results' %}">
 
-  <!-- ジャンル（必須） -->
-  <p>
-    <label>ジャンル（必須）</label><br>
-    <input type="text" name="genre" value="{{ request.GET.genre }}">
-  </p>
+      <p>
+        <label>エリア（必須）</label><br>
+        <input type="text" name="area" value="{{ request.GET.area }}">
+      </p>
 
-  <!-- グループ -->
-  <p>
-    <label>グループ</label><br>
-    <input type="text" name="companions" value="{{ request.GET.companions }}">
-  </p>
+      <p>
+        <label>ジャンル（必須）</label><br>
+        <input type="text" name="genre" value="{{ request.GET.genre }}">
+      </p>
 
-  <!-- シーン -->
-  <p>
-    <label>シーン</label><br>
-    <input type="text" name="scene" value="{{ request.GET.scene }}">
-  </p>
+      <p>
+        <label>グループ</label><br>
+        <input type="text" name="companions" value="{{ request.GET.companions }}">
+      </p>
 
-  <!-- 休業日 -->
-  <p>
-    <label>休業日</label><br>
-    <input type="text" name="closed_day" value="{{ request.GET.closed_day }}">
-  </p>
+      <p>
+        <label>シーン</label><br>
+        <input type="text" name="scene" value="{{ request.GET.scene }}">
+      </p>
 
-  <!-- タグ -->
-  <p>
-    <label>タグ</label><br>
-    <input type="text" name="tag" value="{{ request.GET.tag }}">
-  </p>
+      <p>
+        <label>休業日</label><br>
+        <input type="text" name="closed_day" value="{{ request.GET.closed_day }}">
+      </p>
 
- <!-- ステータス選択 -->
-    <div class="radio-group">
-      <label>
-        <input type="radio" name="status" value="want" {% if request.GET.status == 'want' %}checked{% endif %}> 気になる
-      </label>
-      <label>
-        <input type="radio" name="status" value="went" {% if request.GET.status == 'went' %}checked{% endif %}> 行った
-      </label>
-    </div>
+      <p>
+        <label>タグ</label><br>
+        <input type="text" name="tag" value="{{ request.GET.tag }}">
+      </p>
 
-    <!-- 検索ボタン -->
-    <p><button type="submit">検索</button></p>
-  </form>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="status" value="want" {% if request.GET.status == 'want' %}checked{% endif %}> 気になる
+        </label>
+        <label>
+          <input type="radio" name="status" value="went" {% if request.GET.status == 'went' %}checked{% endif %}> 行った
+        </label>
+      </div>
+
+      <p><button type="submit">検索</button></p>
+    </form>
+  </div>
 
 </div>
-
-<!-- 検索結果の表示 -->
-{% if restaurants %}
-  <h3>検索結果（{{ restaurants|length }}件）</h3>
-  <ul>
-    {% for restaurant in restaurants %}
-      <li>
-        <a href="{% url 'restaurants:restaurant_detail' restaurant.pk %}">
-          {{ restaurant.store_name }}
-        </a>
-        （{{ restaurant.genre }} / {{ restaurant.area }}）
-      </li>
-    {% endfor %}
-  </ul>
-
-{% elif request.GET %}
-  <p>該当するお店は見つかりませんでした。</p>
-{% endif %}
 {% endblock %}
-

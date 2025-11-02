@@ -14,10 +14,10 @@
       <div class="restaurant-card">
         <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" class="card-link">
           <div class="card-content">
-            <!-- 店名 -->
+            
             <h3>{{ restaurant.store_name }}</h3>
 
-            <!-- エリア・ジャンル・シーン・同行者 -->
+            
             <p class="meta-line">
               {% if restaurant.area %}{{ restaurant.area }}　{% endif %}
               {% if restaurant.genre %}{{ restaurant.genre }}　{% endif %}
@@ -25,7 +25,7 @@
               {% if restaurant.companions %}{{ restaurant.companions }}{% endif %}
             </p>
 
-            <!-- タグ -->
+            
             {% if restaurant.tags.exists %}
               <p class="meta-line">
                 {% for tag in restaurant.tags.all %}
@@ -34,11 +34,11 @@
               </p>
             {% endif %}
 
-            <!-- 休業日 -->
+            
             <p class="meta-line">休業日：{{ restaurant.holiday|default:"未設定" }}</p>
           </div>
 
-          <!-- 矢印 -->
+          
           <span class="arrow">＞</span>
         </a>
       </div>

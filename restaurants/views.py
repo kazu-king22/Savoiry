@@ -1,5 +1,5 @@
 from django.views import View
-from django.views.generic import CreateView, ListView, DeleteView, UpdateView
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView, TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
@@ -15,6 +15,8 @@ from django.db.models.functions import TruncMonth
 from django.db.models import Count, Avg
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 
 
 class RestaurantCreateView(LoginRequiredMixin, CreateView):
@@ -38,13 +40,10 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
                     continue  
                 tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
                 self.object.tags.add(tag_obj)
+        
+        messages.success(self.request, "restaurant_added")
+        return redirect("restaurants:restaurant_add")
 
-        return response
-    
-    def form_invalid(self, form):
-        return super().form_invalid(form)
- 
- 
     
 class VisitCreateView(LoginRequiredMixin, CreateView):
     model = Visit
@@ -92,7 +91,7 @@ class WentRestaurantListView(LoginRequiredMixin, ListView):
 
 class RestaurantDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        restaurant = get_object_or_404(Restaurant, pk=pk)
+        restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
         form = VisitForm()
         visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
         return render(request, "restaurants/restaurant_detail.html", {
@@ -102,12 +101,13 @@ class RestaurantDetailView(LoginRequiredMixin, View):
         })
 
     def post(self, request, pk):
-        restaurant = get_object_or_404(Restaurant, pk=pk)
+        restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
         form = VisitForm(request.POST, request.FILES)
 
         if form.is_valid():
             visit = form.save(commit=False)
             visit.restaurant = restaurant
+
             if not visit.date:
                 visit.date = timezone.now().date()
             visit.save()
@@ -120,14 +120,15 @@ class RestaurantDetailView(LoginRequiredMixin, View):
                 restaurant.status = 'went'
                 restaurant.save()
 
-            return redirect("restaurants:restaurant_detail", pk=restaurant.pk)
-        else:
-            visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
-            return render(request, "restaurants/restaurant_detail.html", {
-                "restaurant": restaurant,
-                "form": form,
-                "visits": visits,
-            })
+            return redirect("restaurants:restaurant_list_want")
+
+      
+        visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
+        return render(request, "restaurants/restaurant_detail.html", {
+            "restaurant": restaurant,
+            "form": form,
+            "visits": visits,
+        })
 
 
 class RestaurantDeleteView(LoginRequiredMixin, DeleteView):
@@ -154,19 +155,26 @@ class RestaurantResetView(LoginRequiredMixin, View):
         return redirect(reverse_lazy("restaurants:restaurant_list_want"))
 
 
-class RestaurantSearchView(LoginRequiredMixin, ListView):
-    model = Restaurant
+
+class RestaurantSearchView(LoginRequiredMixin, TemplateView):
     template_name = "restaurants/restaurant_search.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["want_count"] = Restaurant.objects.filter(user=user, status="want").count()
+        context["went_count"] = Restaurant.objects.filter(user=user, status="went").count()
+        return context
+
+
+
+class RestaurantSearchResultView(LoginRequiredMixin, ListView):
+    model = Restaurant
+    template_name = "restaurants/restaurant_search_result.html"
     context_object_name = "restaurants"
 
     def get_queryset(self):
         queryset = Restaurant.objects.filter(user=self.request.user).order_by("-created_at")
-
-        status = self.request.GET.get("status")
-        if status == "want":
-            queryset = queryset.filter(status="want")
-        elif status == "went":
-            queryset = queryset.filter(status="went")
 
         genre = self.request.GET.get("genre")
         area = self.request.GET.get("area")
@@ -174,13 +182,13 @@ class RestaurantSearchView(LoginRequiredMixin, ListView):
         scene = self.request.GET.get("scene")
         closed_day = self.request.GET.get("closed_day")
         tag = self.request.GET.get("tag")
+        status = self.request.GET.get("status")
 
         
-        if not genre or not area:
-            return queryset.none()
-
-        
-        queryset = queryset.filter(genre__icontains=genre, area__icontains=area)
+        if genre:
+            queryset = queryset.filter(genre__icontains=genre)
+        if area:
+            queryset = queryset.filter(area__icontains=area)
         if companions:
             queryset = queryset.filter(companions__icontains=companions)
         if scene:
@@ -189,15 +197,11 @@ class RestaurantSearchView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(closed_day__icontains=closed_day)
         if tag:
             queryset = queryset.filter(tags__name__icontains=tag)
+        if status:
+            queryset = queryset.filter(status=status)
 
         return queryset
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-        context["want_count"] = Restaurant.objects.filter(user=user, status="want").count()
-        context["went_count"] = Restaurant.objects.filter(user=user, status="went").count()
-        return context
+
 
     
 
@@ -226,12 +230,12 @@ class WentRestaurantDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
         
-        # ✅ このお店に紐づくVisit（訪問履歴）を全部取得
+        
         visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
 
         return render(request, "restaurants/restaurant_detail_went.html", {
             "restaurant": restaurant,
-            "visits": visits,  # ← これが超重要！
+            "visits": visits,  
         })
 
 
@@ -242,7 +246,7 @@ class VisitUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["original_visit"] = self.object  # ← ここで渡す
+        context["original_visit"] = self.object  
         return context
 
     def get_success_url(self):
@@ -295,7 +299,6 @@ class TagCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('restaurants:restaurant_list')
     
 
-    
 def visit_chart_monthly(request):
     import matplotlib.pyplot as plt
     import io
@@ -303,20 +306,18 @@ def visit_chart_monthly(request):
     from django.db.models.functions import TruncMonth
     from django.db.models import Count
 
-    plt.close("all")  # ← 前回のグラフを全消去
+    plt.close("all")
 
-    # ✅ ログインしていない場合のエラーハンドリング
     if not request.user.is_authenticated:
         fig, ax = plt.subplots(figsize=(6, 3))
         ax.text(0.5, 0.5, "ログインが必要です", fontsize=14, ha="center", va="center")
         ax.axis("off")
         buf = io.BytesIO()
         fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
-        plt.close("all")  # ← fig単体じゃなく、全部閉じる
+        plt.close("all")
         buf.seek(0)
         return HttpResponse(buf.getvalue(), content_type="image/png")
 
-    # ✅ 月別集計
     visits_by_month = (
         Visit.objects
         .filter(restaurant__user=request.user)
@@ -343,24 +344,42 @@ def visit_chart_monthly(request):
     fig, ax = plt.subplots(figsize=(9, 4))
     x_positions = range(len(months))
     bars = ax.bar(x_positions, counts, color="#5a8dee", width=0.6)
+
+    ax.set_title("月別訪問数", fontsize=16, fontweight="bold")
+
+    ax.tick_params(axis='x', labelsize=16, width=1.2)
+    ax.tick_params(axis='y', labelsize=16, width=1.2)
+
     ax.set_xticks(x_positions)
-    ax.set_xticklabels(months, fontsize=10)
+    ax.set_xticklabels(months, fontsize=14, fontweight="bold")
+
     ax.set_ylim(0, 20)
     ax.set_yticks(range(0, 21, 5))
+
     ax.grid(axis="y", linestyle="--", alpha=0.4)
     ax.set_facecolor("white")
     fig.patch.set_facecolor("white")
 
     for bar in bars:
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2, height + 0.3, f"{int(height)}", ha="center", va="bottom", fontsize=9, color="#333")
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            height + 0.4,
+            f"{int(height)}",
+            ha="center",
+            va="bottom",
+            fontsize=16,          
+            fontweight="bold",    
+            color="#333"
+        )
 
     plt.tight_layout()
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
-    plt.close("all")  # ← 最後も完全リセット
+    plt.close("all")
     buf.seek(0)
     return HttpResponse(buf.getvalue(), content_type="image/png")
+
 
 
 def visit_chart_top3_genre(request):
@@ -416,12 +435,11 @@ def visit_chart_genre(request):
     fig, ax = plt.subplots(figsize=(5, 3))
     bars = ax.barh(genres, counts, color="#4a6cf7", alpha=0.85, height=0.5)
 
-    # ✅ タイトルをさらに左に寄せる（0.00 が完全左端）
-    ax.set_title("")  # デフォルトタイトル無効化
+    
+    ax.set_title("")  
     fig.text(0, 0.95, "ジャンル別訪問数", fontsize=14, fontweight="bold", ha="left", va="center")
 
-    # ✅ 軸・文字調整
-    ax.tick_params(axis='y', labelsize=12, length=0)  # ← 項目左の小線も削除
+    ax.tick_params(axis='y', labelsize=12, length=0) 
     ax.tick_params(axis='x', bottom=False, labelbottom=False)
     ax.invert_yaxis()
 
