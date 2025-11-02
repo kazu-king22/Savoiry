@@ -1,0 +1,36 @@
+.portfolio-page{
+    text-align:center;
+}
+
+.link-button{
+    margin-top: 20px;
+}
+
+.screenshot{
+  display: flex;
+  flex-wrap: wrap;         
+  justify-content: center; 
+  align-items: center;     
+  gap: 20px;               
+  margin: 20px auto;
+  max-width: 90%;     
+  flex-direction: row;
+}
+
+.screenshot img {
+  width: 280px;         
+  height: 450px;         
+  object-fit: cover;     
+  transition: transform 0.3s ease;   
+}
+
+@media (max-width: 767px) {
+  .screenshot {
+     flex-direction: column !important; 
+    align-items: center; 
+  }
+
+  .screenshot img {
+    width: 85%; 
+  }
+}
