@@ -4,7 +4,6 @@
     text-align: center;
 }
 
-/* 項目を縦並びに */
 .signup-form p {
     display: flex;
     flex-direction: column;
@@ -12,7 +11,6 @@
     margin: 10px 0;
 }
 
-/* ログイン見出しだけ白に */
 .signup-form h2 {
     color: white;
 }
@@ -21,7 +19,6 @@
     color: white;
 }
 
-/* 入力欄 */
 .signup-form input {
     width: 100%;
     padding: 8px;
@@ -30,7 +27,6 @@
     border-radius: 4px;
 }
 
-/* ボタン */
 .signup-form button {
     margin-top: 15px;
     width: 35%;
@@ -47,11 +43,31 @@
     background-color: #ffcc33;
 }
 
-/* ログインリンク */
 .signup-form a {
     display: block;
     margin: 15px auto 0;
     color: white;
     text-decoration: underline;
     text-align: center;
+}
+
+.error-message-global {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  width: 80%;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error-message {
+  color: #ff6666;
+  font-size: 13px;
+  display: block;
+  margin-top: 4px;
 }

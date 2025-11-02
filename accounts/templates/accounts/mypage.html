@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/mypage.css' %}">
+{% endblock %}
+
 {% block content %}
 <div style="text-align:center; color:white;">
-  <a href="{% url 'restaurants:visit_chart_genre' %}" style="color:white;">
-ジャンルグラフへのリンク（テスト）
-</a>
-
   <h2>マイページ</h2>
-<p style="color:yellow;">※テンプレート更新テスト</p>
 
   <h3>ジャンル別訪問数</h3>
   <img src="/restaurants/visit_chart/genre/" 
@@ -39,5 +38,31 @@
   {% endfor %}
 </div>
 
-</div>
+<a href="{% url 'accounts:email_change' %}" class="account-item">
+  <div class="left">
+    <img src="{% static 'icons/mail.png' %}" alt="key icon" class="icon">
+    <span class="text">メールアドレスを変更</span>
+  </div>
+  <span class="arrow">＞</span>
+</a>
+
+<a href="{% url 'accounts:password_change' %}" class="account-item">
+  <div class="left">
+    <img src="{% static 'icons/key.png' %}" alt="key icon" class="icon">
+    <span class="text">パスワードを変更</span>
+  </div>
+  <span class="arrow">＞</span>
+</a>
+
+<form action="{% url 'accounts:logout' %}" method="post" class="logout-item-form">
+  {% csrf_token %}
+  <button type="submit" class="logout-item">
+    <div class="left">
+      <img src="{% static 'icons/logout.png' %}" alt="door icon" class="icon">
+      <span class="text">ログアウト</span>
+    </div>
+  </button>
+</form>
+
+
 {% endblock %}

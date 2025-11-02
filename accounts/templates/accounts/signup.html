@@ -9,27 +9,50 @@
 <div class="signup-form">
   <h2>新規登録</h2>
 
-  <form method="post">
-      {% csrf_token %}
-      
-      <p>
-          <label for="id_username">ユーザー名</label>
-          {{ form.first_name }}
-      </p>
-      <p>
-          <label for="id_email">メールアドレス</label>
-          {{ form.email }}
-      </p>
-      <p>
-          <label for="id_password1">パスワード</label>
-          {{ form.password1 }}
-      </p>
-      <p>
-          <label for="id_password2">パスワード（確認）</label>
-          {{ form.password2 }}
-      </p>
-      
-      <button type="submit">登録</button>
+  {% if form.errors %}
+    <div class="error-message-global">
+      アカウント登録に失敗しました
+    </div>
+  {% endif %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    
+
+    <p>
+      <label for="id_username">ユーザー名（変更不可）</label><br>
+      {{ form.first_name }}
+      {% if form.first_name.errors %}
+        <span class="error-message">{{ form.first_name.errors.0 }}</span>
+      {% endif %}
+    </p>
+
+    <p>
+      <label for="id_email">メールアドレス</label><br>
+      {{ form.email }}
+      {% if form.email.errors %}
+        <span class="error-message">{{ form.email.errors.0 }}</span>
+      {% endif %}
+    </p>
+
+    <p>
+      <label for="id_password1">パスワード</label><br>
+      {{ form.password1 }}
+      {% if form.password1.errors %}
+        <span class="error-message">{{ form.password1.errors.0 }}</span>
+      {% endif %}
+    </p>
+
+
+    <p>
+      <label for="id_password2">パスワード（確認）</label><br>
+      {{ form.password2 }}
+      {% if form.password2.errors %}
+        <span class="error-message">{{ form.password2.errors.0 }}</span>
+      {% endif %}
+    </p>
+
+    <button type="submit">登録</button>
   </form>
 
   <p><a href="{% url 'accounts:login' %}">ログインはこちら</a></p>

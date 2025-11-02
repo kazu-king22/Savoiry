@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="account-container" style="text-align:center; color:white;">
+  <h2 style="color:#eeb61a;">メールアドレス変更完了</h2>
+
+  
+  <div id="popup" 
+       style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+              background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center;">
+    <div style="background: white; color: black; padding: 30px; border-radius: 20px; width: 80%; max-width: 300px;">
+      <p>メールアドレスの変更が完了しました</p>
+      <p>次回ログイン時は<br>新しいメールアドレスを使用してください</p>
+      <button id="okButton" 
+              style="margin-top: 15px; background-color: #eeb61a; border: none; padding: 10px 30px; 
+                     border-radius: 6px; font-weight: bold; cursor: pointer;">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // OKボタンを押したらアカウント設定に戻る
+  document.getElementById('okButton').addEventListener('click', function() {
+    window.location.href = "{% url 'accounts:profile' %}";
+  });
+</script>
+{% endblock %}

@@ -8,6 +8,20 @@
     color: white;
 }
 
+.error-message {
+  background-color: #e74c3c; 
+  color: white;
+  padding: 10px 17px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  width: 80%;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
 /* form.as_p が生成する p 要素を縦並びに */
 .login-form p {
@@ -55,5 +69,48 @@
     color: white;
     text-decoration: underline;
     text-align: center;
+}
+
+.sv-modal { 
+  position: fixed; 
+  inset: 0; 
+  display: none; 
+}
+.sv-modal.is-open { 
+  display: block; 
+}
+
+.sv-modal__backdrop {
+  position: absolute; 
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+}
+
+.sv-modal__dialog {
+  position: absolute; 
+  left: 50%; 
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 320px);
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.sv-modal__line1 { 
+  font-weight: bold; 
+  margin-bottom: 8px; 
+}
+
+.sv-modal__ok {
+  background-color: #eeb61a;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 28px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 14px;
 }
 

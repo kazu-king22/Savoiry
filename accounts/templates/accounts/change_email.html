@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/change_email.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account-container">
+
+  <h2 class="page-title">メールアドレス変更</h2>
+
+  {% if form.non_field_errors %}
+    <div class="error-banner">
+      メールアドレス変更に失敗しました
+    </div>
+  {% endif %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <p class="current-email">現在のメールアドレス：{{ user.email }}</p>
+
+    <div class="form-wrapper">
+
+      <label>{{ form.email.label }}</label><br>
+      {{ form.email }}
+      {% if form.email.errors %}
+        <p class="error-msg">{{ form.email.errors.0 }}</p>
+      {% endif %}
+
+      <label>{{ form.confirm_email.label }}</label><br>
+      {{ form.confirm_email }}
+      {% if form.confirm_email.errors %}
+        <p class="error-msg">{{ form.confirm_email.errors.0 }}</p>
+      {% endif %}
+
+    </div>
+
+    <button type="submit" class="submit-btn">変更</button>
+  </form>
+
+  <p class="back-link">
+    <a href="{% url 'accounts:mypage' %}">アカウントに戻る</a>
+  </p>
+
+</div>
+{% endblock %}

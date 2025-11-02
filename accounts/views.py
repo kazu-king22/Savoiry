@@ -1,10 +1,19 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import SignUpForm, EmailLoginForm
+from .forms import SignUpForm, EmailLoginForm, EmailChangeForm, CustomPasswordChangeForm
 from .models import User
 from django.contrib.auth.decorators import login_required
+from restaurants.models import Visit
+from django.db.models import Avg
+from django.shortcuts import render
+from django.views.generic import UpdateView, View
+from django.contrib import messages
+from django.contrib.auth import get_user_model, update_session_auth_hash
+from django.shortcuts import redirect
+
+User = get_user_model()
 
 
 class SignUpView(CreateView):
@@ -18,6 +27,10 @@ class CustomLoginView(LoginView):
     form_class = EmailLoginForm
     template_name = "accounts/login.html"
 
+    def get_success_url(self):
+        messages.success(self.request, "login_first")
+        return reverse_lazy("restaurants:restaurant_search")
+
 
 class CustomLogoutView(LogoutView):
     template_name = "accounts/logout.html"
@@ -26,23 +39,9 @@ class CustomLogoutView(LogoutView):
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "accounts/home.html"
 
-
-class MyPageView(TemplateView):
-    template_name = "accounts/mypage.html"
-    
     
 @login_required
 def mypage(request):
-    visits = Visit.objects.all()
-    print("===== DEBUG =====")
-    for v in visits:
-        print(
-            f"店舗: {v.restaurant.store_name}, "
-            f"登録ユーザー: {v.restaurant.user}, "
-            f"ログイン中ユーザー: {request.user}, "
-            f"評価: {v.rating}"
-        )
-
     top3_visits = (
         Visit.objects
         .filter(restaurant__user=request.user, rating__isnull=False)
@@ -51,7 +50,40 @@ def mypage(request):
         .order_by("-avg_rating")[:3]
     )
 
-    print("==== 集計結果 ====")
-    print(list(top3_visits))
+    return render(request, "accounts/mypage.html", {"top3_visits": top3_visits})
 
-    return render(request, "restaurants/mypage.html", {"top3_visits": top3_visits})
+
+class EmailChangeView(LoginRequiredMixin, View):
+    template_name = "accounts/change_email.html"
+
+    def get(self, request):
+        form = EmailChangeForm()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        form = EmailChangeForm(request.POST)
+        if form.is_valid():
+            new_email = form.cleaned_data["email"]
+            request.user.email = new_email
+            request.user.save()
+
+            messages.success(request, "email_changed")
+            return redirect("accounts:mypage")
+
+        messages.error(request, "メールアドレス変更に失敗しました")
+        return render(request, self.template_name, {"form": form})
+
+
+class PasswordChangeViewWithModal(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = "accounts/password_change.html"
+
+    def form_valid(self, form):
+        form.save()
+        update_session_auth_hash(self.request, form.user)
+        messages.success(self.request, "password_changed")
+        return redirect("accounts:mypage")
+
+    def form_invalid(self, form):
+        messages.error(self.request, "パスワード変更に失敗しました")
+        return self.render_to_response(self.get_context_data(form=form))
