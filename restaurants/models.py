@@ -40,6 +40,26 @@ class Restaurant(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     
+    DAY_CHOICES = [
+        ('月', '月曜日'),
+        ('火', '火曜日'),
+        ('水', '水曜日'),
+        ('木', '木曜日'),
+        ('金', '金曜日'),
+        ('土', '土曜日'),
+        ('日', '日曜日'),
+        ('不定', '不定休'),
+    ]
+    
+    holiday = models.CharField(
+        max_length=3,
+        choices=DAY_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="休業日"
+    )
+    
+    
     def __str__(self):
         return self.store_name
     
