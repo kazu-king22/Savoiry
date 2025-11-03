@@ -21,11 +21,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("portfolio/", TemplateView.as_view(template_name="portfolio.html"), name="portfolio"),
-    path("", include("accounts.urls")),
-    path('home', HomeView.as_view(), name='Home'), 
-    path("restaurants/", include("restaurants.urls")),
+    path("admin/", admin.site.urls),
+    path("", TemplateView.as_view(template_name="portfolio.html"), name="portfolio"),
+    path("savoiry/accounts/", include(("accounts.urls", "accounts"), namespace="accounts")),
+    path("savoiry/restaurants/", include(("restaurants.urls", "restaurants"), namespace="restaurants")),
+    path("savoiry/home/", HomeView.as_view(), name="Home"),
 ]
 
 if settings.DEBUG:

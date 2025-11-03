@@ -23,14 +23,12 @@
 
     <div class="form-wrapper">
 
-      <!-- 新しいメールアドレス -->
       <label>{{ form.email.label }}</label><br>
       {{ form.email }}
       {% if form.email.errors %}
         <p class="error-msg">{{ form.email.errors.0 }}</p>
       {% endif %}
 
-      <!-- 確認用メールアドレス -->
       <label>{{ form.confirm_email.label }}</label><br>
       {{ form.confirm_email }}
       {% if form.confirm_email.errors %}
