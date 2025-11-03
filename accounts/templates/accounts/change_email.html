@@ -10,10 +10,11 @@
 
   <h2 class="page-title">メールアドレス変更</h2>
 
-  {% if form.non_field_errors %}
-    <div class="error-banner">
-      メールアドレス変更に失敗しました
-    </div>
+  <!-- ✅ messagesフレームワークで受け取ったエラーを表示 -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="error-banner">{{ message }}</div>
+    {% endfor %}
   {% endif %}
 
   <form method="post" novalidate>
@@ -22,12 +23,14 @@
 
     <div class="form-wrapper">
 
+      <!-- 新しいメールアドレス -->
       <label>{{ form.email.label }}</label><br>
       {{ form.email }}
       {% if form.email.errors %}
         <p class="error-msg">{{ form.email.errors.0 }}</p>
       {% endif %}
 
+      <!-- 確認用メールアドレス -->
       <label>{{ form.confirm_email.label }}</label><br>
       {{ form.confirm_email }}
       {% if form.confirm_email.errors %}
@@ -40,7 +43,7 @@
   </form>
 
   <p class="back-link">
-    <a href="{% url 'accounts:mypage' %}">アカウントに戻る</a>
+    <a href="{% url 'accounts:mypage' %}">マイページに戻る</a>
   </p>
 
 </div>

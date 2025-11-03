@@ -249,6 +249,15 @@ class VisitUpdateView(UpdateView):
         context["original_visit"] = self.object  
         return context
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        images = self.request.FILES.getlist('images')
+        for image in images:
+            VisitImage.objects.create(visit=self.object, image=image)
+
+        return response
+
     def get_success_url(self):
         restaurant = getattr(self.object, "restaurant", None)
         if restaurant and restaurant.pk:
@@ -258,9 +267,9 @@ class VisitUpdateView(UpdateView):
 
 
 
+
 class VisitRevisitView(View):
     def get(self, request, pk):
-        """再訪フォームを表示"""
         original_visit = get_object_or_404(Visit, pk=pk)
         form = VisitForm()
         return render(request, "restaurants/visit_form.html", {
@@ -269,7 +278,6 @@ class VisitRevisitView(View):
         })
 
     def post(self, request, pk):
-        """再訪記録を追加"""
         original_visit = get_object_or_404(Visit, pk=pk)
         restaurant = original_visit.restaurant
         form = VisitForm(request.POST, request.FILES)

@@ -63,3 +63,13 @@
   color: white;
   text-decoration: underline;
 }
+
+.error-banner {
+  background-color: #d9534f;
+  color: white;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
