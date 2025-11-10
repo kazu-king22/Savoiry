@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7i)6pqux-*e(zv0n9-lm(ur2oa@nu27xmqe%7(o88^mhiu=shi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.0.8']
+ALLOWED_HOSTS = ['kazukisekisita.pythonanywhere.com']
 
 
 # Application definition
@@ -120,11 +120,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    [
-        os.path.join(BASE_DIR, "static"), 
-    ]
-)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -135,8 +136,8 @@ AUTH_USER_MODEL = 'accounts.User'
 # settings.py
 SESSION_COOKIE_AGE = 10800
 
-LOGIN_URL = "accounts:login"      
-LOGIN_REDIRECT_URL = reverse_lazy('restaurants:restaurant_search')      
-LOGOUT_REDIRECT_URL = "accounts:login"   
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = reverse_lazy('restaurants:restaurant_search')
+LOGOUT_REDIRECT_URL = "accounts:login"
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')   
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

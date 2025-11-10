@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Restaurant, Visit, VisitImage, Tag
 from .forms import RestaurantForm, VisitForm
 import matplotlib
-matplotlib.use("Agg") 
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 plt.rcParams["font.family"] = "MS Gothic"
 from django.http import HttpResponse
@@ -16,7 +16,8 @@ from django.db.models import Count, Avg
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+import matplotlib
+matplotlib.rcParams['font.family'] = ['Noto Sans CJK JP', 'IPAexGothic', 'TakaoGothic', 'Meiryo', 'sans-serif']
 
 
 class RestaurantCreateView(LoginRequiredMixin, CreateView):
@@ -31,20 +32,20 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
 
         response = super().form_valid(form)
 
-        tags_input = self.request.POST.getlist("tags")  
-        
+        tags_input = self.request.POST.getlist("tags")
+
         if tags_input:
             for tag_name in tags_input:
-                tag_name = tag_name.strip()  
+                tag_name = tag_name.strip()
                 if not tag_name:
-                    continue  
+                    continue
                 tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
                 self.object.tags.add(tag_obj)
-        
+
         messages.success(self.request, "restaurant_added")
         return redirect("restaurants:restaurant_add")
 
-    
+
 class VisitCreateView(LoginRequiredMixin, CreateView):
     model = Visit
     form_class = VisitForm
@@ -54,11 +55,11 @@ class VisitCreateView(LoginRequiredMixin, CreateView):
         restaurant_id = self.kwargs["restaurant_id"]
         restaurant = Restaurant.objects.get(id=restaurant_id)
 
-        
+
         form.instance.restaurant = restaurant
         response = super().form_valid(form)
 
-        
+
         restaurant.status = "went"
         restaurant.save()
 
@@ -115,14 +116,14 @@ class RestaurantDetailView(LoginRequiredMixin, View):
             images = request.FILES.getlist('images')
             for image in images:
                 VisitImage.objects.create(visit=visit, image=image)
-                
+
             if restaurant.status == 'want':
                 restaurant.status = 'went'
                 restaurant.save()
 
             return redirect("restaurants:restaurant_list_want")
 
-      
+
         visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
         return render(request, "restaurants/restaurant_detail.html", {
             "restaurant": restaurant,
@@ -151,7 +152,7 @@ class RestaurantResetView(LoginRequiredMixin, View):
 
         restaurant.status = "want"
         restaurant.save()
-        
+
         return redirect(reverse_lazy("restaurants:restaurant_list_want"))
 
 
@@ -184,7 +185,7 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
         tag = self.request.GET.get("tag")
         status = self.request.GET.get("status")
 
-        
+
         if genre:
             queryset = queryset.filter(genre__icontains=genre)
         if area:
@@ -203,7 +204,7 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
         return queryset
 
 
-    
+
 
 class RestaurantListView(LoginRequiredMixin, ListView):
     model = Restaurant
@@ -213,7 +214,7 @@ class RestaurantListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = Restaurant.objects.filter(user=self.request.user).order_by("-created_at")
 
-        
+
         tag = self.request.GET.get("tag")
         if tag:
             queryset = queryset.filter(tags__name=tag)
@@ -222,20 +223,20 @@ class RestaurantListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["tags"] = Tag.objects.all()  
+        context["tags"] = Tag.objects.all()
         return context
 
 
 class WentRestaurantDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
-        
-        
+
+
         visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
 
         return render(request, "restaurants/restaurant_detail_went.html", {
             "restaurant": restaurant,
-            "visits": visits,  
+            "visits": visits,
         })
 
 
@@ -246,7 +247,7 @@ class VisitUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["original_visit"] = self.object  
+        context["original_visit"] = self.object
         return context
 
     def form_valid(self, form):
@@ -287,7 +288,7 @@ class VisitRevisitView(View):
             new_visit.restaurant = restaurant
             new_visit.save()
 
-            
+
             images = request.FILES.getlist("images")
             for image in images:
                 VisitImage.objects.create(visit=new_visit, image=image)
@@ -302,10 +303,10 @@ class VisitRevisitView(View):
 
 class TagCreateView(LoginRequiredMixin, CreateView):
     model = Tag
-    fields = ['name', 'category']  
+    fields = ['name', 'category']
     template_name = 'restaurants/restaurant_tag_form.html'
     success_url = reverse_lazy('restaurants:restaurant_list')
-    
+
 
 def visit_chart_monthly(request):
     import matplotlib.pyplot as plt
@@ -376,8 +377,8 @@ def visit_chart_monthly(request):
             f"{int(height)}",
             ha="center",
             va="bottom",
-            fontsize=16,          
-            fontweight="bold",    
+            fontsize=16,
+            fontweight="bold",
             color="#333"
         )
 
@@ -443,11 +444,11 @@ def visit_chart_genre(request):
     fig, ax = plt.subplots(figsize=(5, 3))
     bars = ax.barh(genres, counts, color="#4a6cf7", alpha=0.85, height=0.5)
 
-    
-    ax.set_title("")  
+
+    ax.set_title("")
     fig.text(0, 0.95, "ジャンル別訪問数", fontsize=14, fontweight="bold", ha="left", va="center")
 
-    ax.tick_params(axis='y', labelsize=12, length=0) 
+    ax.tick_params(axis='y', labelsize=12, length=0)
     ax.tick_params(axis='x', bottom=False, labelbottom=False)
     ax.invert_yaxis()
 
