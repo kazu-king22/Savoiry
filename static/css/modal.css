@@ -13,42 +13,45 @@
 
 .modal {
   background: white;
-  border-radius: 20px;
-  padding: 25px 20px;
-  width: 80%;
-  max-width: 400px;
+  border-radius: 25px;
+  padding: 60px 50px;          /* ← 内側の余白たっぷりに */
+  width: 90%;
+  max-width: 750px;            /* ← 最大幅をさらに拡大 */
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 35px rgba(0,0,0,0.4);
   animation: fadeIn 0.3s ease;
 }
 
 .modal-title {
   font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 38px;             /* ← かなり大きめタイトル */
+  margin-bottom: 30px;
   color: #244272;
 }
 
 .modal-message {
-  font-size: 14px;
+  font-size: 26px;             /* ← 通常文字も拡大 */
   color: #333;
-  margin-bottom: 20px;
-  line-height: 1.5;
+  margin-bottom: 40px;
+  line-height: 1.8;
 }
 
 .modal-btn {
   background: #eeb61a;
   color: #000;
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
+  border-radius: 12px;
+  padding: 20px 40px;          /* ← 押しやすく＆存在感アップ */
+  font-size: 35px;
   font-weight: bold;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .modal-btn:hover {
   opacity: 0.9;
 }
+
 
 @keyframes fadeIn {
   from {opacity: 0; transform: scale(0.95);}

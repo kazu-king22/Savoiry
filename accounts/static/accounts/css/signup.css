@@ -1,7 +1,7 @@
 /* サインアップフォーム全体 */
 .signup-form {
   width: 90%;                 
-  max-width: 400px;           /* ログインと同じ幅に統一 */
+  max-width: 600px;           /* ログインと同じ幅に統一 */
   margin: 60px auto;          
   text-align: left;           /* ラベルと入力欄の位置を揃える */
   padding: 10px 0;
@@ -39,13 +39,13 @@
 /* ボタン */
 .signup-form button {
   display: block;
-  width: 80%;
+  width: 50%;
   padding: 14px 20px;
   margin: 20px auto 0;
   background-color: #eeb61a;
   color: black;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 35px;
   border: none;
   border-radius: 10px;
   cursor: pointer;

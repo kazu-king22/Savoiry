@@ -1,7 +1,7 @@
 /* ログインフォーム全体 */
 .login-form {
   width: 90%;                /* 画面幅に追従 */
-  max-width: 400px;
+  max-width: 600px;
   margin: 60px auto;
   text-align: left;
   padding: 10px 0;
@@ -38,13 +38,13 @@
 /* ボタン */
 .login-form button {
   display: block;
-  width: 80%;
+  width: 50%;
   padding: 14px 20px;
   margin: 20px auto 0;
   background-color: #eeb61a;
   color: black;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 35px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
