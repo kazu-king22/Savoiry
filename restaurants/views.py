@@ -163,6 +163,10 @@ class RestaurantSearchView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
+
+        if self.request.session.pop("just_signed_up", False):
+            messages.success(self.request, "login_first")
+
         context["want_count"] = Restaurant.objects.filter(user=user, status="want").count()
         context["went_count"] = Restaurant.objects.filter(user=user, status="went").count()
         return context
@@ -319,7 +323,7 @@ def visit_chart_monthly(request):
 
     if not request.user.is_authenticated:
         fig, ax = plt.subplots(figsize=(6, 3))
-        ax.text(0.5, 0.5, "ログインが必要です", fontsize=14, ha="center", va="center")
+        ax.text(0.5, 0.5, "ログインが必要です", fontsize=40, ha="center", va="center")
         ax.axis("off")
         buf = io.BytesIO()
         fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
@@ -354,13 +358,13 @@ def visit_chart_monthly(request):
     x_positions = range(len(months))
     bars = ax.bar(x_positions, counts, color="#5a8dee", width=0.6)
 
-    ax.set_title("月別訪問数", fontsize=16, fontweight="bold")
+    ax.set_title("月別訪問数", fontsize=30, fontweight="bold")
 
-    ax.tick_params(axis='x', labelsize=16, width=1.2)
-    ax.tick_params(axis='y', labelsize=16, width=1.2)
+    ax.tick_params(axis='x', labelsize=30, width=1.2)
+    ax.tick_params(axis='y', labelsize=30, width=1.2)
 
     ax.set_xticks(x_positions)
-    ax.set_xticklabels(months, fontsize=14, fontweight="bold")
+    ax.set_xticklabels(months, fontsize=30, fontweight="bold")
 
     ax.set_ylim(0, 20)
     ax.set_yticks(range(0, 21, 5))
@@ -377,7 +381,7 @@ def visit_chart_monthly(request):
             f"{int(height)}",
             ha="center",
             va="bottom",
-            fontsize=16,
+            fontsize=30,
             fontweight="bold",
             color="#333"
         )
@@ -443,18 +447,17 @@ def visit_chart_genre(request):
 
     fig, ax = plt.subplots(figsize=(5, 3))
     bars = ax.barh(genres, counts, color="#4a6cf7", alpha=0.85, height=0.5)
-
-
+    
     ax.set_title("")
-    fig.text(0, 0.95, "ジャンル別訪問数", fontsize=14, fontweight="bold", ha="left", va="center")
-
-    ax.tick_params(axis='y', labelsize=12, length=0)
+    fig.text(0, 0.95, "ジャンル別訪問数", fontsize=19, fontweight="bold", ha="left", va="center")
+    
+    ax.tick_params(axis='y', labelsize=16, length=0)
     ax.tick_params(axis='x', bottom=False, labelbottom=False)
     ax.invert_yaxis()
 
     for i, bar in enumerate(bars):
         ax.text(bar.get_width() + 0.05, bar.get_y() + bar.get_height() / 2,
-                str(counts[i]), va='center', fontsize=12, fontweight="bold", color="#333")
+                str(counts[i]), va='center', fontsize=20, fontweight="bold", color="#333")
 
     ax.set_xlabel("")
     ax.set_ylabel("")

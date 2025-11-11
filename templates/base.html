@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     {% block extra_css %}{% endblock %}
@@ -108,10 +109,10 @@ const map = {
     action: () => document.querySelector(".modal-overlay").remove(),
   },
   login_first: {
-    l1: "Savoiryへようこそ！！",
+    l1: "Savoiryへようこそ！！<br>アカウント登録が完了しました。",
     l2: "✓ 気になるお店を登録する<br>✓ 実際にお店を訪問する<br>✓ 行った感想を記録する",
     buttonText: "気になるお店を登録する",
-    action: () => window.location.href = "/savoiry/restaurants/add/",
+    action: () => window.location.href = "/savoiry/restaurants/search/",
   },
   restaurant_added: {
     l1: "✓ お店を登録しました！",
@@ -131,6 +132,31 @@ if (window.__sv_messages) {
   }
 }
 </script>
+
+{% if messages %}
+<div id="toast-container"></div>
+<script>
+  const toastContainer = document.getElementById("toast-container");
+
+  {% for message in messages %}
+    const msg = "{{ message|escapejs }}";
+    if (!["login_first", "email_changed", "password_changed", "restaurant_added"].includes(msg)) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = msg;
+      toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add("show");
+      }, 100);
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  {% endfor %}
+</script>
+{% endif %}
+
 
   </body>
 </html>

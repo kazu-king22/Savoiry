@@ -9,7 +9,7 @@ from restaurants.models import Visit
 from django.db.models import Avg
 from django.shortcuts import render
 from django.views.generic import UpdateView, View
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.shortcuts import redirect
 
@@ -20,17 +20,28 @@ class SignUpView(CreateView):
     model = User
     form_class = SignUpForm
     template_name = "accounts/signup.html"
-    success_url = reverse_lazy('accounts:login')  
+    success_url = reverse_lazy("restaurants:restaurant_search")
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.object
+        auth.login(self.request, user)
+
+        self.request.session["just_signed_up"] = True
+
+        return redirect("restaurants:restaurant_search")
+
+    def form_invalid(self, form):
+        messages.error(self.request, "アカウント登録に失敗しました。")
+        return super().form_invalid(form)
 
 class CustomLoginView(LoginView):
     form_class = EmailLoginForm
     template_name = "accounts/login.html"
 
     def get_success_url(self):
-        messages.success(self.request, "login_first")
+        messages.success(self.request, "ログインしました。")
         return reverse_lazy("restaurants:restaurant_search")
-
 
 class CustomLogoutView(LogoutView):
     template_name = "accounts/logout.html"

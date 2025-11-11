@@ -13,6 +13,8 @@
 
 .register-container h2 {
     color: white;
+    font-size: 45px;
+    white-space: nowrap;
 
 }
 
@@ -20,7 +22,8 @@
   display: block;
   margin-bottom: 5px;
   color: white;
-  font-size: 18px;
+  font-size: 35px;
+  
 }
 
 .register-container input {
@@ -29,6 +32,7 @@
     margin: 1px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 30px;
 }
 
 .register-container select{
@@ -48,6 +52,7 @@
   cursor: pointer;
   font-weight: bold;
   margin-top: 15px;
+  font-size: 30px;
 }
 
 #add-tag:hover {
@@ -57,14 +62,14 @@
 .register-container button {
   display: block;
   margin: 25px auto;         
-  padding: 8px 40px;
+  padding: 8px 70px;
   background-color: #eeb61a; 
   color: black;
   font-weight: bold;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 35px;
 }
 .register-container button:hover {
     background-color: #eeb61a;
@@ -78,3 +83,16 @@
     text-align: center;
 }
 
+/* 休業日セレクトボックス */
+.register-container select[name="closed_day"],
+.register-container select[name="holiday"] {
+  width: 100%;             
+  padding: 18px 20px;      
+  border: 1px solid #ccc;
+  border-radius: 10px;     
+  font-size: 38px;         
+  background-color: #fff;  
+  color: #000;             
+  box-sizing: border-box;  
+  margin-bottom: 15px;     
+}

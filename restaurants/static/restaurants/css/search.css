@@ -8,9 +8,9 @@
 }
 
 .status-box {
-  width: 300px ;
-  height: 100px;
-  font-size: 18px;
+  width: 500px ;
+  height: 250px;
+  font-size: 40px;
   color: #000 !important;
   font-weight: bold;
   background: #fff;
@@ -37,6 +37,7 @@
 /* ログイン見出しだけ白に */
 .search-form h2 {
     color: white;
+    font-size: 50px;
 
 }
 
@@ -44,7 +45,7 @@
   display: block;
   margin-bottom: -15px;
   color: white;
-  font-size: 18px;
+  font-size: 35px;
 }
 
 
@@ -55,6 +56,7 @@
     margin: 1px -6px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 30px;
 }
 
 /* ラジオボタン横並び */
@@ -69,15 +71,15 @@
 /* ボタン */
 .search-form button {
   display: block;
-  margin: 15px auto;         
-  padding: 8px 40px;
+  margin: 25px auto;         
+  padding: 8px 70px;
   background-color: #eeb61a; 
   color: black;
   font-weight: bold;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 35px;
 }
 .search-form button:hover {
     background-color: #eeb61a;

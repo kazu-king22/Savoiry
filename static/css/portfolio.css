@@ -3,7 +3,24 @@
 }
 
 .link-button{
-    margin-top: 20px;
+   display: inline-block;
+   margin-top: 20px;
+  background-color: #244272;
+  color: #eeb61a;
+  font-weight: bold;
+  padding: 18px 32px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 17px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.link-button:hover {
+  background-color: #eeb61a;
+  color: #244272;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
 .screenshot{

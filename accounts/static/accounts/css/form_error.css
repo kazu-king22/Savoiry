@@ -1,0 +1,44 @@
+.error-message-global,
+.error-banner {
+   background-color: #dc2626;  /* 赤背景 */
+  color: #fff;                /* 白文字 */
+  padding: 25px 30px;         /* 内側の余白を少し広げる */
+  border-radius: 8px;         /* 角を少し丸く */
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.error-message,
+.error-msg {
+  display: block;             /* ✅ 横幅いっぱいに */
+  background-color: #dc2626;
+  color: #fff;
+  padding: 8px 12px;          /* 内側の余白少し増やす */
+  border-radius: 6px;
+  font-size: 30px;
+  margin-top: 10px;
+  text-align: left;           /* 左揃え（自然に見える） */
+  width: 100%;                /* 入力欄と同じ幅に */
+  box-sizing: border-box;     /* padding含めて幅を計算 */
+}
+
+
+.errorlist {
+  list-style: none;
+  background-color: #dc2626;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 15px;
+  margin: 6px 0;
+  font-size: 13px;
+}
+
+
+input:invalid,
+input.error {
+  border: 2px solid #dc2626 !important;
+  outline: none;
+}
+

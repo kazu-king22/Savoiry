@@ -1,0 +1,86 @@
+/* 全フォーム要素 */
+input, button, select, textarea {
+  font-size: 17px;            /* テキスト大きく */
+  padding: 12px 14px;         /* タップしやすく */
+  border-radius: 8px;         /* 丸み */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* フォーカス時 */
+input:focus, select:focus, textarea:focus {
+  border-color: #eeb61a;
+  outline: none;
+  box-shadow: 0 0 6px rgba(238, 182, 26, 0.4);
+}
+
+/* ラベル */
+label {
+  font-size: 16px;
+  color: white;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* ボタン */
+button {
+  font-size: 17px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  background-color: #eeb61a;
+  color: #244272;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #f2c847;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+
+/* 各フォーム要素の間隔 */
+.form-wrapper > div,
+.login-form p,
+.signup-form p {
+  margin-bottom: 16px;
+}
+
+/* フォームレイアウト */
+.account-container,
+.signup-form,
+.login-form,
+.restaurant-form,
+.search-form {
+  width: 90%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* スマホ表示時の調整 */
+@media (max-width: 480px) {
+  input, button {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+}
+
+/* 休業日セレクトボックスだけ幅を狭く */
+/* 休業日だけ幅を狭く（複数パターンに対応） */
+select#id_closed_day,
+select#id_holiday,
+select[name="closed_day"],
+select[name="holiday"] {
+  width: 150%;          /* ← 少し広めに変更（見やすく操作しやすい） */
+  max-width: 300px;    /* PCでも狭すぎないよう調整 */
+  margin: 0 auto;
+  display: block;
+  font-size: 16px;     /* 文字サイズも上げると良い */
+  padding: 10px 12px;  /* タップしやすく */
+}
