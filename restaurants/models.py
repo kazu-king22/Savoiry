@@ -48,12 +48,13 @@ class Restaurant(models.Model):
         ('金', '金曜日'),
         ('土', '土曜日'),
         ('日', '日曜日'),
-        ('不定', '不定休'),
+        ('祝日', '祝日'),
+        ('年中無休', '年中無休'),
+        ('不定休', '不定休'),
     ]
     
     holiday = models.CharField(
-        max_length=3,
-        choices=DAY_CHOICES,
+        max_length=50,
         blank=True,
         null=True,
         verbose_name="休業日"

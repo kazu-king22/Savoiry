@@ -37,3 +37,10 @@ form {
   text-decoration: underline;
   font-size: 14px;
 }
+
+.cancel-link {
+  display: inline-block;
+  color: black;
+  text-decoration: underline;
+  font-size: 30px;
+}

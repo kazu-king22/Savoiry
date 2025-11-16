@@ -39,9 +39,23 @@
       </p>
 
       <p>
-        <label>休業日</label><br>
-        <input type="text" name="closed_day" value="{{ request.GET.closed_day }}">
-      </p>
+  <label>休業日</label><br>
+  <select name="holiday" multiple>
+    <option value="月" {% if "月" in request.GET.getlist.holiday %}selected{% endif %}>月曜日</option>
+    <option value="火" {% if "火" in request.GET.getlist.holiday %}selected{% endif %}>火曜日</option>
+    <option value="水" {% if "水" in request.GET.getlist.holiday %}selected{% endif %}>水曜日</option>
+    <option value="木" {% if "木" in request.GET.getlist.holiday %}selected{% endif %}>木曜日</option>
+    <option value="金" {% if "金" in request.GET.getlist.holiday %}selected{% endif %}>金曜日</option>
+    <option value="土" {% if "土" in request.GET.getlist.holiday %}selected{% endif %}>土曜日</option>
+    <option value="日" {% if "日" in request.GET.getlist.holiday %}selected{% endif %}>日曜日</option>
+    <option value="不定" {% if "不定" in request.GET.getlist.holiday %}selected{% endif %}>不定休</option>
+    <option value="年中無休" {% if "年中無休" in request.GET.getlist.holiday %}selected{% endif %}>年中無休</option>
+  </select>
+
+  <p id="selected-holidays" style="color:white; font-size:24px; margin-top:-10px; margin-bottom:10px;"></p>
+
+</p>
+
 
       <p>
         <label>タグ</label><br>
@@ -62,4 +76,35 @@
   </div>
 
 </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const select = document.querySelector('select[name="holiday"]');
+    const display = document.getElementById("selected-holidays");
+
+    if (select) {
+      select.addEventListener("change", function() {
+        const selected = Array.from(select.selectedOptions).map(opt => opt.text);
+        display.textContent = selected.length ? selected.join("、") : "";
+      });
+
+      const selected = Array.from(select.selectedOptions).map(opt => opt.text);
+      display.textContent = selected.length ? selected.join("、") : "";
+    }
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  // 検索画面のすべての input[type='text'] をサジェストON
+  document.querySelectorAll("input[type='text']").forEach(input => {
+    input.setAttribute("autocomplete", "on");
+  });
+
+});
+</script>
+
+
 {% endblock %}

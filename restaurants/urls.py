@@ -12,8 +12,9 @@ from .views import (
     RestaurantResetView,
     WentRestaurantDetailView,
     VisitUpdateView,
-    VisitRevisitView,
+    VisitRevisitStoreView,
     RestaurantSearchResultView,
+    #VisitRevisitView,
 )
 
 app_name = "restaurants"
@@ -32,7 +33,9 @@ urlpatterns = [
     path("<int:pk>/delete/", RestaurantDeleteView.as_view(), name="restaurant_delete"),
     path("<int:pk>/reset/", RestaurantResetView.as_view(), name="restaurant_reset"),
     path("visit/<int:pk>/edit/", VisitUpdateView.as_view(), name="visit_edit"),
-    path("visit/<int:pk>/revisit/", VisitRevisitView.as_view(), name="visit_revisit"),
+    path("restaurant/<int:pk>/revisit/",views.VisitRevisitStoreView.as_view(),name="visit_revisit_store",),
+    path("visit/<int:pk>/delete/", views.VisitDeleteView.as_view(), name="visit_delete"),
     path("visit_chart/genre/", views.visit_chart_genre, name="visit_chart_genre"),
+    # path("visit/<int:pk>/revisit/", VisitRevisitView.as_view(), name="visit_revisit"),
 ]
 

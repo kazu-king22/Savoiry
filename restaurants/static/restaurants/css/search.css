@@ -93,3 +93,25 @@
     text-decoration: underline;
     text-align: center;
 }
+
+input::placeholder {
+  font-size: 25px;
+  color: #aaa;
+}
+
+.search-page select[name="holiday"] {
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 30px;
+  background-color: #fff;
+  color: #000;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.search-page select[name="holiday"] option {
+  padding: 10px;
+  font-size: 28px;
+}

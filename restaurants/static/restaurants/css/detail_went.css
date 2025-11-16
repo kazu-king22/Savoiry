@@ -1,6 +1,6 @@
 .detail-container {
   width: 90%;
-  max-width: 360px;
+  max-width: 480px;
   margin: 0 auto 100px auto;
   color: black;
 }
@@ -104,11 +104,19 @@
   margin-top: 10px;
 }
 
+.restaurant-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
 .btn-edit,
-.btn-revisit {
-  flex: 1;
-  margin: 0 5px;
-  padding: 6px 0;
+.btn-revisit-store,
+.btn-delete,
+.btn-delete-visit
+ {
+  width: 150px;
+  padding: 10px 0;
   text-align: center;
   border: none;
   border-radius: 6px;
@@ -116,25 +124,21 @@
   cursor: pointer;
   color: white;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 20px;
+  display: inline-block;
 }
 
 .btn-edit {
   background: #777;
 }
 
-.btn-revisit {
+.btn-revisit-store {
   background: #2f3b6b;
 }
 
-.btn-delete {
+.btn-delete,
+.btn-delete-visit {
   background: #e74c3c;
-  margin: 0 3x;
-  padding: 5px 45px;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  margin-top: 10px;
 }
 
 
@@ -148,4 +152,11 @@
   font-weight: bold;
   text-decoration: underline;
   font-size: 25px;
+}
+
+.no-visit-message {
+  font-size: 27px;       /* 大きさを調整 */
+  color: #ccc;           /* 薄めのグレー。黒にしたい場合は #333 や black */
+  text-align: center;    /* 中央寄せ（必要なら） */
+  margin-top: 30px;      /* 上に余白（必要に応じて調整） */
 }

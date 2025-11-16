@@ -86,13 +86,25 @@
 /* 休業日セレクトボックス */
 .register-container select[name="closed_day"],
 .register-container select[name="holiday"] {
-  width: 100%;             
-  padding: 18px 20px;      
+  width: 100%;
+  padding: 18px 20px;
   border: 1px solid #ccc;
-  border-radius: 10px;     
-  font-size: 38px;         
-  background-color: #fff;  
-  color: #000;             
-  box-sizing: border-box;  
-  margin-bottom: 15px;     
+  border-radius: 10px;
+  font-size: 30px;
+  background-color: #fff;
+  color: #000;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+
+  /* ▼ 複数選択対応（ここを追加） */
+  min-height: 55px;   /* 1行だけのときでも潰れないように */
+  height: auto;       /* 中の項目数に応じて高さ可変 */
+  line-height: 1.2;   /* テキストの上下余白を自然に */
 }
+
+
+input::placeholder {
+  font-size: 25px;
+  color: #aaa;
+}
+

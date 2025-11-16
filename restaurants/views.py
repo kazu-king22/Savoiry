@@ -12,11 +12,13 @@ plt.rcParams["font.family"] = "MS Gothic"
 from django.http import HttpResponse
 import io
 from django.db.models.functions import TruncMonth
-from django.db.models import Count, Avg
+from django.db.models import Count, Avg, Q
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import matplotlib
+from django.http import HttpResponseForbidden
+
 matplotlib.rcParams['font.family'] = ['Noto Sans CJK JP', 'IPAexGothic', 'TakaoGothic', 'Meiryo', 'sans-serif']
 
 
@@ -175,7 +177,6 @@ class RestaurantSearchView(LoginRequiredMixin, TemplateView):
 
 class RestaurantSearchResultView(LoginRequiredMixin, ListView):
     model = Restaurant
-    template_name = "restaurants/restaurant_search_result.html"
     context_object_name = "restaurants"
 
     def get_queryset(self):
@@ -185,7 +186,7 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
         area = self.request.GET.get("area")
         companions = self.request.GET.get("companions")
         scene = self.request.GET.get("scene")
-        closed_day = self.request.GET.get("closed_day")
+        holidays = self.request.GET.getlist("holiday")
         tag = self.request.GET.get("tag")
         status = self.request.GET.get("status")
 
@@ -198,14 +199,27 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(companions__icontains=companions)
         if scene:
             queryset = queryset.filter(scene__icontains=scene)
-        if closed_day:
-            queryset = queryset.filter(closed_day__icontains=closed_day)
+        if holidays:
+            q_obj = Q()
+            for h in holidays:
+                q_obj |= Q(holiday__icontains=h)
+            queryset = queryset.filter(q_obj)
         if tag:
             queryset = queryset.filter(tags__name__icontains=tag)
         if status:
             queryset = queryset.filter(status=status)
 
         return queryset
+    
+    def get_template_names(self):
+        """status値に応じてテンプレートを切り替える"""
+        status = self.request.GET.get("status")
+        if status == "want":
+            return ["restaurants/restaurant_search_result_want.html"]
+        elif status == "went":  
+            return ["restaurants/restaurant_search_result_went.html"]
+
+        return ["restaurants/restaurant_search_result_want.html"]
 
 
 
@@ -244,19 +258,22 @@ class WentRestaurantDetailView(LoginRequiredMixin, View):
         })
 
 
-class VisitUpdateView(UpdateView):
+class VisitUpdateView(LoginRequiredMixin, UpdateView):
     model = Visit
     form_class = VisitForm
-    template_name = "restaurants/visit_form.html"
+    template_name = "restaurants/restaurant_visit_form.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["original_visit"] = self.object
+        context["restaurant"] = self.object.restaurant
+        context["is_edit"] = True
         return context
 
     def form_valid(self, form):
         response = super().form_valid(form)
 
+        # 画像追加
         images = self.request.FILES.getlist('images')
         for image in images:
             VisitImage.objects.create(visit=self.object, image=image)
@@ -264,45 +281,78 @@ class VisitUpdateView(UpdateView):
         return response
 
     def get_success_url(self):
-        restaurant = getattr(self.object, "restaurant", None)
-        if restaurant and restaurant.pk:
-            return reverse_lazy("restaurants:restaurant_detail_went", kwargs={"pk": restaurant.pk})
-        else:
-            return reverse_lazy("restaurants:restaurant_list_went")
+        restaurant = self.object.restaurant
+        return reverse_lazy(
+            "restaurants:restaurant_detail_went",
+            kwargs={"pk": restaurant.pk}
+        )
 
-
-
-
-class VisitRevisitView(View):
+class VisitRevisitStoreView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        original_visit = get_object_or_404(Visit, pk=pk)
+        restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
+
         form = VisitForm()
-        return render(request, "restaurants/visit_form.html", {
+
+        return render(request, "restaurants/restaurant_visit_form.html", {
+            "restaurant": restaurant,
             "form": form,
-            "original_visit": original_visit,
+            "is_edit": False,  
         })
 
     def post(self, request, pk):
-        original_visit = get_object_or_404(Visit, pk=pk)
-        restaurant = original_visit.restaurant
+        restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
         form = VisitForm(request.POST, request.FILES)
 
         if form.is_valid():
-            new_visit = form.save(commit=False)
-            new_visit.restaurant = restaurant
-            new_visit.save()
+            visit = form.save(commit=False)
+            visit.restaurant = restaurant
+            visit.save()
 
-
-            images = request.FILES.getlist("images")
+            # 画像
+            images = request.FILES.getlist('images')
             for image in images:
-                VisitImage.objects.create(visit=new_visit, image=image)
+                VisitImage.objects.create(visit=visit, image=image)
 
             return redirect("restaurants:restaurant_detail_went", pk=restaurant.pk)
-        else:
-            return render(request, "restaurants/visit_form.html", {
-                "form": form,
-                "original_visit": original_visit,
-            })
+
+        return render(request, "restaurants/restaurant_visit_form.html", {
+            "restaurant": restaurant,
+            "form": form,
+            "is_edit": False,
+        })
+
+
+
+# class VisitRevisitView(View):
+#     def get(self, request, pk):
+#         original_visit = get_object_or_404(Visit, pk=pk)
+#         form = VisitForm()
+#         return render(request, "restaurants/visit_form.html", {
+#             "form": form,
+#             "original_visit": original_visit,
+#         })
+
+#     def post(self, request, pk):
+#         original_visit = get_object_or_404(Visit, pk=pk)
+#         restaurant = original_visit.restaurant
+#         form = VisitForm(request.POST, request.FILES)
+
+#         if form.is_valid():
+#             new_visit = form.save(commit=False)
+#             new_visit.restaurant = restaurant
+#             new_visit.save()
+
+
+#             images = request.FILES.getlist("images")
+#             for image in images:
+#                 VisitImage.objects.create(visit=new_visit, image=image)
+
+#             return redirect("restaurants:restaurant_detail_went", pk=restaurant.pk)
+#         else:
+#             return render(request, "restaurants/visit_form.html", {
+#                 "form": form,
+#                 "original_visit": original_visit,
+#             })
 
 
 class TagCreateView(LoginRequiredMixin, CreateView):
@@ -310,6 +360,22 @@ class TagCreateView(LoginRequiredMixin, CreateView):
     fields = ['name', 'category']
     template_name = 'restaurants/restaurant_tag_form.html'
     success_url = reverse_lazy('restaurants:restaurant_list')
+
+
+class VisitDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        visit = get_object_or_404(Visit, pk=pk)
+
+        if visit.restaurant.user != request.user:
+            return HttpResponseForbidden()
+
+        restaurant_id = visit.restaurant.id
+        visit.delete()
+
+        messages.success(request, "訪問記録を削除しました")
+
+        return redirect("restaurants:restaurant_detail_went", restaurant_id)
+
 
 
 def visit_chart_monthly(request):

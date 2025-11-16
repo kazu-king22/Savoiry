@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+  <div class="detail-card">
+
+    <!-- 店舗情報 -->
+    <div class="restaurant-info">
+      <h2>{{ restaurant.store_name }}</h2>
+
+      {% if restaurant.url %}
+        {% if "instagram.com" in restaurant.url %}
+          <blockquote class="instagram-media"
+                      data-instgrm-permalink="{{ restaurant.url }}"
+                      data-instgrm-version="14"></blockquote>
+          <script async src="//www.instagram.com/embed.js"></script>
+        {% elif "tiktok.com" in restaurant.url %}
+          <blockquote class="tiktok-embed" cite="{{ restaurant.url }}">
+            <a href="{{ restaurant.url }}">TikTokを開く</a>
+          </blockquote>
+          <script async src="https://www.tiktok.com/embed.js"></script>
+        {% else %}
+          <a href="{{ restaurant.url }}" target="_blank">{{ restaurant.url }}</a>
+        {% endif %}
+      {% endif %}
+
+      <div class="restaurant-details">
+        <p class="line">
+          {% if restaurant.area %}{{ restaurant.area }}{% endif %}
+          {% if restaurant.genre %}　{{ restaurant.genre }}{% endif %}
+          {% if restaurant.scene %}　{{ restaurant.scene }}{% endif %}
+          {% if restaurant.companions %}　{{ restaurant.companions }}{% endif %}
+        </p>
+
+        {% if restaurant.tags.all %}
+          <p class="line">
+            {% for tag in restaurant.tags.all %}
+              {{ tag.name }}{% if not forloop.last %}　{% endif %}
+            {% endfor %}
+          </p>
+        {% endif %}
+
+        {% if restaurant.holiday %}
+          <p class="line">休業日　{{ restaurant.holiday }}</p>
+        {% endif %}
+      </div>
+
+      <a href="{% url 'restaurants:restaurant_list_want' %}" class="back-link">
+        ← 一覧へ戻る
+      </a>
+    </div>
+
+    <!-- 訪問フォーム -->
+    <div class="visit-form-section">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- 写真アップロード -->
+        <div class="photo-upload">
+          <label for="id_images" class="upload-label">＋</label>
+          <input type="file" name="images" id="id_images" multiple hidden>
+          <p class="upload-text">写真を追加<br>(1回の訪問につき5枚まで)</p>
+          <div id="image-count" class="image-count"></div>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const imageInput = document.getElementById('id_images');
+          const imageCount = document.getElementById('image-count');
+          imageInput.addEventListener('change', function() {
+            const count = this.files.length;
+            imageCount.textContent = count > 0 ? `${count}枚選択中` : '';
+          });
+        });
+        </script>
+
+        <!-- 訪問日 -->
+        <div class="visit-date-section">
+          <label for="id_date">訪問日</label>
+          <input type="date" name="date" id="id_date" class="visit-date"
+                 value="{% if is_edit %}{{ original_visit.date|date:'Y-m-d' }}{% endif %}">
+        </div>
+
+        <!-- コメント -->
+        <textarea name="comment" placeholder="感想・思い出を入力" class="comment-box">{% if is_edit and original_visit.comment %}{{ original_visit.comment }}{% endif %}</textarea>
+
+        </textarea>
+
+        </textarea>
+
+        <!-- 星評価 -->
+        <div class="rating">
+          <p>お気に入り度</p>
+          <div class="stars">
+            {% for i in "12345" %}
+              <span class="star {% if is_edit and original_visit.rating >= forloop.counter %}filled{% endif %}"
+                    data-value="{{ forloop.counter }}">★</span>
+            {% endfor %}
+          </div>
+
+          <input type="hidden" name="rating" id="rating-value"
+          value="{% if is_edit and original_visit.rating %}{{ original_visit.rating }}{% endif %}">
+
+        </div>
+
+        <!-- 気持ち評価 -->
+        <div class="feeling-select">
+          <label for="id_feeling">気持ち評価</label>
+          <select name="feeling" id="id_feeling">
+            <option value="">選択してください</option>
+            <option value="again" {% if is_edit and original_visit.feeling == 'again' %}selected{% endif %}>また行きたい</option>
+            <option value="recommend" {% if is_edit and original_visit.feeling == 'recommend' %}selected{% endif %}>おすすめしたい</option>
+            <option value="no" {% if is_edit and original_visit.feeling == 'no' %}selected{% endif %}>もう行かない</option>
+          </select>
+        </div>
+
+        <!-- =============================
+             ボタン切り替え部分（超重要）
+        ============================== -->
+        {% if is_edit %}
+          <!-- 編集時：グレーの「保存」 -->
+          <button type="submit" class="btn-edit">保存</button>
+
+          <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" 
+             class="cancel-link">
+            キャンセル
+          </a>
+
+        {% else %}
+          <!-- 新規 or 再訪：青の「行った」 -->
+          <button type="submit" class="btn-went">行った</button>
+          <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" 
+             class="cancel-link">
+            キャンセル
+          </a>
+
+        {% endif %}
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'restaurants/js/star_rating.js' %}"></script>
+{% endblock %}
+

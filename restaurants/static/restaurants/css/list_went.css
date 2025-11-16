@@ -24,6 +24,7 @@
   width: 95%;            /* ✅ 横幅を広く */
   max-width: 700px;
   transition: transform 0.2s ease;
+  padding-bottom: 50px;
 }
 
 .thumbnail {
@@ -65,10 +66,17 @@
 }
 
 .arrow {
- position: absolute;
-  right: 5%;
-  bottom: 180px;
+position: absolute;
+  right: 16px;
+  bottom: 16px;
   font-size: 50px;
-  color: black;
-  text-decoration: none;
+  color: #666;
+  pointer-events: none;  /* カード全体がクリック対象になるように */
 }
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+

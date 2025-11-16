@@ -27,7 +27,8 @@
   text-align: left;
   overflow: hidden;
   height: auto;                 /* ✅ 高さは中身に合わせる */
-  box-sizing: border-box;              /* ✅ 内側余白を少し確保 */
+  box-sizing: border-box; 
+   padding-bottom: 50px;             /* ✅ 内側余白を少し確保 */
 }
 
 .card-link {
@@ -58,11 +59,11 @@
 
 .arrow {
   position: absolute;
-  right: 4%;
-  bottom: 20px;
-  font-size: 40px;
-  color: black;
-  bottom: 130px;
+  right: 16px;
+  bottom: 16px;
+  font-size: 50px;
+  color: #666;
+  pointer-events: none;
 }
 
 .no-data {

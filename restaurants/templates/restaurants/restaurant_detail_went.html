@@ -14,12 +14,10 @@
       {% for visit in visits %}
         {% for image in visit.images.all %}
           <img src="{{ image.image.url }}" alt="訪問画像" class="visit-photo">
-        {% empty %}
+          {% empty %} 
           <p class="no-photo">写真はまだ登録されていません</p>
         {% endfor %}
       {% endfor %}
-    {% else %}
-      <p class="no-photo">まだ訪問履歴がありません</p>
     {% endif %}
   </div>
 
@@ -45,11 +43,25 @@
     {% if restaurant.holiday %}
       <p class="meta-line">休業日　{{ restaurant.holiday }}</p>
     {% endif %}
-    <!-- お店削除 -->
-  <form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}">
-  {% csrf_token %}
-  <button type="submit" class="btn-delete">削除</button>
-</form>
+    
+   <!-- 店の削除 ＋ 再訪 -->
+    <div class="restaurant-buttons">
+
+      <!-- 再訪（店単位） -->
+      <a href="{% url 'restaurants:visit_revisit_store' restaurant.pk %}" 
+         class="btn-revisit-store">再訪</a>
+
+      <!-- 店削除 -->
+      <form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}"
+            style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete"
+                onclick="return confirm('このお店を削除しますか？');">
+          削除
+        </button>
+      </form>
+
+    </div>
   </div>
 
   
@@ -63,30 +75,50 @@
       {% for visit in visits %}
         <div class="visit-card">
           <p class="meta-line">訪問日　{{ visit.date|date:"Y年 n月 j日" }}</p>
-          <p class="meta-line">評価　{{ visit.get_feeling_display }}</p>
+          <p class="meta-line">
+            評価　
+            {% if visit.feeling %}
+            {{ visit.get_feeling_display }}
+            {% else %}
+            なし
+            {% endif %}
+          </p>
 
-          <div class="stars">
-            {% for i in "12345" %}
-              {% if forloop.counter <= visit.rating %}
-                <span class="star filled">★</span>
-              {% else %}
-                <span class="star">★</span>
-              {% endif %}
-            {% endfor %}
-          </div>
+
+  <div class="stars">
+      {% with r=visit.rating|default:0 %}
+        {% for i in "12345" %}
+          {% if forloop.counter <= r %}
+            <span class="star filled">★</span>
+          {% else %}
+            <span class="star">★</span>
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+  </div>
+
 
           {% if visit.comment %}
             <p class="comment">{{ visit.comment }}</p>
           {% endif %}
 
           <div class="visit-buttons">
+
+            <!-- 編集 -->
             <a href="{% url 'restaurants:visit_edit' visit.pk %}" class="btn-edit">編集</a>
-            <a href="{% url 'restaurants:visit_revisit' visit.pk %}" class="btn-revisit">再訪</a>
+
+            <!-- 訪問削除 -->
+            <form method="post" action="{% url 'restaurants:visit_delete' visit.pk %}"
+                  style="display:inline;"
+                  onsubmit="return confirm('この訪問記録を削除しますか？');">
+              {% csrf_token %}
+              <button type="submit" class="btn-delete-visit">削除</button>
+            </form>
           </div>
         </div>
       {% endfor %}
     {% else %}
-      <p>まだ訪問履歴がありません。</p>
+      <p class="no-visit-message">まだ訪問履歴がありません</p>
     {% endif %}
   </div>
 

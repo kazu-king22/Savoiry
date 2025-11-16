@@ -122,6 +122,7 @@
   margin: -8px;
   font-size: 30px;
   margin-top: 10px;
+  vertical-align: top;
 }
 
 /* 星評価 */
@@ -179,18 +180,20 @@
 }
 
 .btn-went,
-.btn-delete {
+.btn-delete,
+.btn-edit {
   width: 48%;
   padding: 10px 0;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 35px;
   border-radius: 3px;
   border: 1px solid black;
   cursor: pointer;
 }
 
 /* 「行った」ボタン */
-.btn-went {
+.btn-went,
+.btn-edit {
   background-color: #eeb61a;
   color: black;
   margin-top: 30px;
@@ -227,4 +230,12 @@
 
 .back-link a:hover {
   opacity: 0.8;
+}
+
+.cancel-link {
+  display: block;
+  color: black;
+  text-decoration: underline;
+  font-size: 25px;
+   margin-top: 30px;
 }

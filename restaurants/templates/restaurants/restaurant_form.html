@@ -17,17 +17,63 @@
       <p><label for="id_companions">グループ</label>{{ form.companions }}</p>
       <p><label for="id_scene">シーン</label>{{ form.scene }}</p>
       <p><label for="id_closed_day">休業日</label>{{ form.holiday }}</p>
+      <p id="selected-holidays" style="color:white; font-size:24px; margin-top:-10px; margin-bottom:10px;"></p>
       
 
       <div id="tag-container">
-      <p><label>タグ</label><input type="text" name="tags" class="tag-input"></p>
-    </div>
-    <button type="button" id="add-tag">タグを追加</button>
+  <p>
+    <label>タグ</label>
+    <input type="text" name="tags" class="tag-input" placeholder="例：おしゃれ・個室など">
+  </p>
+</div>
+<button type="button" id="add-tag">タグを追加</button>
+
 
       <button type="submit">登録</button>
     </form>
   </div>
 
-<script src="{% static 'restaurants/js/add_tag.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
 
+  // ① 登録画面のすべての input[type="text"] にサジェストON
+  document.querySelectorAll("input[type='text']").forEach(input => {
+    input.setAttribute("autocomplete", "on");
+  });
+
+  // ② タグ追加ボタン処理
+  const addTagBtn = document.getElementById("add-tag");
+  const tagContainer = document.getElementById("tag-container");
+
+  addTagBtn.addEventListener("click", function() {
+    const lastInput = document.querySelector(".tag-input:last-of-type");
+    const newInput = lastInput.cloneNode(true);  // 入力欄を複製
+    newInput.value = "";                         // 初期化
+    newInput.setAttribute("autocomplete", "on"); // サジェストON
+    tagContainer.appendChild(newInput);          // HTMLに追加
+  });
+
+});
+</script>
+
+
+ <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const select = document.querySelector('select[name="holiday"]');
+      const display = document.getElementById("selected-holidays");
+
+      if (select) {
+        // 選択が変わったら実行
+        select.addEventListener("change", function() {
+          const selected = Array.from(select.selectedOptions).map(opt => opt.text);
+          display.textContent = selected.length ? selected.join("、") : "";
+        });
+
+        // 編集時など初期値がある場合
+        const selected = Array.from(select.selectedOptions).map(opt => opt.text);
+        display.textContent = selected.length ? selected.join("、") : "";
+      }
+    });
+  </script>
 {% endblock %}
+

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/list_want.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+  <h2>検索結果（気になる）</h2>
+
+  {% if restaurants %}
+    {% for restaurant in restaurants %}
+      <div class="restaurant-card">
+        <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" class="card-link">
+          <div class="card-content">
+            <h3>{{ restaurant.store_name }}</h3>
+            <p class="meta-line">
+              {% if restaurant.area %}{{ restaurant.area }}　{% endif %}
+              {% if restaurant.genre %}{{ restaurant.genre }}　{% endif %}
+              {% if restaurant.scene %}{{ restaurant.scene }}　{% endif %}
+              {% if restaurant.companions %}{{ restaurant.companions }}{% endif %}
+            </p>
+
+            {% if restaurant.tags.exists %}
+              <p class="meta-line">
+                {% for tag in restaurant.tags.all %}
+                  {{ tag.name }}{% if not forloop.last %}　{% endif %}
+                {% endfor %}
+              </p>
+            {% endif %}
+
+            <p class="meta-line">休業日：{{ restaurant.holiday|default:"未設定" }}</p>
+          </div>
+          <span class="arrow">＞</span>
+        </a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="no-data">該当するお店は見つかりませんでした。</p>
+  {% endif %}
+</div>
+{% endblock %}
