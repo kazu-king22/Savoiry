@@ -24,13 +24,13 @@
 
 .modal-title {
   font-weight: bold;
-  font-size: 38px;             /* ← かなり大きめタイトル */
+  font-size: 40px;             /* ← かなり大きめタイトル */
   margin-bottom: 30px;
   color: #244272;
 }
 
 .modal-message {
-  font-size: 26px;             /* ← 通常文字も拡大 */
+  font-size: 33px;             /* ← 通常文字も拡大 */
   color: #333;
   margin-bottom: 40px;
   line-height: 1.8;

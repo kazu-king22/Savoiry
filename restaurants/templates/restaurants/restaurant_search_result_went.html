@@ -12,39 +12,47 @@
   {% if restaurants %}
     {% for restaurant in restaurants %}
       {% with visit=restaurant.visits.last %}
-        <div class="restaurant-card">
-          {% if visit and visit.images.first %}
-            <img src="{{ visit.images.first.image.url }}" alt="{{ restaurant.store_name }}" class="thumbnail">
-          {% endif %}
 
-          <div class="info">
-            <h3>{{ restaurant.store_name }}</h3>
+        <!-- ★ カード全体クリックで詳細へ -->
+        <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" class="card-link">
 
-            {% if visit %}
-              {% if visit.date %}
-                <p class="date">{{ visit.date|date:"Y年n月j日" }}</p>
-              {% endif %}
+          <div class="restaurant-card">
 
-              {% if visit.rating %}
-                <p class="stars">
-                  {% for i in "12345" %}
-                    {% if forloop.counter <= visit.rating %}
-                      ★
-                    {% else %}
-                      ☆
-                    {% endif %}
-                  {% endfor %}
-                </p>
-              {% endif %}
-
-              {% if visit.comment %}
-                <p class="comment">{{ visit.comment|truncatechars:30 }}</p>
-              {% endif %}
+            {% if visit and visit.images.first %}
+              <img src="{{ visit.images.first.image.url }}" 
+                   alt="{{ restaurant.store_name }}" 
+                   class="thumbnail">
             {% endif %}
 
-            <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" class="arrow">＞</a>
+            <div class="info">
+              <h3>{{ restaurant.store_name }}</h3>
+
+              {% if visit %}
+                {% if visit.date %}
+                  <p class="date">{{ visit.date|date:"Y年n月j日" }}</p>
+                {% endif %}
+
+                {% if visit.rating %}
+                  <p class="stars">
+                    {% for i in "12345" %}
+                      {% if forloop.counter <= visit.rating %}
+                        ★
+                      {% else %}
+                        ☆
+                      {% endif %}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+
+                {% if visit.comment %}
+                  <p class="comment">{{ visit.comment|truncatechars:30 }}</p>
+                {% endif %}
+              {% endif %}
+            </div>
+            <span class="arrow">＞</span>
           </div>
-        </div>
+        </a>
+
       {% endwith %}
     {% endfor %}
   {% else %}
@@ -52,3 +60,4 @@
   {% endif %}
 </div>
 {% endblock %}
+

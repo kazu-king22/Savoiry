@@ -239,3 +239,34 @@
   font-size: 25px;
    margin-top: 30px;
 }
+
+.date-wrapper {
+  position: relative;
+}
+
+/* 訪問日の入力欄のデザイン（気持ち評価と同じ雰囲気に） */
+.date-wrapper input[type="date"] {
+  width: 95%;
+  padding: 12px;
+  background: #f0f0f0;  /* ← 気持ち評価と同じ系統 */
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 30px;
+  color: #333;
+}
+
+/* 擬似プレースホルダー */
+.date-placeholder {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+  font-size: 27px;
+}
+
+/* 入力されたら placeholder を隠す */
+.date-wrapper input[type="date"]:valid + .date-placeholder {
+  display: none;
+}

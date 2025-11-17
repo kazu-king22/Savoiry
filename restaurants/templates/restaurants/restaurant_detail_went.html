@@ -44,24 +44,25 @@
       <p class="meta-line">休業日　{{ restaurant.holiday }}</p>
     {% endif %}
     
-   <!-- 店の削除 ＋ 再訪 -->
-    <div class="restaurant-buttons">
+  <!-- 店の削除 ＋ 再訪 -->
+<div class="restaurant-buttons">
 
-      <!-- 再訪（店単位） -->
-      <a href="{% url 'restaurants:visit_revisit_store' restaurant.pk %}" 
-         class="btn-revisit-store">再訪</a>
+  <!-- 再訪（店単位） -->
+  <form action="{% url 'restaurants:visit_revisit_store' restaurant.pk %}" method="get" class="action-form">
+    <button type="submit" class="btn-revisit-store">再訪</button>
+  </form>
 
-      <!-- 店削除 -->
-      <form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}"
-            style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn-delete"
-                onclick="return confirm('このお店を削除しますか？');">
-          削除
-        </button>
-      </form>
+  <!-- 店削除 -->
+  <form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}" class="action-form">
+    {% csrf_token %}
+    <button type="submit" class="btn-delete"
+            onclick="return confirm('このお店を気になるに戻しますか？');">
+      削除
+    </button>
+  </form>
 
-    </div>
+</div>
+
   </div>
 
   
@@ -97,24 +98,27 @@
       {% endwith %}
   </div>
 
-
           {% if visit.comment %}
             <p class="comment">{{ visit.comment }}</p>
           {% endif %}
 
-          <div class="visit-buttons">
+         <div class="visit-buttons">
 
-            <!-- 編集 -->
-            <a href="{% url 'restaurants:visit_edit' visit.pk %}" class="btn-edit">編集</a>
+  <!-- 編集 -->
+  <form action="{% url 'restaurants:visit_edit' visit.pk %}" method="get" class="visit-action-form">
+    <button class="btn-edit">編集</button>
+  </form>
 
-            <!-- 訪問削除 -->
-            <form method="post" action="{% url 'restaurants:visit_delete' visit.pk %}"
-                  style="display:inline;"
-                  onsubmit="return confirm('この訪問記録を削除しますか？');">
-              {% csrf_token %}
-              <button type="submit" class="btn-delete-visit">削除</button>
-            </form>
-          </div>
+  <!-- 訪問削除 -->
+  <form method="post" action="{% url 'restaurants:visit_delete' visit.pk %}" 
+        class="visit-action-form"
+        onsubmit="return confirm('この訪問記録を削除しますか？');">
+    {% csrf_token %}
+    <button class="btn-delete-visit">削除</button>
+  </form>
+
+</div>
+
         </div>
       {% endfor %}
     {% else %}

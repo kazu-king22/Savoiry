@@ -80,8 +80,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="visit-date-section">
   <label for="id_date">訪問日</label>
-  <input type="date" name="date" id="id_date" class="visit-date">
+
+  <div class="date-wrapper">
+    <input type="date" name="date" id="id_date" class="visit-date" required>
+    <span class="date-placeholder">選択してください</span>
+  </div>
 </div>
+
 
 
       <textarea name="comment" placeholder="感想・思い出を入力" class="comment-box"></textarea>
@@ -113,12 +118,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <form method="post" action="{% url 'restaurants:restaurant_delete' restaurant.pk %}">
   {% csrf_token %}
-  <button type="submit" class="btn-delete">削除</button>
+  <button type="submit" class="btn-delete"
+            onclick="return confirm('このお店を削除しますか？');">
+      削除
 </form>
-      
-
-      <p class="note">※このボタンを押すと、<br>「気になる一覧」から削除されます。</p>
   </div>
+  <p class="note">※このボタンを押すと、<br>「気になる一覧」から削除されます。</p>
  </div>
 </div>
 

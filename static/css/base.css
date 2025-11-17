@@ -103,21 +103,21 @@ body {
 
 .toast {
   position: fixed;
-  top: 120px;
+  top: 190px;
   left: 50%;
-  transform: translate(-50%, -20px);
+  transform: translate(-50%, -30px);
   background: white; 
   color: #244272;
-  padding: 18px 28px; 
+  padding: 23px 45px; 
   border-radius: 12px;
   opacity: 0;
   transition: all 0.4s ease;
   z-index: 9999;
-  font-size: 20px;
+  font-size: 35px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  max-width: 90%;
-  width: fit-content;
+  width: 80%;         /* ← 今よりだいぶ広い */
+  max-width: 600px;   
   word-break: break-word;
 }
 

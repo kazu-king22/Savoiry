@@ -14,6 +14,7 @@
      alt="ジャンル別訪問グラフ"
      style="width:100%; max-width:500px; border-radius:8px; background:white; border:1px solid #ccc; padding:8px;">
 
+
   <h3>月別訪問数</h3>
   <img src="/savoiry/restaurants/visit_chart/monthly/" 
      alt="月別訪問グラフ"
@@ -34,7 +35,7 @@
       </div>
     </div>
   {% empty %}
-    <p style="color: gray;">データがありません</p>
+    <p class="no-data2">データがありません</p>
   {% endfor %}
 </div>
 
@@ -56,7 +57,8 @@
 
 <form action="{% url 'accounts:logout' %}" method="post" class="logout-item-form">
   {% csrf_token %}
-  <button type="submit" class="logout-item">
+  <button type="submit" class="logout-item"
+            onclick="return confirm('ログアウトしますか？');">
     <div class="left">
       <img src="{% static 'icons/logout.png' %}" alt="door icon" class="icon">
       <span class="text">ログアウト</span>
@@ -66,3 +68,5 @@
 
 
 {% endblock %}
+<button type="submit" class="logout-item"
+            onclick="return confirm('ログアウトしますか？');">

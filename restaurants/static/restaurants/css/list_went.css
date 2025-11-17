@@ -80,3 +80,8 @@ position: absolute;
   display: block;
 }
 
+.no-data {
+  color: #ddd;
+  margin-top: 40px;
+  font-size: 40px;
+}

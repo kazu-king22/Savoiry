@@ -80,9 +80,10 @@ class EmailChangeView(LoginRequiredMixin, View):
 
             messages.success(request, "email_changed")
             return redirect("accounts:mypage")
-
         messages.error(request, "メールアドレス変更に失敗しました")
         return render(request, self.template_name, {"form": form})
+
+
 
 
 class PasswordChangeViewWithModal(PasswordChangeView):

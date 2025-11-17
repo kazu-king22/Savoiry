@@ -1,9 +1,14 @@
+/* ==========================
+   ページ全体
+========================== */
 .detail-container {
-  width: 90%;
-  max-width: 480px;
-  margin: 0 auto 100px auto;
+  width: 95%;
+  max-width: 650px;   /* iPhone画面幅に最適化 */
+  margin: 0 auto 120px auto;
   color: black;
+  font-size: 20px;    /* 全体を底上げ */
 }
+
 
 /* ==========================
    画像ギャラリー
@@ -11,73 +16,65 @@
 .photo-gallery {
   display: flex;
   overflow-x: auto;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
 .visit-photo {
-  width: 100%;
-  max-width: 110px;
-  height: 80px;
+  width: 300px;
+  height: 200px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
+
 /* ==========================
-   店舗情報
+   店舗情報カード
 ========================== */
 .restaurant-info {
   background: white;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  margin-bottom: 15px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  margin-bottom: 20px;
 }
 
 .restaurant-info h2 {
-  font-size: 18px;
+  font-size: 45px;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .meta-line {
-  font-size: 14px;
+  font-size: 35px;
+  margin: 5px 0;
   color: #333;
-  margin: 3px 0;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 8px 0;
 }
 
 /* ==========================
-   訪問履歴カード（🆕 追加）
+   訪問履歴
 ========================== */
 .visit-history {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 18px;
 }
 
 .visit-card {
   background: white;
-  border-radius: 10px;
-  padding: 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .visit-card .meta-line {
-  font-size: 14px;
-  margin: 3px 0;
+  font-size: 35px;
 }
 
 /* 星評価 */
 .stars {
-  font-size: 20px;
-  color: #eeb61a;
-  margin: 5px 0 10px 0;
+  font-size: 35px;
+  margin: 10px 0;
 }
 
 .star {
@@ -89,74 +86,111 @@
 
 /* コメント */
 .comment {
-  font-size: 14px;
-  color: #444;
-  line-height: 1.6;
-  margin: 10px 0;
+  font-size: 35px;
+  margin: 12px 0;
+  line-height: 1.7;
 }
 
 /* ==========================
-   ボタンエリア
+   その他
 ========================== */
-.visit-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+.no-visit-message {
+  font-size: 35px;
+  color: #ccc;
+  text-align: center;
+  margin-top: 30px;
 }
 
+.back-link {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.back-link a {
+  font-size: 40px;
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.no-photo{
+  font-size: 35px;
+  color: #ccc;
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* ==========================
+   再訪・削除ボタン（統一）
+========================== */
 .restaurant-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-.btn-edit,
-.btn-revisit-store,
-.btn-delete,
-.btn-delete-visit
- {
-  width: 150px;
-  padding: 10px 0;
+/* form を 48% に揃える */
+.restaurant-buttons .action-form {
+  width: 48%;
+}
+
+/* ボタンのスタイル共通 */
+.restaurant-buttons button {
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-size: 35px;
+  font-weight: bold;
   text-align: center;
   border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
   color: white;
-  text-decoration: none;
-  font-size: 20px;
-  display: inline-block;
 }
 
-.btn-edit {
-  background: #777;
-}
-
+/* 再訪ボタン */
 .btn-revisit-store {
   background: #2f3b6b;
 }
 
-.btn-delete,
-.btn-delete-visit {
+/* 削除ボタン */
+.btn-delete {
   background: #e74c3c;
 }
 
+/* ==========================
+   訪問記録：編集・削除ボタン統一
+========================== */
 
-.back-link {
-  text-align: center;
-  margin-top: 25px;
+.visit-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-.back-link a {
-  color: white;
+/* 2等分 */
+.visit-buttons .visit-action-form {
+  width: 48%;
+}
+
+/* ボタン共通デザイン */
+.visit-buttons button {
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 8px;
+  font-size: 35px;
   font-weight: bold;
-  text-decoration: underline;
-  font-size: 25px;
+  text-align: center;
+  border: none;
+  color: white;
 }
 
-.no-visit-message {
-  font-size: 27px;       /* 大きさを調整 */
-  color: #ccc;           /* 薄めのグレー。黒にしたい場合は #333 や black */
-  text-align: center;    /* 中央寄せ（必要なら） */
-  margin-top: 30px;      /* 上に余白（必要に応じて調整） */
+/* 編集ボタン */
+.btn-edit {
+  background: #777;
+}
+
+/* 訪問削除ボタン */
+.btn-delete-visit {
+  background: #e74c3c;
 }

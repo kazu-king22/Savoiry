@@ -23,6 +23,15 @@
   border-bottom: none;
 }
 
+.no-data1,
+.no-data2 {
+  font-size: 29px;        /* 文字の大きさ */
+  color: black;         /* 黄色にする */
+  text-align: center;
+  margin: 20px 0;
+}
+
+
 .rank {
   font-weight: bold;
   width: 80px;         /* ✅ No.表記を見やすく */

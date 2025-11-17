@@ -37,7 +37,7 @@ class SignUpForm(UserCreationForm):
         required=True,
         widget=forms.PasswordInput,
         error_messages={
-            "required": "パスワード再入力をしてください。",
+            "required": "パスワード(確認)を入力してください。",
         },
     )
 

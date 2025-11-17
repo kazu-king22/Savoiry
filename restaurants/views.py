@@ -45,7 +45,7 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
                 self.object.tags.add(tag_obj)
 
         messages.success(self.request, "restaurant_added")
-        return redirect("restaurants:restaurant_add")
+        return redirect("restaurants:restaurant_list_want")
 
 
 class VisitCreateView(LoginRequiredMixin, CreateView):
@@ -122,8 +122,9 @@ class RestaurantDetailView(LoginRequiredMixin, View):
             if restaurant.status == 'want':
                 restaurant.status = 'went'
                 restaurant.save()
-
-            return redirect("restaurants:restaurant_list_want")
+            
+            messages.success(request, "went_added")
+            return redirect("restaurants:restaurant_list_went")
 
 
         visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
@@ -409,7 +410,7 @@ def visit_chart_monthly(request):
 
     if not visits_by_month:
         fig, ax = plt.subplots(figsize=(6, 3))
-        ax.text(0.5, 0.5, "データがありません", fontsize=14, ha="center", va="center")
+        ax.text(0.5, 0.5, "データがありません", fontsize=20, ha="center", va="center")
         ax.axis("off")
         buf = io.BytesIO()
         fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
@@ -507,6 +508,23 @@ def visit_chart_genre(request):
         .annotate(count=Count("id"))
         .order_by("-count")
     )
+
+    if not genre_counts.exists():
+        fig, ax = plt.subplots(figsize=(5, 3))
+        ax.text(
+            0.5, 0.5,
+            "データがありません",
+            ha="center", va="center",
+            fontsize=16, color="black"
+            
+        )
+        ax.set_axis_off()
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white", dpi=150)
+        plt.close("all")
+        buf.seek(0)
+        return HttpResponse(buf.getvalue(), content_type="image/png")
 
     genres = [g["restaurant__genre"] or "未分類" for g in genre_counts]
     counts = [g["count"] for g in genre_counts]
