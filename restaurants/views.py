@@ -3,7 +3,7 @@ from django.views.generic import CreateView, ListView, DeleteView, UpdateView, T
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Restaurant, Visit, VisitImage, Tag
+from .models import Restaurant, Visit, VisitImage, Tag, SuggestWord
 from .forms import RestaurantForm, VisitForm
 import matplotlib
 matplotlib.use("Agg")
@@ -28,12 +28,43 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
     template_name = "restaurants/restaurant_form.html"
     success_url = reverse_lazy("restaurants:restaurant_search")
 
+    # ★ サジェスト候補をテンプレートに渡す（これが超重要）
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["area_list"] = SuggestWord.objects.filter(word_type="area").values_list("word", flat=True)
+        context["genre_list"] = SuggestWord.objects.filter(word_type="genre").values_list("word", flat=True)
+        context["group_list"] = SuggestWord.objects.filter(word_type="group").values_list("word", flat=True)
+        context["scene_list"] = SuggestWord.objects.filter(word_type="scene").values_list("word", flat=True)
+        context["tag_list"] = SuggestWord.objects.filter(word_type="tag").values_list("word", flat=True)
+
+        return context
+
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.status = "want"
 
         response = super().form_valid(form)
+        restaurant = self.object
 
+        # ---- サジェスト保存 ----
+        def save_suggest(word_type, value):
+            if value:
+                value = value.strip()
+                if value:
+                    SuggestWord.objects.get_or_create(
+                        word_type=word_type,
+                        word=value
+                    )
+
+        # 固定項目
+        save_suggest("area", restaurant.area)
+        save_suggest("genre", restaurant.genre)
+        save_suggest("group", restaurant.companions)
+        save_suggest("scene", restaurant.scene)
+
+        # タグ
         tags_input = self.request.POST.getlist("tags")
 
         if tags_input:
@@ -41,11 +72,16 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
                 tag_name = tag_name.strip()
                 if not tag_name:
                     continue
+
                 tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
-                self.object.tags.add(tag_obj)
+                restaurant.tags.add(tag_obj)
+
+                save_suggest("tag", tag_name)
 
         messages.success(self.request, "restaurant_added")
         return redirect("restaurants:restaurant_list_want")
+
+
 
 
 class VisitCreateView(LoginRequiredMixin, CreateView):
@@ -172,6 +208,13 @@ class RestaurantSearchView(LoginRequiredMixin, TemplateView):
 
         context["want_count"] = Restaurant.objects.filter(user=user, status="want").count()
         context["went_count"] = Restaurant.objects.filter(user=user, status="went").count()
+
+        context["area_list"] = SuggestWord.objects.filter(word_type="area").values_list("word", flat=True)
+        context["genre_list"] = SuggestWord.objects.filter(word_type="genre").values_list("word", flat=True)
+        context["group_list"] = SuggestWord.objects.filter(word_type="group").values_list("word", flat=True)
+        context["scene_list"] = SuggestWord.objects.filter(word_type="scene").values_list("word", flat=True)
+        context["tag_list"] = SuggestWord.objects.filter(word_type="tag").values_list("word", flat=True)
+
         return context
 
 

@@ -6,74 +6,99 @@
 {% endblock %}
 
 {% block content %}
-  <div class="register-container">
-    <h2>お店を登録する</h2>
-    <form method="post">
-      {% csrf_token %}
-      <p><label for="id_store_name">店名（必須）</label>{{ form.store_name }}</p>
-      <p><label for="id_url">URL</label>{{ form.url }}</p>
-      <p><label for="id_area">エリア（必須）</label>{{ form.area }}</p>
-      <p><label for="id_genre">ジャンル（必須）</label>{{ form.genre }}</p>
-      <p><label for="id_companions">グループ</label>{{ form.companions }}</p>
-      <p><label for="id_scene">シーン</label>{{ form.scene }}</p>
-      <p><label for="id_closed_day">休業日</label>{{ form.holiday }}</p>
-      <p id="selected-holidays" style="color:white; font-size:24px; margin-top:-10px; margin-bottom:10px;"></p>
-      
+<div class="register-container">
+  <h2>お店を登録する</h2>
 
-      <div id="tag-container">
-  <p>
-    <label>タグ</label>
-    <input type="text" name="tags" class="tag-input" placeholder="例：おしゃれ・個室など">
-  </p>
+  <form method="post">
+    {% csrf_token %}
+
+    <p>
+      <label for="id_store_name">店名（必須）</label>
+      {{ form.store_name }}
+    </p>
+
+    <p>
+      <label for="id_url">URL</label>
+      {{ form.url }}
+    </p>
+
+    <!-- エリア -->
+    <p>
+      <label for="id_area">エリア（必須）</label>
+      <input type="text" id="id_area" name="area" list="area-list"
+             placeholder="例：渋谷・天神など">
+      <datalist id="area-list">
+        {% for item in area_list %}
+          <option value="{{ item }}">
+        {% endfor %}
+      </datalist>
+    </p>
+
+    <!-- ジャンル -->
+    <p>
+      <label for="id_genre">ジャンル（必須）</label>
+      <input type="text" id="id_genre" name="genre" list="genre-list"
+             placeholder="例：ラーメン・カフェなど">
+      <datalist id="genre-list">
+        {% for item in genre_list %}
+          <option value="{{ item }}">
+        {% endfor %}
+      </datalist>
+    </p>
+
+    <!-- グループ -->
+    <p>
+      <label for="id_companions">グループ</label>
+      <input type="text" id="id_companions" name="companions" list="group-list"
+             placeholder="例：友人・家族など">
+      <datalist id="group-list">
+        {% for item in group_list %}
+          <option value="{{ item }}">
+        {% endfor %}
+      </datalist>
+    </p>
+
+    <!-- シーン -->
+    <p>
+      <label for="id_scene">シーン</label>
+      <input type="text" id="id_scene" name="scene" list="scene-list"
+             placeholder="例：ランチ・デートなど">
+      <datalist id="scene-list">
+        {% for item in scene_list %}
+          <option value="{{ item }}">
+        {% endfor %}
+      </datalist>
+    </p>
+
+    <!-- 休業日 -->
+    <p>
+      <label for="id_holiday">休業日</label>
+      {{ form.holiday }}
+    </p>
+    <p id="selected-holidays"></p>
+
+    <!-- タグ -->
+    <div id="tag-container">
+      <p>
+        <label>タグ</label>
+        <input type="text" name="tags" class="tag-input" list="tag-list"
+               placeholder="例：おしゃれ・個室など">
+      </p>
+    </div>
+
+    <datalist id="tag-list">
+      {% for item in tag_list %}
+        <option value="{{ item }}">
+      {% endfor %}
+    </datalist>
+
+    <button type="button" id="add-tag">タグを追加</button>
+
+    <button type="submit">登録</button>
+  </form>
 </div>
-<button type="button" id="add-tag">タグを追加</button>
-
-
-      <button type="submit">登録</button>
-    </form>
-  </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-
-  // ① 登録画面のすべての input[type="text"] にサジェストON
-  document.querySelectorAll("input[type='text']").forEach(input => {
-    input.setAttribute("autocomplete", "on");
-  });
-
-  // ② タグ追加ボタン処理
-  const addTagBtn = document.getElementById("add-tag");
-  const tagContainer = document.getElementById("tag-container");
-
-  addTagBtn.addEventListener("click", function() {
-    const lastInput = document.querySelector(".tag-input:last-of-type");
-    const newInput = lastInput.cloneNode(true);  // 入力欄を複製
-    newInput.value = "";                         // 初期化
-    newInput.setAttribute("autocomplete", "on"); // サジェストON
-    tagContainer.appendChild(newInput);          // HTMLに追加
-  });
-
-});
-</script>
-
-
- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const select = document.querySelector('select[name="holiday"]');
-      const display = document.getElementById("selected-holidays");
-
-      if (select) {
-        // 選択が変わったら実行
-        select.addEventListener("change", function() {
-          const selected = Array.from(select.selectedOptions).map(opt => opt.text);
-          display.textContent = selected.length ? selected.join("、") : "";
-        });
-
-        // 編集時など初期値がある場合
-        const selected = Array.from(select.selectedOptions).map(opt => opt.text);
-        display.textContent = selected.length ? selected.join("、") : "";
-      }
-    });
-  </script>
 {% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'restaurants/js/register_suggest.js' %}"></script>
+{% endblock %}

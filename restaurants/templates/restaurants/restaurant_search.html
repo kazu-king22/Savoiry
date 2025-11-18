@@ -10,7 +10,7 @@
 
   <div class="status-box">
     <p>気になる：{{ want_count|default:"0" }}件</p>
-  <p>行った：{{ went_count|default:"0" }}件</p>
+    <p>行った：{{ went_count|default:"0" }}件</p>
   </div>
 
   <div class="search-form">
@@ -20,46 +20,54 @@
 
       <p>
         <label>エリア（必須）</label><br>
-        <input type="text" name="area" value="{{ request.GET.area }}">
+        <input type="text" name="area" list="area-list" 
+               placeholder="例：渋谷・天神など"
+               value="{{ request.GET.area }}">
       </p>
 
       <p>
         <label>ジャンル（必須）</label><br>
-        <input type="text" name="genre" value="{{ request.GET.genre }}">
+        <input type="text" name="genre" list="genre-list"
+               placeholder="例：ラーメン・カフェなど"
+               value="{{ request.GET.genre }}">
       </p>
 
       <p>
         <label>グループ</label><br>
-        <input type="text" name="companions" value="{{ request.GET.companions }}">
+        <input type="text" name="companions" list="group-list"
+               placeholder="例：友人・家族など"
+               value="{{ request.GET.companions }}">
       </p>
 
       <p>
         <label>シーン</label><br>
-        <input type="text" name="scene" value="{{ request.GET.scene }}">
+        <input type="text" name="scene" list="scene-list"
+               placeholder="例：ランチ・デートなど"
+               value="{{ request.GET.scene }}">
       </p>
 
       <p>
-  <label>休業日</label><br>
-  <select name="holiday" multiple>
-    <option value="月" {% if "月" in request.GET.getlist.holiday %}selected{% endif %}>月曜日</option>
-    <option value="火" {% if "火" in request.GET.getlist.holiday %}selected{% endif %}>火曜日</option>
-    <option value="水" {% if "水" in request.GET.getlist.holiday %}selected{% endif %}>水曜日</option>
-    <option value="木" {% if "木" in request.GET.getlist.holiday %}selected{% endif %}>木曜日</option>
-    <option value="金" {% if "金" in request.GET.getlist.holiday %}selected{% endif %}>金曜日</option>
-    <option value="土" {% if "土" in request.GET.getlist.holiday %}selected{% endif %}>土曜日</option>
-    <option value="日" {% if "日" in request.GET.getlist.holiday %}selected{% endif %}>日曜日</option>
-    <option value="不定" {% if "不定" in request.GET.getlist.holiday %}selected{% endif %}>不定休</option>
-    <option value="年中無休" {% if "年中無休" in request.GET.getlist.holiday %}selected{% endif %}>年中無休</option>
-  </select>
+        <label>休業日</label><br>
+        <select name="holiday" multiple>
+          <option value="月" {% if "月" in request.GET.getlist.holiday %}selected{% endif %}>月曜日</option>
+          <option value="火" {% if "火" in request.GET.getlist.holiday %}selected{% endif %}>火曜日</option>
+          <option value="水" {% if "水" in request.GET.getlist.holiday %}selected{% endif %}>水曜日</option>
+          <option value="木" {% if "木" in request.GET.getlist.holiday %}selected{% endif %}>木曜日</option>
+          <option value="金" {% if "金" in request.GET.getlist.holiday %}selected{% endif %}>金曜日</option>
+          <option value="土" {% if "土" in request.GET.getlist.holiday %}selected{% endif %}>土曜日</option>
+          <option value="日" {% if "日" in request.GET.getlist.holiday %}selected{% endif %}>日曜日</option>
+          <option value="不定" {% if "不定" in request.GET.getlist.holiday %}selected{% endif %}>不定休</option>
+          <option value="年中無休" {% if "年中無休" in request.GET.getlist.holiday %}selected{% endif %}>年中無休</option>
+        </select>
 
-  <p id="selected-holidays" style="color:white; font-size:24px; margin-top:-10px; margin-bottom:10px;"></p>
-
-</p>
-
+        <p id="selected-holidays" style="color:white; font-size:24px; margin-top:-10px; margin-bottom:10px;"></p>
+      </p>
 
       <p>
         <label>タグ</label><br>
-        <input type="text" name="tag" value="{{ request.GET.tag }}">
+        <input type="text" name="tag" list="tag-list"
+               placeholder="例：おしゃれ・個室など"
+               value="{{ request.GET.tag }}">
       </p>
 
       <div class="radio-group">
@@ -77,34 +85,52 @@
 
 </div>
 
+<!-- ▼ datalist -->
+<datalist id="area-list">
+  {% for w in area_list %}
+    <option value="{{ w }}">
+  {% endfor %}
+</datalist>
 
+<datalist id="genre-list">
+  {% for w in genre_list %}
+    <option value="{{ w }}">
+  {% endfor %}
+</datalist>
+
+<datalist id="group-list">
+  {% for w in group_list %}
+    <option value="{{ w }}">
+  {% endfor %}
+</datalist>
+
+<datalist id="scene-list">
+  {% for w in scene_list %}
+    <option value="{{ w }}">
+  {% endfor %}
+</datalist>
+
+<datalist id="tag-list">
+  {% for w in tag_list %}
+    <option value="{{ w }}">
+  {% endfor %}
+</datalist>
+
+<!-- ▼ JS：休業日表示 -->
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const select = document.querySelector('select[name="holiday"]');
     const display = document.getElementById("selected-holidays");
 
     if (select) {
-      select.addEventListener("change", function() {
+      const update = function () {
         const selected = Array.from(select.selectedOptions).map(opt => opt.text);
         display.textContent = selected.length ? selected.join("、") : "";
-      });
-
-      const selected = Array.from(select.selectedOptions).map(opt => opt.text);
-      display.textContent = selected.length ? selected.join("、") : "";
+      };
+      select.addEventListener("change", update);
+      update();
     }
   });
 </script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-
-  // 検索画面のすべての input[type='text'] をサジェストON
-  document.querySelectorAll("input[type='text']").forEach(input => {
-    input.setAttribute("autocomplete", "on");
-  });
-
-});
-</script>
-
 
 {% endblock %}

@@ -94,6 +94,25 @@ class VisitImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.visit.restaurant.store_name} ({self.visit.date})"
+    
+
+class SuggestWord(models.Model):
+    TYPE_CHOICES = [
+        ('area', 'Area'),
+        ('genre', 'Genre'),
+        ('group', 'Group'),
+        ('scene', 'Scene'),
+        ('tag', 'Tag'),
+    ]
+
+    word_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    word = models.CharField(max_length=50)
+
+    class Meta:
+        unique_together = ('word_type', 'word')
+
+    def __str__(self):
+        return f"{self.word_type}: {self.word}"
 
 
 
