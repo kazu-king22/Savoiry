@@ -30,18 +30,18 @@
       <p>
        <label>ジャンル（必須）</label><br>
        <div class="input-wrapper">
-        <input type="text" name="area" list="area-list" 
-               placeholder="例：渋谷・天神など"
-               value="{{ request.GET.area }}">
+        <input type="text" name="genre" list="genre-list"
+             placeholder="例：ラーメン・カフェなど"
+               value="{{ request.GET.genre }}">
         </div>
       </p>
 
       <p>
       <label>グループ</label><br>
       <div class="input-wrapper">
-         <input type="text" name="genre" list="genre-list"
-               placeholder="例：ラーメン・カフェなど"
-               value="{{ request.GET.genre }}">
+          <input type="text" name="companions" list="group-list"
+             placeholder="例：友人・家族など"
+               value="{{ request.GET.group }}">
       </div>
       </p>
 
