@@ -35,10 +35,9 @@
   font-size: 13px;
 }
 
-
-input:invalid,
 input.error {
   border: 2px solid #dc2626 !important;
   outline: none;
 }
+
 

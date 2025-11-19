@@ -25,8 +25,11 @@
     <!-- エリア -->
     <p>
       <label for="id_area">エリア（必須）</label>
-      <input type="text" id="id_area" name="area" list="area-list"
-             placeholder="例：渋谷・天神など">
+      <div class="input-with-arrow">
+        <input type="text" id="id_area" name="area" list="area-list"
+               placeholder="例：渋谷・天神など">
+      </div>
+
       <datalist id="area-list">
         {% for item in area_list %}
           <option value="{{ item }}">
@@ -37,8 +40,11 @@
     <!-- ジャンル -->
     <p>
       <label for="id_genre">ジャンル（必須）</label>
-      <input type="text" id="id_genre" name="genre" list="genre-list"
-             placeholder="例：ラーメン・カフェなど">
+      <div class="input-with-arrow">
+        <input type="text" id="id_genre" name="genre" list="genre-list"
+               placeholder="例：ラーメン・カフェなど">
+      </div>
+
       <datalist id="genre-list">
         {% for item in genre_list %}
           <option value="{{ item }}">
@@ -49,8 +55,11 @@
     <!-- グループ -->
     <p>
       <label for="id_companions">グループ</label>
-      <input type="text" id="id_companions" name="companions" list="group-list"
-             placeholder="例：友人・家族など">
+      <div class="input-with-arrow">
+        <input type="text" id="id_companions" name="companions" list="group-list"
+               placeholder="例：友人・家族など">
+      </div>
+
       <datalist id="group-list">
         {% for item in group_list %}
           <option value="{{ item }}">
@@ -61,8 +70,11 @@
     <!-- シーン -->
     <p>
       <label for="id_scene">シーン</label>
-      <input type="text" id="id_scene" name="scene" list="scene-list"
-             placeholder="例：ランチ・デートなど">
+      <div class="input-with-arrow">
+        <input type="text" id="id_scene" name="scene" list="scene-list"
+               placeholder="例：ランチ・デートなど">
+      </div>
+
       <datalist id="scene-list">
         {% for item in scene_list %}
           <option value="{{ item }}">
@@ -81,8 +93,10 @@
     <div id="tag-container">
       <p>
         <label>タグ</label>
-        <input type="text" name="tags" class="tag-input" list="tag-list"
-               placeholder="例：おしゃれ・個室など">
+        <div class="input-with-arrow">
+          <input type="text" name="tags" class="tag-input" list="tag-list"
+                 placeholder="例：おしゃれ・個室など">
+        </div>
       </p>
     </div>
 

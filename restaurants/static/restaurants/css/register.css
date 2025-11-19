@@ -1,48 +1,56 @@
 .register-container {
-    width: 300px;
-    margin: 40px auto;
-    text-align: center;
+  width: 95%;
+  max-width: 900px;
+  margin: 40px auto;
+  text-align: center;
 }
 
+/* 各入力行のまとまり */
 .register-container p {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
 }
 
+/* タイトル */
 .register-container h2 {
-    color: white;
-    font-size: 45px;
-    white-space: nowrap;
-
-}
-
-.register-container label {
-  display: block;
-  margin-bottom: 5px;
   color: white;
-  font-size: 35px;
-  
+  font-size: 45px;
+  white-space: nowrap;
 }
 
+/* ラベル */
+.register-container label {
+    width: 57%;            /* ← 横幅を広げる */
+    text-align: left;       /* ← 左寄せに固定 */
+    margin-bottom: 5px;
+    color: white;
+    font-size: 35px;
+}
+
+
+/* テキスト入力 */
 .register-container input {
-    width: 100%;
-    padding: 8px;
-    margin: 1px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 30px;
+  width: 75%;
+  max-width: 500px;
+  padding: 8px;
+  margin: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 35px;
 }
 
-.register-container select{
-    width: 106%;
-    padding: 8px;
-    margin: 1px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* セレクトボックス共通 */
+.register-container select {
+  width: 90%;
+  padding: 8px;
+  margin: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
+/* タグ追加ボタン */
 #add-tag {
   background-color: #ccc;
   color: black;
@@ -59,11 +67,12 @@
   background-color: #ccc;
 }
 
+/* 登録ボタン */
 .register-container button {
   display: block;
-  margin: 25px auto;         
+  margin: 40px auto;
   padding: 8px 70px;
-  background-color: #eeb61a; 
+  background-color: #eeb61a;
   color: black;
   font-weight: bold;
   border: none;
@@ -71,41 +80,77 @@
   cursor: pointer;
   font-size: 35px;
 }
+
 .register-container button:hover {
-    background-color: #eeb61a;
+  background-color: #eeb61a;
 }
 
+/* 戻るリンクなど */
 .search-form a {
-    display: block;
-    margin: 15px auto 0;
-    color: white;
-    text-decoration: underline;
-    text-align: center;
+  display: block;
+  margin: 15px auto 0;
+  color: white;
+  text-decoration: underline;
 }
 
-/* 休業日セレクトボックス */
+/* ▼ 休業日セレクトボックス（複数選択対応） */
 .register-container select[name="closed_day"],
 .register-container select[name="holiday"] {
-  width: 100%;
+  width: 58%;
   padding: 18px 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
-  font-size: 30px;
+  font-size: 35px;
   background-color: #fff;
   color: #000;
   box-sizing: border-box;
   margin-bottom: 15px;
 
-  /* ▼ 複数選択対応（ここを追加） */
-  min-height: 55px;   /* 1行だけのときでも潰れないように */
-  height: auto;       /* 中の項目数に応じて高さ可変 */
-  line-height: 1.2;   /* テキストの上下余白を自然に */
+  /* 複数選択対応 */
+  min-height: 55px;
+  height: auto;
+  line-height: 1.2;
 }
 
-
+/* プレースホルダー */
 input::placeholder {
-  font-size: 25px;
+  font-size: 35px;
   color: #aaa;
 }
 
+/* ▼アイコンを右側に表示するためのラッパー */
+.input-with-arrow {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
 
+/* input 本体 */
+.input-with-arrow input {
+    width: 150%;
+    padding-right: 30px; /* ▼のスペース */
+    padding-left: 10px;
+    font-size: 35px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* ▼アイコン */
+.input-with-arrow::after {
+    content: "▾";
+    font-size: 60px;
+    color: #000;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+#selected-holidays {
+  font-size: 30px;   /* 好きな大きさに変更してOK */
+  color: white;      /* 色も調整したかったらここ */
+  margin-top: 10px;
+  text-align: center; /* 中央揃え */
+}
