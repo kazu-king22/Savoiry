@@ -64,16 +64,30 @@
 /* ラジオボタン横並び */
 .radio-group {
   display: flex;
-  justify-content: center;   /* 真ん中に配置 */
-  gap: 20px;                 /* ボタンの間に余白 */
-  margin: 20px 0;
-  color: white;              /* テキストを白に */
+  justify-content: space-between;  /* ← 各ボタンを均等配置 */
+  width: 100%;
+  margin: 60px 0;
+  font-size: 32px;
+}
+
+.radio-group label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 33%;                 /* ← 3つを完全に均等幅にする */
+  text-align: center;
+}
+
+.radio-group input[type="radio"] {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 6px;
 }
 
 /* ボタン */
 .search-form button {
   display: block;
-  margin: 25px auto;         
+  margin: 35px auto;         
   padding: 8px 70px;
   background-color: #eeb61a; 
   color: black;

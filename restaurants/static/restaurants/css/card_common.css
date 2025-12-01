@@ -126,3 +126,21 @@
   color: #666;
   pointer-events: none;
 }
+
+/* セクションタイトルの調整 */
+.section-title {
+  text-align: center;        /* 中央揃え */
+  font-size: 40px;           /* フォント大きく */
+  font-weight: bold;
+  margin: 120px 0 5px 0;     /* 上下余白 */
+  color: white;
+}
+
+.search-title {
+  font-size: 50px;        /* ← 文字を大きく */
+  font-weight: bold;      /* ← 太く */
+  text-align: center;     /* ← 中央寄せ */
+  margin-top: 40px;       /* ← 上に余白 */
+  margin-bottom: 40px;    /* ← 下に余白 */
+  color: white;           /* ← 白文字にしたい場合 */
+}

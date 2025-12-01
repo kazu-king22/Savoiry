@@ -1,3 +1,6 @@
+/* ===============================
+   コンテナ
+================================ */
 .register-container {
   width: 95%;
   max-width: 900px;
@@ -22,15 +25,16 @@
 
 /* ラベル */
 .register-container label {
-    width: 57%;            /* ← 横幅を広げる */
-    text-align: left;       /* ← 左寄せに固定 */
-    margin-bottom: 5px;
-    color: white;
-    font-size: 35px;
+  width: 57%;
+  text-align: left;
+  margin-bottom: 5px;
+  color: white;
+  font-size: 35px;
 }
 
-
-/* テキスト入力 */
+/* ===============================
+   共通 input（全項目）
+================================ */
 .register-container input {
   width: 75%;
   max-width: 500px;
@@ -41,16 +45,104 @@
   font-size: 35px;
 }
 
-/* セレクトボックス共通 */
+/* select */
 .register-container select {
   width: 90%;
   padding: 8px;
   margin: 1px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 35px;
 }
 
-/* タグ追加ボタン */
+/* ===============================
+   ▼ アイコン付き入力（area / genre / group / scene）
+================================ */
+.input-with-arrow {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.input-with-arrow input {
+  width: 100%; /* ← 修正（150% → 100%） */
+  padding-right: 40px;
+  padding-left: 10px;
+  font-size: 35px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* ▼アイコン（消す仕様なので none） */
+.input-with-arrow::after {
+  content: none !important;
+}
+
+/* プレースホルダー */
+input::placeholder {
+  font-size: 35px;
+  color: #aaa;
+}
+
+/* ===============================
+   休業日欄
+================================ */
+.register-container select[name="closed_day"],
+.register-container select[name="holiday"] {
+  width: 58%;
+  padding: 18px 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 35px;
+  background-color: #fff;
+  color: #000;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  min-height: 55px;
+  line-height: 1.2;
+}
+
+#selected-holidays {
+  font-size: 30px;
+  color: white;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* ===============================
+   ▼ タグ入力（複数可）
+================================ */
+
+/* タグ入力行（1個目も追加分も同じ） */
+.tag-row {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+/* ラッパー（白背景＋影） */
+.tag-input-wrapper {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin-bottom: 12px;
+}
+
+/* 実際の入力欄 */
+.tag-input {
+  width: 100%;
+  font-size: 32px;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* ===============================
+   ▼ ボタン類
+================================ */
 #add-tag {
   background-color: #ccc;
   color: black;
@@ -67,7 +159,6 @@
   background-color: #ccc;
 }
 
-/* 登録ボタン */
 .register-container button {
   display: block;
   margin: 40px auto;
@@ -85,7 +176,7 @@
   background-color: #eeb61a;
 }
 
-/* 戻るリンクなど */
+/* 戻るリンク */
 .search-form a {
   display: block;
   margin: 15px auto 0;
@@ -93,68 +184,15 @@
   text-decoration: underline;
 }
 
-/* ▼ 休業日セレクトボックス（複数選択対応） */
-.register-container select[name="closed_day"],
-.register-container select[name="holiday"] {
-  width: 58%;
-  padding: 18px 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 35px;
-  background-color: #fff;
-  color: #000;
-  box-sizing: border-box;
-  margin-bottom: 15px;
-
-  /* 複数選択対応 */
-  min-height: 55px;
-  height: auto;
-  line-height: 1.2;
+/* ▼ タグラベル専用のデザイン */
+.tag-label {
+    width: 57%;              /* 他のラベルと同じ幅 */
+    text-align: left;        /* 左寄せ */
+    margin-bottom: 5px;
+    color: white;
+    font-size: 35px;         /* ← 大きさを統一 */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* プレースホルダー */
-input::placeholder {
-  font-size: 35px;
-  color: #aaa;
-}
-
-/* ▼アイコンを右側に表示するためのラッパー */
-.input-with-arrow {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-/* input 本体 */
-.input-with-arrow input {
-    width: 150%;
-    padding-right: 30px; /* ▼のスペース */
-    padding-left: 10px;
-    font-size: 35px;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-/* ▼アイコン */
-.input-with-arrow::after {
-    content: "▾";
-    font-size: 60px;
-    color: #000;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-}
-
-#selected-holidays {
-  font-size: 30px;   /* 好きな大きさに変更してOK */
-  color: white;      /* 色も調整したかったらここ */
-  margin-top: 10px;
-  text-align: center; /* 中央揃え */
-}
-
-.input-with-arrow::after {
-    content: none !important;
-}

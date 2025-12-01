@@ -90,8 +90,11 @@
         <label>
           <input type="radio" name="status" value="went" {% if request.GET.status == 'went' %}checked{% endif %}> 行った
         </label>
+        <label>
+          <input type="radio" name="status" value="all"{% if request.GET.status == 'all' %}checked{% endif %}>全て
+        <label>
       </div>
-
+      
       <p><button type="submit">検索</button></p>
     </form>
   </div>

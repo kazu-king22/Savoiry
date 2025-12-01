@@ -7,16 +7,19 @@
 
 {% block content %}
 <div class="register-container">
+
   <h2>お店を登録する</h2>
 
   <form method="post">
     {% csrf_token %}
 
+    <!-- 店名 -->
     <p>
       <label for="id_store_name">店名（必須）</label>
       {{ form.store_name }}
     </p>
 
+    <!-- URL -->
     <p>
       <label for="id_url">URL</label>
       {{ form.url }}
@@ -27,9 +30,8 @@
       <label for="id_area">エリア（必須）</label>
       <div class="input-with-arrow">
         <input type="text" id="id_area" name="area" list="area-list"
-               placeholder="例：渋谷・天神など">
+               placeholder="例：渋谷・天神など" autocomplete="on">
       </div>
-
       <datalist id="area-list">
         {% for item in area_list %}
           <option value="{{ item }}">
@@ -42,9 +44,8 @@
       <label for="id_genre">ジャンル（必須）</label>
       <div class="input-with-arrow">
         <input type="text" id="id_genre" name="genre" list="genre-list"
-               placeholder="例：ラーメン・カフェなど">
+               placeholder="例：ラーメン・カフェなど" autocomplete="on">
       </div>
-
       <datalist id="genre-list">
         {% for item in genre_list %}
           <option value="{{ item }}">
@@ -57,9 +58,8 @@
       <label for="id_companions">グループ</label>
       <div class="input-with-arrow">
         <input type="text" id="id_companions" name="companions" list="group-list"
-               placeholder="例：友人・家族など">
+               placeholder="例：友人・家族など" autocomplete="on">
       </div>
-
       <datalist id="group-list">
         {% for item in group_list %}
           <option value="{{ item }}">
@@ -72,9 +72,8 @@
       <label for="id_scene">シーン</label>
       <div class="input-with-arrow">
         <input type="text" id="id_scene" name="scene" list="scene-list"
-               placeholder="例：ランチ・デートなど">
+               placeholder="例：ランチ・デートなど" autocomplete="on">
       </div>
-
       <datalist id="scene-list">
         {% for item in scene_list %}
           <option value="{{ item }}">
@@ -89,26 +88,36 @@
     </p>
     <p id="selected-holidays"></p>
 
-    <!-- タグ -->
-    <div id="tag-container">
-      <p>
-        <label>タグ</label>
-        <div class="input-with-arrow">
-          <input type="text" name="tags" class="tag-input" list="tag-list"
-                 placeholder="例：おしゃれ・個室など">
-        </div>
-      </p>
+
+<!-- ▼ タグ -->
+<label class="tag-label">タグ</label>
+
+<div id="tag-container">
+
+  <div class="tag-row">
+    <div class="input-with-arrow">
+      <input type="text" name="tags" class="tag-input"
+             placeholder="例：おしゃれ・個室など"
+             list="tag-list" autocomplete="on">
     </div>
+  </div>
 
-    <datalist id="tag-list">
-      {% for item in tag_list %}
-        <option value="{{ item }}">
-      {% endfor %}
-    </datalist>
+</div>
 
-    <button type="button" id="add-tag">タグを追加</button>
+<!-- ▼ datalist -->
+<datalist id="tag-list">
+  {% for item in tag_list %}
+    <option value="{{ item }}">
+  {% endfor %}
+</datalist>
 
+<!-- ▼ タグ追加ボタン -->
+<button type="button" id="add-tag">タグを追加</button>
+
+
+    <!-- 登録ボタン -->
     <button type="submit">登録</button>
+
   </form>
 </div>
 {% endblock %}

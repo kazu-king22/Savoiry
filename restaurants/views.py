@@ -232,9 +232,9 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
         scene = self.request.GET.get("scene")
         holidays = self.request.GET.getlist("holiday")
         tag = self.request.GET.get("tag")
-        status = self.request.GET.get("status")
+        status = self.request.GET.get("status")  # ← 追加フィルター対象
 
-
+        # ---- 個別フィルター ----
         if genre:
             queryset = queryset.filter(genre__icontains=genre)
         if area:
@@ -250,20 +250,34 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(q_obj)
         if tag:
             queryset = queryset.filter(tags__name__icontains=tag)
-        if status:
-            queryset = queryset.filter(status=status)
+
+        # ---- ★ステータスフィルター（改善版）----
+        if status == "want":
+            queryset = queryset.filter(status="want")
+        elif status == "went":
+            queryset = queryset.filter(status="went")
+        elif status == "all":
+            pass
+        else:
+            # 初期状態は「絞り込みなし」
+            pass
 
         return queryset
-    
+
     def get_template_names(self):
         """status値に応じてテンプレートを切り替える"""
         status = self.request.GET.get("status")
+
         if status == "want":
             return ["restaurants/restaurant_search_result_want.html"]
         elif status == "went":  
             return ["restaurants/restaurant_search_result_went.html"]
+        elif status == "all":
+            return ["restaurants/restaurant_search_result_all.html"]
 
+        # 初期状態も全体
         return ["restaurants/restaurant_search_result_all.html"]
+
 
 
 

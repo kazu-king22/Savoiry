@@ -1,34 +1,36 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  // ===============================
-  // 全 input に autocomplete を付ける
-  // ===============================
+  // autocomplete
   document.querySelectorAll("input[type='text']").forEach(input => {
     input.setAttribute("autocomplete", "on");
   });
 
-  // ===============================
-  // タグ追加ボタン
-  // ===============================
+  // タグ追加
   const addTagBtn = document.getElementById("add-tag");
   const tagContainer = document.getElementById("tag-container");
 
   addTagBtn.addEventListener("click", function () {
-    const lastInput = document.querySelector(".tag-input:last-of-type");
-    const newInput = lastInput.cloneNode(true);
-    newInput.value = "";
-    newInput.setAttribute("autocomplete", "on");
-    tagContainer.appendChild(newInput);
-  });
+    const lastTag = tagContainer.querySelector(".tag-row:last-of-type");
+
+    if (!lastTag) return;
+
+    const newTag = lastTag.cloneNode(true);
+
+    const input = newTag.querySelector("input");
+    input.value = "";
+    input.setAttribute("autocomplete", "on");
+
+    tagContainer.appendChild(newTag);
+});
 
 
-  // ===============================
+
+
   // 休業日表示
-  // ===============================
   const select = document.querySelector('select[name="holiday"]');
   const display = document.getElementById("selected-holidays");
 
-  if (select) {
+  if (select && display) {
     const updateHoliday = () => {
       const selected = Array.from(select.selectedOptions).map(opt => opt.text);
       display.textContent = selected.length ? selected.join("、") : "";
