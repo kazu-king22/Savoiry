@@ -1,4 +1,4 @@
-.list-container {
+.list-container-want {
   width: 100%;               /* ✅ 画面いっぱいに広げる */
   max-width: none;           /* ✅ 固定制限を解除 */
   margin: 0 auto 100px auto;
@@ -6,14 +6,14 @@
   color: white;
 }
 
-.list-container h2 {
+.list-container-want h2 {
   text-align: center;
   font-size: 50px;
   font-weight: bold;
   margin-bottom: 15px;
 }
 
-.restaurant-card {
+.restaurant-card-want {
   display: block;
   width: 95%;                   /* ✅ 画面のほぼ全幅（余白5%） */
   max-width: 700px;             /* ✅ タブレット・PCでも広めに */
@@ -31,7 +31,7 @@
    padding-bottom: 50px;             /* ✅ 内側余白を少し確保 */
 }
 
-.card-link {
+.card-link-want {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -41,23 +41,23 @@
   width: 100%;
 }
 
-.card-content {
+.card-content-want {
   flex: 1;
 }
 
-.card-content h3 {
+.card-content-want h3 {
   font-size: 38px;
   margin-bottom: 6px;
 }
 
-.meta-line {
+.meta-line-want {
  font-size: 30px;
   color: #333;
   margin: 4px 0;
   line-height: 1.5;
 }
 
-.arrow {
+.arrow-want {
   position: absolute;
   right: 16px;
   bottom: 16px;
@@ -66,7 +66,7 @@
   pointer-events: none;
 }
 
-.no-data {
+.no-data-want {
   color: #ddd;
   margin-top: 40px;
   font-size: 40px;

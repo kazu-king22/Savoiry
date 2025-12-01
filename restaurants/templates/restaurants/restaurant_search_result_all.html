@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/card_common.css' %}">
+<link rel="stylesheet" href="{% static 'restaurants/css/list_want.css' %}">
+<link rel="stylesheet" href="{% static 'restaurants/css/list_went.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="search-page">
+  <h2>検索結果（全体）</h2>
+
+  <!-- 行ったお店 -->
+  <h2 class="section-title">行ったお店</h2>
+
+  {% for restaurant in restaurants %}
+    {% if restaurant.status == "went" %}
+      {% with visit=restaurant.visits.last %}
+        {% include "restaurants/partials/card_went.html" with restaurant=restaurant visit=visit %}
+      {% endwith %}
+    {% endif %}
+  {% endfor %}
+
+  <!-- 気になるお店 -->
+  <h2 class="section-title" style="margin-top:40px;">気になるお店</h2>
+
+  {% for restaurant in restaurants %}
+    {% if restaurant.status == "want" %}
+      {% include "restaurants/partials/card_want.html" with restaurant=restaurant %}
+    {% endif %}
+  {% endfor %}
+
+</div>
+{% endblock %}

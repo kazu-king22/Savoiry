@@ -263,8 +263,7 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
         elif status == "went":  
             return ["restaurants/restaurant_search_result_went.html"]
 
-        return ["restaurants/restaurant_search_result_want.html"]
-
+        return ["restaurants/restaurant_search_result_all.html"]
 
 
 

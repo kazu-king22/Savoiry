@@ -1,0 +1,36 @@
+<div class="restaurant-card-went">
+  <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" class="card-link-went">
+
+    {% if visit and visit.images.first %}
+      <img src="{{ visit.images.first.image.url }}" 
+           alt="{{ restaurant.store_name }}" 
+           class="thumbnail-went">
+    {% endif %}
+
+    <div class="info-went">
+      <h3>{{ restaurant.store_name }}</h3>
+
+      {% if visit %}
+        {% if visit.date %}
+          <p class="date-went">{{ visit.date|date:"Y年n月j日" }}</p>
+        {% endif %}
+
+        <p class="stars-went">
+          {% for i in "12345" %}
+            {% if forloop.counter <= visit.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </p>
+
+        {% if visit.comment %}
+          <p class="comment-went">{{ visit.comment|truncatechars:30 }}</p>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <span class="arrow-went">＞</span>
+  </a>
+</div>

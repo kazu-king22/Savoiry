@@ -6,7 +6,10 @@
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
-    {% block extra_css %}{% endblock %}
+{% block extra_css %}
+  {{ block.super }}
+{% endblock %}
+
   </head>
   <body>
 <script>

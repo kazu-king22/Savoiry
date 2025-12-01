@@ -154,3 +154,7 @@ input::placeholder {
   margin-top: 10px;
   text-align: center; /* 中央揃え */
 }
+
+.input-with-arrow::after {
+    content: none !important;
+}

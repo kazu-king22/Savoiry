@@ -1,0 +1,28 @@
+<div class="restaurant-card-want">
+  <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" class="card-link-want">
+
+    <div class="card-content-want">
+      <h3>{{ restaurant.store_name }}</h3>
+
+      <p class="meta-line-want">
+        {% if restaurant.area %}{{ restaurant.area }} {% endif %}
+        {% if restaurant.genre %}{{ restaurant.genre }} {% endif %}
+        {% if restaurant.scene %}{{ restaurant.scene }} {% endif %}
+        {% if restaurant.companions %}{{ restaurant.companions }}{% endif %}
+      </p>
+
+      {% if restaurant.tags.exists %}
+      <p class="meta-line-want">
+        {% for tag in restaurant.tags.all %}
+          {{ tag.name }}{% if not forloop.last %} {% endif %}
+        {% endfor %}
+      </p>
+      {% endif %}
+
+      <p class="meta-line-want">休業日：{{ restaurant.holiday|default:"未設定" }}</p>
+    </div>
+
+    <span class="arrow-want">＞</span>
+
+  </a>
+</div>

@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="list-container">
+<div class="list-container-went">
   <h2>検索結果（行った）</h2>
 
   {% if restaurants %}
@@ -14,26 +14,26 @@
       {% with visit=restaurant.visits.last %}
 
         <!-- ★ カード全体クリックで詳細へ -->
-        <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" class="card-link">
+        <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" class="card-link-went">
 
-          <div class="restaurant-card">
+          <div class="restaurant-card-went">
 
             {% if visit and visit.images.first %}
               <img src="{{ visit.images.first.image.url }}" 
                    alt="{{ restaurant.store_name }}" 
-                   class="thumbnail">
+                   class="thumbnail-went">
             {% endif %}
 
-            <div class="info">
+            <div class="info-went">
               <h3>{{ restaurant.store_name }}</h3>
 
               {% if visit %}
                 {% if visit.date %}
-                  <p class="date">{{ visit.date|date:"Y年n月j日" }}</p>
+                  <p class="date-went">{{ visit.date|date:"Y年n月j日" }}</p>
                 {% endif %}
 
                 {% if visit.rating %}
-                  <p class="stars">
+                  <p class="stars-went">
                     {% for i in "12345" %}
                       {% if forloop.counter <= visit.rating %}
                         ★
@@ -45,19 +45,18 @@
                 {% endif %}
 
                 {% if visit.comment %}
-                  <p class="comment">{{ visit.comment|truncatechars:30 }}</p>
+                  <p class="comment-went">{{ visit.comment|truncatechars:30 }}</p>
                 {% endif %}
               {% endif %}
             </div>
-            <span class="arrow">＞</span>
+            <span class="arrow-went">＞</span>
           </div>
         </a>
 
       {% endwith %}
     {% endfor %}
   {% else %}
-    <p class="no-data">該当するお店は見つかりませんでした。</p>
+    <p class="no-data-went">該当するお店は見つかりませんでした。</p>
   {% endif %}
 </div>
 {% endblock %}
-

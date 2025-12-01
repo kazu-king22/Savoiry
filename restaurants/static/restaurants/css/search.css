@@ -118,20 +118,3 @@ input::placeholder {
   padding: 10px;
   font-size: 50px;
 }
-
-
-/* ▼ datalist用 input に大きい ▽ を重ねる */
-.input-wrapper {
-  position: relative;
-}
-
-.input-wrapper::after {
-  content: "▼";                 /* ← 見た目用の矢印 */
-  position: absolute;
-  right: -17px;                  /* 右側の位置 */
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 30px;              /* ← ★▽の大きさ */
-  color: #000;                  /* 好みに応じて白でもOK */
-  pointer-events: none;         /* 入力操作を邪魔しない */
-}

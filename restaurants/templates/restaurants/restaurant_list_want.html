@@ -6,19 +6,19 @@
 {% endblock %}
 
 {% block content %}
-<div class="list-container">
+<div class="list-container-want">
   <h2>気になるお店</h2>
 
   {% if restaurants %}
     {% for restaurant in restaurants %}
-      <div class="restaurant-card">
-        <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" class="card-link">
-          <div class="card-content">
+      <div class="restaurant-card-want">
+        <a href="{% url 'restaurants:restaurant_detail' restaurant.id %}" class="card-link-want">
+          <div class="card-content-want">
             
             <h3>{{ restaurant.store_name }}</h3>
 
             
-            <p class="meta-line">
+            <p class="meta-line-want">
               {% if restaurant.area %}{{ restaurant.area }}　{% endif %}
               {% if restaurant.genre %}{{ restaurant.genre }}　{% endif %}
               {% if restaurant.scene %}{{ restaurant.scene }}　{% endif %}
@@ -27,7 +27,7 @@
 
             
             {% if restaurant.tags.exists %}
-              <p class="meta-line">
+              <p class="meta-line-want">
                 {% for tag in restaurant.tags.all %}
                   {{ tag.name }}{% if not forloop.last %}　{% endif %}
                 {% endfor %}
@@ -35,16 +35,16 @@
             {% endif %}
 
             
-            <p class="meta-line">休業日：{{ restaurant.holiday|default:"未設定" }}</p>
+            <p class="meta-line-want">休業日：{{ restaurant.holiday|default:"未設定" }}</p>
           </div>
 
           
-          <span class="arrow">＞</span>
+          <span class="arrow-want">＞</span>
         </a>
       </div>
     {% endfor %}
   {% else %}
-    <p class="no-data">まだ「気になる」お店はありません</p>
+    <p class="no-data-want">まだ「気になる」お店はありません</p>
   {% endif %}
 </div>
 {% endblock %}
