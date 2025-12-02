@@ -270,3 +270,24 @@
 .date-wrapper input[type="date"]:valid + .date-placeholder {
   display: none;
 }
+
+.edit-btn-wrapper {
+  text-align: center;
+  margin: 25px 0;
+}
+
+.edit-btn {
+  display: inline-block;
+  background-color: #eeb61a;
+  color: black;
+  padding: 10px 45px;
+  border-radius: 10px;
+  font-size: 34px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.edit-btn:hover {
+  opacity: 0.85;
+}
+

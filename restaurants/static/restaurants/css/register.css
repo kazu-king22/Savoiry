@@ -110,6 +110,14 @@ input::placeholder {
   text-align: center;
 }
 
+.input-with-arrow select {
+    width: 150%;
+    padding-right: 30px;
+    font-size: 35px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
 /* ===============================
    ▼ タグ入力（複数可）
 ================================ */

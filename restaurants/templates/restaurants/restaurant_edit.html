@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'restaurants/css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+  <h2>お店の情報を編集</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- 店名 -->
+    <p>
+      <label for="id_store_name">店名（必須）</label>
+      {{ form.store_name }}
+    </p>
+
+    <!-- URL -->
+    <p>
+      <label for="id_url">URL</label>
+      {{ form.url }}
+    </p>
+
+    <!-- エリア -->
+    <p>
+      <label for="id_area">エリア（必須）</label>
+      <div class="input-with-arrow">
+        {{ form.area }}
+      </div>
+    </p>
+
+    <!-- ジャンル -->
+    <p>
+      <label for="id_genre">ジャンル（必須）</label>
+      <div class="input-with-arrow">
+        {{ form.genre }}
+      </div>
+    </p>
+
+    <!-- グループ -->
+    <p>
+      <label for="id_companions">グループ</label>
+      <div class="input-with-arrow">
+        {{ form.companions }}
+      </div>
+    </p>
+
+    <!-- シーン -->
+    <p>
+      <label for="id_scene">シーン</label>
+      <div class="input-with-arrow">
+        {{ form.scene }}
+      </div>
+    </p>
+
+
+<!-- 休業日 -->
+<p>
+      <label for="id_holiday">休業日</label>
+      {{ form.holiday }}
+    </p>
+    <p id="selected-holidays"></p>
+
+
+<label class="tag-label">タグ</label>
+
+<div id="tag-container">
+
+  {% if selected_tags %}
+    {% for tagname in selected_tags %}
+      <div class="tag-row">
+        <div class="input-with-arrow">
+          <input type="text" name="tags" class="tag-input"
+                 value="{{ tagname }}"
+                 placeholder="例：おしゃれ・個室など"
+                 list="tag-list" autocomplete="on">
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <!-- タグが無い場合は1つ空欄 -->
+    <div class="tag-row">
+      <div class="input-with-arrow">
+        <input type="text" name="tags" class="tag-input"
+               placeholder="例：おしゃれ・個室など"
+               list="tag-list" autocomplete="on">
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<button type="button" id="add-tag">タグを追加</button>
+
+
+    <!-- ▼ datalist -->
+    <datalist id="tag-list">
+      {% for item in tag_list %}
+        <option value="{{ item }}">
+      {% endfor %}
+    </datalist>
+
+    <!-- ▼ 保存ボタン -->
+    <button type="submit">保存</button>
+
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'restaurants/js/register_suggest.js' %}"></script>
+{% endblock %}

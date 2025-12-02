@@ -1,6 +1,6 @@
 from django.views import View
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView, TemplateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Restaurant, Visit, VisitImage, Tag, SuggestWord
@@ -379,39 +379,6 @@ class VisitRevisitStoreView(LoginRequiredMixin, View):
         })
 
 
-
-# class VisitRevisitView(View):
-#     def get(self, request, pk):
-#         original_visit = get_object_or_404(Visit, pk=pk)
-#         form = VisitForm()
-#         return render(request, "restaurants/visit_form.html", {
-#             "form": form,
-#             "original_visit": original_visit,
-#         })
-
-#     def post(self, request, pk):
-#         original_visit = get_object_or_404(Visit, pk=pk)
-#         restaurant = original_visit.restaurant
-#         form = VisitForm(request.POST, request.FILES)
-
-#         if form.is_valid():
-#             new_visit = form.save(commit=False)
-#             new_visit.restaurant = restaurant
-#             new_visit.save()
-
-
-#             images = request.FILES.getlist("images")
-#             for image in images:
-#                 VisitImage.objects.create(visit=new_visit, image=image)
-
-#             return redirect("restaurants:restaurant_detail_went", pk=restaurant.pk)
-#         else:
-#             return render(request, "restaurants/visit_form.html", {
-#                 "form": form,
-#                 "original_visit": original_visit,
-#             })
-
-
 class TagCreateView(LoginRequiredMixin, CreateView):
     model = Tag
     fields = ['name', 'category']
@@ -432,6 +399,30 @@ class VisitDeleteView(LoginRequiredMixin, View):
         messages.success(request, "訪問記録を削除しました")
 
         return redirect("restaurants:restaurant_detail_went", restaurant_id)
+
+
+class RestaurantEditView(LoginRequiredMixin, UpdateView):
+    model = Restaurant
+    fields = [
+        "store_name", "url", "area", "genre",
+        "companions", "scene", "holiday", "tags",
+    ]
+    template_name = "restaurants/restaurant_edit.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # タグ名のリストを渡す
+        context["selected_tags"] = [tag.name for tag in self.object.tags.all()]
+
+        # datalist 用
+        context["tag_list"] = Tag.objects.values_list("name", flat=True)
+
+        return context
+
+    def get_success_url(self):
+        return reverse("restaurants:restaurant_detail", args=[self.object.pk])
+
 
 
 
@@ -612,3 +603,35 @@ def visit_chart_genre(request):
     plt.close("all")
     buf.seek(0)
     return HttpResponse(buf.getvalue(), content_type="image/png")
+
+
+# class VisitRevisitView(View):
+#     def get(self, request, pk):
+#         original_visit = get_object_or_404(Visit, pk=pk)
+#         form = VisitForm()
+#         return render(request, "restaurants/visit_form.html", {
+#             "form": form,
+#             "original_visit": original_visit,
+#         })
+
+#     def post(self, request, pk):
+#         original_visit = get_object_or_404(Visit, pk=pk)
+#         restaurant = original_visit.restaurant
+#         form = VisitForm(request.POST, request.FILES)
+
+#         if form.is_valid():
+#             new_visit = form.save(commit=False)
+#             new_visit.restaurant = restaurant
+#             new_visit.save()
+
+
+#             images = request.FILES.getlist("images")
+#             for image in images:
+#                 VisitImage.objects.create(visit=new_visit, image=image)
+
+#             return redirect("restaurants:restaurant_detail_went", pk=restaurant.pk)
+#         else:
+#             return render(request, "restaurants/visit_form.html", {
+#                 "form": form,
+#                 "original_visit": original_visit,
+#             })
