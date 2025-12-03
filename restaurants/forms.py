@@ -42,15 +42,6 @@ class RestaurantForm(forms.ModelForm):
             "tags": "タグ",
         }
         
-    def clean_holiday(self):
-        holidays = self.cleaned_data.get("holiday")
-        if not holidays:
-            return ""
-
-        if isinstance(holidays, list):
-            return "、".join(holidays)
-
-        return str(holidays)
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

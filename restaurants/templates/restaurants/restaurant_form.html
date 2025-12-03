@@ -81,12 +81,25 @@
       </datalist>
     </p>
 
-    <!-- 休業日 -->
-    <p>
-      <label for="id_holiday">休業日</label>
-      {{ form.holiday }}
-    </p>
-    <p id="selected-holidays"></p>
+<!-- 休業日（カスタムUI） -->
+<p>
+  <label for="holiday-box">休業日</label>
+  <div id="holiday-box" class="holiday-box"
+       data-initial="{{ form.instance.holiday|default:'' }}">
+    選択してください
+  </div>
+</p>
+
+<div id="holiday-options" class="holiday-options hidden">
+  {% for value, label in form.holiday.field.choices %}
+    <div class="holiday-option" data-value="{{ value }}">{{ label }}</div>
+  {% endfor %}
+</div>
+
+<!-- hidden inputs を入れるコンテナ -->
+<div id="holiday-hidden-container"></div>
+
+
 
 
 <!-- ▼ タグ -->

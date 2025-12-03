@@ -204,3 +204,47 @@ input::placeholder {
     margin-right: auto;
 }
 
+/* 休業日ボックス（input と統一デザイン） */
+.holiday-box {
+  width: 75%;
+  max-width: 500px;
+  padding: 4px 18px;
+  background: #fff;
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 35px;
+  margin: 5px auto 10px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* 選択肢一覧 */
+.holiday-options {
+  background: #fff;
+  border: 1px solid #ccc;
+  width: 75%;
+  max-width: 500px;
+  margin: 0 auto 10px;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.holiday-option {
+  padding: 12px 10px;
+  font-size: 32px;
+  border-bottom: 1px solid #ddd;
+  color: #000;
+}
+
+.holiday-option:last-child {
+  border-bottom: none;
+}
+
+.holiday-option.selected {
+  background: #e3e3e3;
+}
+
+.hidden {
+  display: none;
+}

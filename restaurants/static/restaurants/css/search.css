@@ -115,20 +115,49 @@ input::placeholder {
   color: #aaa;
 }
 
-.search-page select[name="holiday"] {
-  width: 105%;
-  max-width: none;
-  padding: 18px 22px;
+/* 休業日ボックス（input と統一デザイン） */
+.holiday-box {
+  width: 115%;       /* ← 他の input と同じ幅 */
+  max-width: 505px;  /* ← 全体の最大幅も揃う */
+  padding: 8px 13px;     /* ← 他と同じ */
+  background: #fff;
+  color: black;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 4px;
   font-size: 35px;
-  background-color: #fff;
-  color: #000;
+  margin: 25px -6px;
   box-sizing: border-box;
-  margin-bottom: 15px;
+  text-align: left;
 }
 
-.search-page select[name="holiday"] option {
+
+
+/* 選択肢一覧 */
+.holiday-options {
+  background: #fff;
+  border: 1px solid #ccc;
+  width: 75%;
+  max-width: 500px;
+  margin: 0 auto 10px;
+  border-radius: 10px;
   padding: 10px;
-  font-size: 50px;
+}
+
+.holiday-option {
+  padding: 12px 10px;
+  font-size: 32px;
+  border-bottom: 1px solid #ddd;
+  color: #000;
+}
+
+.holiday-option:last-child {
+  border-bottom: none;
+}
+
+.holiday-option.selected {
+  background: #e3e3e3;
+}
+
+.hidden {
+  display: none;
 }

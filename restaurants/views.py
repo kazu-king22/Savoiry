@@ -28,7 +28,7 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
     template_name = "restaurants/restaurant_form.html"
     success_url = reverse_lazy("restaurants:restaurant_search")
 
-    # ★ サジェスト候補をテンプレートに渡す（これが超重要）
+    # ★ サジェスト候補
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -40,15 +40,33 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
 
         return context
 
-
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.instance.status = "want"
+        # -----------------------------
+        # ★ form.save(commit=False) で保存前インスタンスを取得
+        # -----------------------------
+        restaurant = form.save(commit=False)
 
-        response = super().form_valid(form)
-        restaurant = self.object
+        # 必須情報セット
+        restaurant.user = self.request.user
+        restaurant.status = "want"
 
-        # ---- サジェスト保存 ----
+        # -----------------------------
+        # ★ 休業日の複数選択を文字列に変換して保存
+        # -----------------------------
+        holidays = self.request.POST.getlist("holiday")
+        restaurant.holiday = ",".join(holidays)
+
+        # -----------------------------
+        # ★ ここで save（super().form_valid は使わない）
+        # -----------------------------
+        restaurant.save()
+
+        # ManyToMany の tags は save_m2m() が必要
+        form.save_m2m()
+
+        # -----------------------------
+        # ★ サジェスト保存処理
+        # -----------------------------
         def save_suggest(word_type, value):
             if value:
                 value = value.strip()
@@ -64,9 +82,8 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
         save_suggest("group", restaurant.companions)
         save_suggest("scene", restaurant.scene)
 
-        # タグ
+        # タグ保存
         tags_input = self.request.POST.getlist("tags")
-
         if tags_input:
             for tag_name in tags_input:
                 tag_name = tag_name.strip()
@@ -75,10 +92,13 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
 
                 tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
                 restaurant.tags.add(tag_obj)
-
                 save_suggest("tag", tag_name)
 
         messages.success(self.request, "restaurant_added")
+
+        # -----------------------------
+        # ★ 最後にリダイレクト
+        # -----------------------------
         return redirect("restaurants:restaurant_list_want")
 
 
@@ -215,8 +235,13 @@ class RestaurantSearchView(LoginRequiredMixin, TemplateView):
         context["scene_list"] = SuggestWord.objects.filter(word_type="scene").values_list("word", flat=True)
         context["tag_list"] = SuggestWord.objects.filter(word_type="tag").values_list("word", flat=True)
 
-        return context
+        # ★ 休業日の選択肢（検索画面用）
+        context["holiday_choices"] = Restaurant.DAY_CHOICES
 
+        # ★ 検索時の選択済みの休業日（編集 UI の初期値用）
+        context["selected_holidays"] = self.request.GET.getlist("holiday")
+
+        return context
 
 
 class RestaurantSearchResultView(LoginRequiredMixin, ListView):
@@ -423,15 +448,18 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
+
+    # ▼ 休業日の複数選択を保存
+        holidays = self.request.POST.getlist("holiday")
+        form.instance.holiday = "、".join(holidays)
+
         response = super().form_valid(form)
 
+    # ▼ タグ更新処理（今のままでOK）
         restaurant = self.object
-
-        # ▼ タグ更新処理 ▼
-        tags = self.request.POST.getlist("tags")  # 複数取得
+        tags = self.request.POST.getlist("tags")
         tags = [t.strip() for t in tags if t.strip()]
-
-        restaurant.tags.clear()  # 一旦全部外す
+        restaurant.tags.clear()
 
         from .models import Tag
         for tagname in tags:
@@ -439,6 +467,8 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
             restaurant.tags.add(tag_obj)
 
         return response
+
+
 
 
 

@@ -83,12 +83,26 @@
       {% endfor %}
     </datalist>
 
-<!-- 休業日 -->
-    <p>
-      <label for="id_holiday">休業日</label>
-      {{ form.holiday }}
-    </p>
-<p id="selected-holidays" class="selected-holiday-box"></p>
+<!-- 休業日（カスタムUI） -->
+<p>
+  <label for="holiday-box">休業日</label>
+
+  <!-- 表示ボックス（初期値が入る） -->
+  <div id="holiday-box" class="holiday-box"
+       data-initial="{{ object.holiday|default:'' }}">
+       選択してください
+  </div>
+</p>
+
+<!-- 選択肢リスト -->
+<div id="holiday-options" class="holiday-options hidden">
+  {% for value, label in form.fields.holiday.choices %}
+    <div class="holiday-option" data-value="{{ value }}">{{ label }}</div>
+  {% endfor %}
+</div>
+
+<div id="holiday-hidden-container"></div>
+
 
    <label class="tag-label">タグ</label>
 
@@ -128,28 +142,19 @@
   {% endfor %}
 </datalist>
 
-    <button type="submit">保存する</button>
+    <button type="submit">保存</button>
+
+    <div class="cancel-wrapper">
+  <a href="{% url 'restaurants:restaurant_detail' pk=object.pk %}" class="cancel-link">
+    キャンセル
+  </a>
+</div>
 
   </form>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.getElementById("add-tag").addEventListener("click", function () {
-  const container = document.getElementById("tag-container");
-
-  container.insertAdjacentHTML("beforeend",
-    `<div class="tag-row">
-        <div class="input-with-arrow">
-            <input type="text" name="tags" class="tag-input"
-                   placeholder="例：おしゃれ・個室など"
-                   list="tag-list" autocomplete="on">
-        </div>
-     </div>`
-  );
-});
-</script>
 
 <script src="{% static 'restaurants/js/register_suggest.js' %}"></script>
 
