@@ -403,27 +403,57 @@ class VisitDeleteView(LoginRequiredMixin, View):
 
 class RestaurantEditView(LoginRequiredMixin, UpdateView):
     model = Restaurant
-    fields = [
-        "store_name", "url", "area", "genre",
-        "companions", "scene", "holiday", "tags",
-    ]
+    form_class = RestaurantForm
     template_name = "restaurants/restaurant_edit.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # タグ名のリストを渡す
+        # --- タグの初期値 ---
         context["selected_tags"] = [tag.name for tag in self.object.tags.all()]
 
-        # datalist 用
-        context["tag_list"] = Tag.objects.values_list("name", flat=True)
+        # --- ★ サジェストを追加（登録画面と同じ） ---
+        context["area_list"] = SuggestWord.objects.filter(word_type="area").values_list("word", flat=True)
+        context["genre_list"] = SuggestWord.objects.filter(word_type="genre").values_list("word", flat=True)
+        context["group_list"] = SuggestWord.objects.filter(word_type="group").values_list("word", flat=True)
+        context["scene_list"] = SuggestWord.objects.filter(word_type="scene").values_list("word", flat=True)
+        context["tag_list"] = SuggestWord.objects.filter(word_type="tag").values_list("word", flat=True)
 
         return context
 
+    def form_valid(self, form):
+        restaurant = form.save(commit=False)
+        
+        restaurant.genre = self.request.POST.get("genre")
+
+
+        # holiday の統一
+        holidays = form.cleaned_data.get("holiday")
+        restaurant.holiday = "、".join(holidays) if holidays else ""
+        restaurant.save()
+
+        # --- タグを更新 ---
+        tags_input = self.request.POST.getlist("tags")
+        restaurant.tags.clear()
+
+        for tagname in tags_input:
+            tagname = tagname.strip()
+            if not tagname:
+                continue
+
+            tag_obj, _ = Tag.objects.get_or_create(name=tagname)
+            restaurant.tags.add(tag_obj)
+
+            # サジェストにも登録
+            SuggestWord.objects.get_or_create(
+                word_type="tag",
+                word=tagname
+            )
+
+        return redirect(self.get_success_url())
+
     def get_success_url(self):
         return reverse("restaurants:restaurant_detail", args=[self.object.pk])
-
-
 
 
 def visit_chart_monthly(request):
