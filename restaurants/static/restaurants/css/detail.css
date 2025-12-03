@@ -278,12 +278,12 @@
 
 .edit-btn {
   display: inline-block;
-  background-color: #eeb61a;
-  color: black;
-  padding: 10px 45px;
+  background-color: #2f3b6b;
+  color: white;
+  margin-top: 25px;
+  padding: 10px 50px;
   border-radius: 10px;
-  font-size: 34px;
-  font-weight: bold;
+  font-size: 30px;
   text-decoration: none;
 }
 
