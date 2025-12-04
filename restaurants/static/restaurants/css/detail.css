@@ -277,8 +277,9 @@
 }
 
 .edit-btn {
+  width: 48%;
   display: inline-block;
-  background-color: #2f3b6b;
+  background-color: #777;
   color: white;
   margin-top: 25px;
   padding: 10px 50px;

@@ -8,25 +8,34 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
-  // ======================================
-  // タグ追加
-  // ======================================
-  const addTagBtn = document.getElementById("add-tag");
-  const tagContainer = document.getElementById("tag-container");
+ // ======================================
+// タグ追加（最大 3 個まで）
+// ======================================
+const addTagBtn = document.getElementById("add-tag");
+const tagContainer = document.getElementById("tag-container");
 
-  if (addTagBtn && tagContainer) {
-    addTagBtn.addEventListener("click", function () {
-      const newTag = `
-        <div class="tag-row">
-          <div class="input-with-arrow">
-            <input type="text" name="tags" class="tag-input"
-                   placeholder="例：おしゃれ・個室など"
-                   list="tag-list" autocomplete="on">
-          </div>
-        </div>`;
-      tagContainer.insertAdjacentHTML("beforeend", newTag);
-    });
-  }
+if (addTagBtn && tagContainer) {
+  addTagBtn.addEventListener("click", function () {
+
+    // ▼ 現在の入力欄の数をチェック
+    const currentCount = tagContainer.querySelectorAll(".tag-row").length;
+    if (currentCount >= 3) {
+      alert("タグは最大3つまでです。");
+      return;
+    }
+
+    // ▼ 新しいタグ欄を追加
+    const newTag = `
+      <div class="tag-row">
+        <div class="input-with-arrow-tag">
+          <input type="text" name="tags" class="tag-input"
+                 placeholder="例：おしゃれ・個室など"
+                 list="tag-list" autocomplete="on">
+        </div>
+      </div>`;
+    tagContainer.insertAdjacentHTML("beforeend", newTag);
+  });
+}
 
 
 // ======================================

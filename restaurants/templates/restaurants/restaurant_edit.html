@@ -111,7 +111,7 @@
   {% if selected_tags %}
     {% for tagname in selected_tags %}
       <div class="tag-row">
-        <div class="input-with-arrow">
+        <div class="input-with-arrow-tag">
           <input type="text" name="tags" class="tag-input"
                  value="{{ tagname }}"
                  placeholder="例：おしゃれ・個室など"
@@ -122,7 +122,7 @@
   {% else %}
     <!-- タグが無い場合は1つ空欄 -->
     <div class="tag-row">
-      <div class="input-with-arrow">
+      <div class="input-with-arrow-tag">
         <input type="text" name="tags" class="tag-input"
                placeholder="例：おしゃれ・個室など"
                list="tag-list" autocomplete="on">
@@ -142,15 +142,24 @@
   {% endfor %}
 </datalist>
 
-    <button type="submit">保存</button>
+<button type="submit">保存</button>
 
-    <div class="cancel-wrapper">
-  <a href="{% url 'restaurants:restaurant_detail' pk=object.pk %}" class="cancel-link">
-    キャンセル
-  </a>
+<div class="cancel-wrapper">
+  {% if request.GET.from == "went" %}
+    <!-- 行った詳細に戻る -->
+    <a href="{% url 'restaurants:restaurant_detail_went' pk=object.pk %}" class="cancel-link">
+      キャンセル
+    </a>
+  {% else %}
+    <!-- 気になる詳細に戻る -->
+    <a href="{% url 'restaurants:restaurant_detail' pk=object.pk %}" class="cancel-link">
+      キャンセル
+    </a>
+  {% endif %}
 </div>
 
-  </form>
+
+</form>
 </div>
 {% endblock %}
 

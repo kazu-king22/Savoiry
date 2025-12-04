@@ -60,7 +60,13 @@
       削除
     </button>
   </form>
+</div>
 
+<!-- 店舗編集 -->
+<div class="edit-store-wrapper">
+  <a href="{% url 'restaurants:restaurant_edit' restaurant.pk %}?from=went" class="btn-edit-store">
+  店舗情報を編集
+</a>
 </div>
 
   </div>

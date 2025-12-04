@@ -134,7 +134,7 @@ input::placeholder {
 .tag-input-wrapper {
   background: #fff;
   border-radius: 10px;
-  padding: 12px 18px;
+  padding: 12px 50px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   margin-bottom: 12px;
 }
@@ -145,6 +145,23 @@ input::placeholder {
   font-size: 32px;
   border: none;
   outline: none;
+  box-sizing: border-box;
+}
+
+.input-with-arrow-tag {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: 60px;
+}
+
+.input-with-arrow-tag input {
+  width: 100%; /* ← 修正（150% → 100%） */
+  padding-right: 40px;
+  padding-left: 10px;
+  font-size: 35px;
+  border-radius: 4px;
   box-sizing: border-box;
 }
 

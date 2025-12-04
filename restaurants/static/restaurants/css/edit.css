@@ -148,6 +148,24 @@ input::placeholder {
   box-sizing: border-box;
 }
 
+.input-with-arrow-tag {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: 60px;
+}
+
+.input-with-arrow-tag input {
+  width: 100%; /* ← 修正（150% → 100%） */
+  padding-right: 40px;
+  padding-left: 10px;
+  font-size: 35px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
 /* ===============================
    ▼ ボタン類
 ================================ */
@@ -260,4 +278,3 @@ input::placeholder {
   text-decoration: underline;
   font-size: 25px;
 }
-

@@ -430,8 +430,14 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
     model = Restaurant
     form_class = RestaurantForm
     template_name = "restaurants/restaurant_edit.html"
-    
+
+    # ★ 保存後の遷移先を分岐
     def get_success_url(self):
+        if self.request.GET.get("from") == "went":
+            # 行ったお店の詳細ページへ
+            return reverse("restaurants:restaurant_detail_went", kwargs={"pk": self.object.pk})
+        
+        # 気になるの詳細ページへ
         return reverse("restaurants:restaurant_detail", kwargs={"pk": self.object.pk})
 
     def get_context_data(self, **kwargs):
@@ -448,14 +454,13 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-
-    # ▼ 休業日の複数選択を保存
+        # ▼ 休業日の複数選択を保存
         holidays = self.request.POST.getlist("holiday")
         form.instance.holiday = "、".join(holidays)
 
         response = super().form_valid(form)
 
-    # ▼ タグ更新処理（今のままでOK）
+        # ▼ タグ更新処理
         restaurant = self.object
         tags = self.request.POST.getlist("tags")
         tags = [t.strip() for t in tags if t.strip()]
@@ -467,9 +472,6 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
             restaurant.tags.add(tag_obj)
 
         return response
-
-
-
 
 
 def visit_chart_monthly(request):
