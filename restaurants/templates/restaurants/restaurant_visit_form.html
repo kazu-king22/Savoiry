@@ -80,12 +80,11 @@
 
         <!-- 削除ボタン（×） -->
         <button type="button"
-        class="open-delete-modal"
-        data-url="{% url 'restaurants:delete_visit_image' img.id %}"
-        data-message="この写真を削除しますか？"
-        id="image-{{ img.id }}">
+        class="delete-image-btn"
+        data-image-id="{{ img.id }}">
   ×
 </button>
+
 
       </div>
     {% endfor %}
@@ -276,5 +275,45 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
   </div>
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  let targetImageId = null;
+
+  // 削除ボタンが押されたらモーダルを表示
+  document.querySelectorAll(".delete-image-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      targetImageId = btn.dataset.imageId;
+      document.getElementById("delete-confirm-modal").style.display = "flex";
+    });
+  });
+
+  // キャンセル
+  document.getElementById("cancel-delete").addEventListener("click", () => {
+    document.getElementById("delete-confirm-modal").style.display = "none";
+    targetImageId = null;
+  });
+
+  // 削除実行
+  document.getElementById("ok-delete").addEventListener("click", () => {
+
+    fetch(`/savoiry/restaurants/visit/image/${targetImageId}/delete/`, {
+      method: "POST",
+      headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`image-${targetImageId}`).remove();
+      }
+    });
+
+    // モーダル閉じる
+    document.getElementById("delete-confirm-modal").style.display = "none";
+  });
+});
+</script>
+
 
 {% endblock %}

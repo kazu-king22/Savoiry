@@ -56,11 +56,15 @@
     <button type="submit" class="btn-revisit-store">再訪</button>
   </form>
 
-  <!-- 店削除 -->
-<form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}" class="action-form">
+ <!-- 店削除 -->
+<form method="post"
+      action="{% url 'restaurants:restaurant_reset' restaurant.pk %}"
+      class="action-form">
   {% csrf_token %}
-  <button type="submit" class="btn-delete"
-          onclick="return confirm('このお店を気になるに戻しますか？');">
+  <button type="button" 
+          class="btn-delete open-delete-modal"
+          data-url="{% url 'restaurants:restaurant_reset' restaurant.pk %}"
+          data-message="このお店を気になるに戻しますか？">
     削除
   </button>
 </form>
@@ -117,13 +121,19 @@
     <button class="btn-edit">編集</button>
   </form>
 
-  <!-- 訪問削除-->
-<form method="post" action="{% url 'restaurants:visit_delete' visit.pk %}" 
-      class="visit-action-form"
-      onsubmit="return confirm('この訪問記録を削除しますか？');">
+  <!-- 訪問削除 -->
+<form method="post"
+      action="{% url 'restaurants:visit_delete' visit.pk %}" 
+      class="visit-action-form">
   {% csrf_token %}
-  <button class="btn-delete-visit">削除</button>
+  <button type="button"
+          class="btn-delete-visit open-delete-modal"
+          data-url="{% url 'restaurants:visit_delete' visit.pk %}"
+          data-message="この訪問記録を削除しますか？">
+    削除
+  </button>
 </form>
+
 </div>
 
         </div>
@@ -154,4 +164,49 @@
 </div>
 
 <script src="{% static 'restaurants/js/star_rating.js' %}"></script>
+
+<!-- 汎用削除モーダル -->
+<!-- 汎用削除モーダル（写真と同じデザイン） -->
+<div id="delete-modal" class="confirm-modal" style="display: none;">
+  <div class="confirm-content">
+    <p id="delete-message">本当に削除しますか？</p>
+
+    <div class="confirm-buttons">
+      <button type="button" id="cancel-delete" class="btn-cancel">キャンセル</button>
+
+      <form id="delete-form" method="POST" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" class="btn-ok">削除する</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const modal = document.getElementById("delete-modal");
+  const msg = document.getElementById("delete-message");
+  const form = document.getElementById("delete-form");
+  const cancel = document.getElementById("cancel-delete");
+
+  // 削除ボタンが押されたらモーダルを開く
+  document.querySelectorAll(".open-delete-modal").forEach(btn => {
+    btn.addEventListener("click", () => {
+      msg.textContent = btn.dataset.message;
+      form.action = btn.dataset.url;
+      modal.style.display = "flex";
+    });
+  });
+
+  // キャンセル
+  cancel.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+});
+</script>
+
 {% endblock %}

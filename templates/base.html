@@ -166,68 +166,8 @@ if (window.__sv_messages) {
 </script>
 {% endif %}
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  let deleteUrl = null;
-
-  // すべての削除ボタンを拾う
-  document.querySelectorAll(".open-delete-modal").forEach(btn => {
-    btn.addEventListener("click", () => {
-
-      deleteUrl = btn.dataset.url;   // POST 先のURL
-      const msg = btn.dataset.message || "この項目を削除しますか？";
-
-      // メッセージ差し替え
-      document.getElementById("delete-message").textContent = msg;
-
-      // モーダル開く
-      document.getElementById("delete-confirm-modal").style.display = "flex";
-    });
-  });
-
-  // キャンセル
-  document.getElementById("cancel-delete").addEventListener("click", () => {
-    document.getElementById("delete-confirm-modal").style.display = "none";
-    deleteUrl = null;
-  });
-
-  // 削除実行
-  document.getElementById("ok-delete").addEventListener("click", () => {
-    if (!deleteUrl) return;
-
-    fetch(deleteUrl, {
-      method: "POST",
-      headers: { "X-CSRFToken": "{{ csrf_token }}" }
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        if (data.deleted_id) {
-          const el = document.getElementById(data.deleted_id);
-          if (el) el.remove();
-        }
-        location.reload(); // 必要ならリロード
-      }
-    });
-
-    // モーダルを閉じる
-    document.getElementById("delete-confirm-modal").style.display = "none";
-  });
-});
-</script>
-
-
 {% block extra_js %}{% endblock %}
-<!-- 汎用 削除確認モーダル（全ページ共通） -->
-<div id="delete-confirm-modal" class="confirm-modal">
-  <div class="confirm-content">
-    <p id="delete-message">この項目を削除しますか？</p>
-    <div class="confirm-buttons">
-      <button id="cancel-delete" class="btn-cancel">キャンセル</button>
-      <button id="ok-delete" class="btn-ok">削除する</button>
-    </div>
-  </div>
-</div>
+
 
 </body>
 </html>
