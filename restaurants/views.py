@@ -41,9 +41,7 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        # -----------------------------
-        # ★ form.save(commit=False) で保存前インスタンスを取得
-        # -----------------------------
+       
         restaurant = form.save(commit=False)
 
         # 必須情報セット
@@ -56,9 +54,6 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
         holidays = self.request.POST.getlist("holiday")
         restaurant.holiday = ",".join(holidays)
 
-        # -----------------------------
-        # ★ ここで save（super().form_valid は使わない）
-        # -----------------------------
         restaurant.save()
 
         # ManyToMany の tags は save_m2m() が必要
@@ -102,8 +97,6 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
         return redirect("restaurants:restaurant_list_want")
 
 
-
-
 class VisitCreateView(LoginRequiredMixin, CreateView):
     model = Visit
     form_class = VisitForm
@@ -125,8 +118,6 @@ class VisitCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy("restaurants:restaurant_detail", kwargs={"pk": self.object.restaurant.pk})
-
-
 
 
 class WantRestaurantListView(LoginRequiredMixin, ListView):
@@ -164,31 +155,50 @@ class RestaurantDetailView(LoginRequiredMixin, View):
         form = VisitForm(request.POST, request.FILES)
 
         if form.is_valid():
+
+            # ★ 画像を取得（ここが最重要）
+            images = request.FILES.getlist("images")
+
+            # ★ 5枚を超えていたらエラーを出して return
+            if len(images) > 5:
+                messages.error(request, "写真は1回の訪問につき最大5枚まで登録できます。")
+
+                visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
+                return render(request, "restaurants/restaurant_detail.html", {
+                    "restaurant": restaurant,
+                    "form": form,
+                    "visits": visits,
+                })
+
+            # ★ 枚数OKなら Visit 保存
             visit = form.save(commit=False)
             visit.restaurant = restaurant
 
             if not visit.date:
                 visit.date = timezone.now().date()
+
             visit.save()
 
-            images = request.FILES.getlist('images')
+            # ★ 画像の保存処理
             for image in images:
                 VisitImage.objects.create(visit=visit, image=image)
 
+            # ステータス更新
             if restaurant.status == 'want':
                 restaurant.status = 'went'
                 restaurant.save()
-            
+
             messages.success(request, "went_added")
             return redirect("restaurants:restaurant_list_went")
 
-
+        # フォームエラー時
         visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
         return render(request, "restaurants/restaurant_detail.html", {
             "restaurant": restaurant,
             "form": form,
             "visits": visits,
         })
+
 
 
 class RestaurantDeleteView(LoginRequiredMixin, DeleteView):
@@ -353,14 +363,30 @@ class VisitUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
+
+        visit = self.object  # 編集対象の Visit
+
+    # 既存画像の枚数
+        existing_count = visit.images.count()
+
+    # 新しくアップロードされた画像
+        new_images = self.request.FILES.getlist('images')
+        new_count = len(new_images)
+
+    # ★ 合計枚数チェック（最重要） ★
+        if existing_count + new_count > 5:
+            form.add_error(None, f"写真は最大5枚までです。（既存{existing_count}枚＋新規{new_count}枚）")
+            return self.form_invalid(form)
+
+    # Visit 本体を保存
         response = super().form_valid(form)
 
-        # 画像追加
-        images = self.request.FILES.getlist('images')
-        for image in images:
-            VisitImage.objects.create(visit=self.object, image=image)
+    # 新規画像を追加保存
+        for image in new_images:
+            VisitImage.objects.create(visit=visit, image=image)
 
         return response
+
 
     def get_success_url(self):
         restaurant = self.object.restaurant
@@ -370,15 +396,15 @@ class VisitUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 class VisitRevisitStoreView(LoginRequiredMixin, View):
+
     def get(self, request, pk):
         restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
-
         form = VisitForm()
 
         return render(request, "restaurants/restaurant_visit_form.html", {
             "restaurant": restaurant,
             "form": form,
-            "is_edit": False,  
+            "is_edit": False,
         })
 
     def post(self, request, pk):
@@ -386,14 +412,20 @@ class VisitRevisitStoreView(LoginRequiredMixin, View):
         form = VisitForm(request.POST, request.FILES)
 
         if form.is_valid():
+            images = request.FILES.getlist("images")
+
+            # ★ ここが一番重要（5枚制限）★
+            if len(images) > 5:
+                messages.error(request, "写真は1回の訪問につき最大5枚まで登録できます。")
+                return redirect(request.path)
+
             visit = form.save(commit=False)
             visit.restaurant = restaurant
             visit.save()
 
-            # 画像
-            images = request.FILES.getlist('images')
-            for image in images:
-                VisitImage.objects.create(visit=visit, image=image)
+            # 画像保存
+            for img in images:
+                VisitImage.objects.create(visit=visit, image=img)
 
             return redirect("restaurants:restaurant_detail_went", pk=restaurant.pk)
 

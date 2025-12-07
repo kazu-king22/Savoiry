@@ -68,6 +68,35 @@
           <div id="image-count" class="image-count"></div>
         </div>
 
+        {% if is_edit %}
+  <p id="image-count-display" style="color:#444; margin-top:8px; font-size: 17px;">
+    現在：既存 {{ original_visit.images.count }} 枚
+  </p>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const existingCount = {{ original_visit.images.count }};
+      const input = document.getElementById("id_images");
+      const display = document.getElementById("image-count-display");
+
+      if (input) {
+        input.addEventListener("change", () => {
+          const newCount = input.files.length;
+          const total = existingCount + newCount;
+
+          display.textContent =
+            `既存 ${existingCount} 枚 ＋ 新規 ${newCount} 枚 ＝ 合計 ${total} 枚`;
+
+          // 5枚超えたら赤色
+          display.style.color = total > 5 ? "red" : "#444";
+        });
+      }
+    });
+  </script>
+{% endif %}
+
+
         <script>
         document.addEventListener('DOMContentLoaded', function() {
           const imageInput = document.getElementById('id_images');
@@ -96,9 +125,6 @@
     </div>
   {% endif %}
 </div>
-
-
-
 
         <!-- コメント -->
         <textarea name="comment" placeholder="感想・思い出を入力" class="comment-box">{% if is_edit and original_visit.comment %}{{ original_visit.comment }}{% endif %}</textarea>
