@@ -36,8 +36,9 @@ urlpatterns = [
     path("visit/<int:pk>/delete/", views.VisitDeleteView.as_view(), name="visit_delete"),
     path("visit_chart/genre/", views.visit_chart_genre, name="visit_chart_genre"),
     path("<int:pk>/", RestaurantDetailView.as_view(), name="restaurant_detail"),
-    path("restaurant/<int:pk>/edit/",views.RestaurantEditView.as_view(),name="restaurant_edit",)
-]
+    path("restaurant/<int:pk>/edit/",views.RestaurantEditView.as_view(),name="restaurant_edit"),
+    path("visit/image/<int:image_id>/delete/", views.delete_visit_image, name="delete_visit_image"),
+    ]
     
     # path("visit/<int:pk>/revisit/", VisitRevisitView.as_view(), name="visit_revisit"),
 

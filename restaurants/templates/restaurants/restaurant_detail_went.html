@@ -8,18 +8,22 @@
 {% block content %}
 <div class="detail-container">
 
-  <!-- 写真ギャラリー -->
-  <div class="photo-gallery">
-    {% if visits %}
-      {% for visit in visits %}
-        {% for image in visit.images.all %}
-          <img src="{{ image.image.url }}" alt="訪問画像" class="visit-photo">
-          {% empty %} 
-          <p class="no-photo">写真はまだ登録されていません</p>
-        {% endfor %}
+ <!-- 写真ギャラリー -->
+<div class="photo-gallery">
+  {% if visits %}
+    {% for visit in visits %}
+      {% for image in visit.images.all %}
+        <img src="{{ image.image.url }}"
+             alt="訪問画像"
+             class="visit-photo"
+             data-visit-date="{{ visit.date|date:'Y/m/d' }}">
+      {% empty %} 
+        <p class="no-photo">写真はまだ登録されていません</p>
       {% endfor %}
-    {% endif %}
-  </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
 
   <!-- 店舗情報 -->
   <div class="restaurant-info">
@@ -53,13 +57,13 @@
   </form>
 
   <!-- 店削除 -->
-  <form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}" class="action-form">
-    {% csrf_token %}
-    <button type="submit" class="btn-delete"
-            onclick="return confirm('このお店を気になるに戻しますか？');">
-      削除
-    </button>
-  </form>
+<form method="post" action="{% url 'restaurants:restaurant_reset' restaurant.pk %}" class="action-form">
+  {% csrf_token %}
+  <button type="submit" class="btn-delete"
+          onclick="return confirm('このお店を気になるに戻しますか？');">
+    削除
+  </button>
+</form>
 </div>
 
 <!-- 店舗編集 -->
@@ -70,9 +74,6 @@
 </div>
 
   </div>
-
-  
-
 
   <hr class="divider">
 
@@ -104,9 +105,10 @@
       {% endwith %}
   </div>
 
-          {% if visit.comment %}
-            <p class="comment">{{ visit.comment }}</p>
-          {% endif %}
+{% if visit.comment %}
+  <p class="comment">{{ visit.comment|linebreaksbr }}</p>
+{% endif %}
+
 
          <div class="visit-buttons">
 
@@ -115,14 +117,13 @@
     <button class="btn-edit">編集</button>
   </form>
 
-  <!-- 訪問削除 -->
-  <form method="post" action="{% url 'restaurants:visit_delete' visit.pk %}" 
-        class="visit-action-form"
-        onsubmit="return confirm('この訪問記録を削除しますか？');">
-    {% csrf_token %}
-    <button class="btn-delete-visit">削除</button>
-  </form>
-
+  <!-- 訪問削除-->
+<form method="post" action="{% url 'restaurants:visit_delete' visit.pk %}" 
+      class="visit-action-form"
+      onsubmit="return confirm('この訪問記録を削除しますか？');">
+  {% csrf_token %}
+  <button class="btn-delete-visit">削除</button>
+</form>
 </div>
 
         </div>
@@ -133,10 +134,24 @@
   </div>
 
 
-
   <!-- 戻るリンク -->
   <div class="back-link">
     <a href="{% url 'restaurants:restaurant_list_went' %}">一覧へ戻る</a>
   </div>
 </div>
+
+<!-- 画像拡大モーダル -->
+<div id="image-modal" class="image-modal">
+  <span class="close-modal">×</span>
+
+  <div class="modal-inner">
+    <img id="modal-img" class="modal-content">
+    <p id="modal-date" class="modal-date"></p>
+  </div>
+
+  <p id="modal-visit-date" class="modal-visit-date"></p>
+
+</div>
+
+<script src="{% static 'restaurants/js/star_rating.js' %}"></script>
 {% endblock %}

@@ -92,7 +92,13 @@ document.addEventListener('DOMContentLoaded', function() {
     <input type="date" name="date" id="id_date" class="visit-date" required>
     <span class="date-placeholder">選択してください</span>
   </div>
+
+  <!-- ★ 日付エラー表示（未来日禁止など） -->
+  {% if form.date.errors %}
+    <p class="error-text">{{ form.date.errors.0 }}</p>
+  {% endif %}
 </div>
+
 
 
 
@@ -138,6 +144,46 @@ document.addEventListener('DOMContentLoaded', function() {
   <a href="{% url 'restaurants:restaurant_list_want' %}">一覧へ戻る</a>
 </div>
 
+<!-- 画像拡大モーダル -->
+<div id="image-modal" class="image-modal">
+  <span class="close-modal">×</span>
+  <img id="modal-img" class="modal-content">
+</div>
+
+
 <script src="{% static 'restaurants/js/star_rating.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const modal   = document.getElementById("image-modal");
+  const modalImg = document.getElementById("modal-img");
+  const closeBtn = document.querySelector(".close-modal");
+
+  // ▼ ここを修正：.visit-photo を対象にする
+  const thumbnails = document.querySelectorAll(".visit-photo");
+
+  thumbnails.forEach((img) => {
+    img.addEventListener("click", function () {
+      modal.style.display = "flex";
+      modalImg.src = this.src;
+    });
+  });
+
+  // ✕で閉じる
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  }
+
+  // 背景クリックでも閉じる
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+});
+</script>
+
 
 {% endblock %}

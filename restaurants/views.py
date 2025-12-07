@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 plt.rcParams["font.family"] = "MS Gothic"
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse 
 import io
 from django.db.models.functions import TruncMonth
 from django.db.models import Count, Avg, Q
@@ -18,6 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import matplotlib
 from django.http import HttpResponseForbidden
+import datetime
 
 matplotlib.rcParams['font.family'] = ['Noto Sans CJK JP', 'IPAexGothic', 'TakaoGothic', 'Meiryo', 'sans-serif']
 
@@ -365,28 +366,37 @@ class VisitUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
 
         visit = self.object  # 編集対象の Visit
+    
+    # ===== 未来日チェック =====
+        visit_date = form.cleaned_data.get("date")
 
-    # 既存画像の枚数
+        if isinstance(visit_date, str):
+            try:
+                visit_date = datetime.datetime.strptime(visit_date, "%Y-%m-%d").date()
+            except:
+                pass
+
+        today = timezone.localdate()
+
+        if visit_date and visit_date > today:
+            form.add_error("date", "未来日は登録できません。")
+            return self.form_invalid(form)
+
+    # ===== 画像チェック =====
         existing_count = visit.images.count()
-
-    # 新しくアップロードされた画像
         new_images = self.request.FILES.getlist('images')
         new_count = len(new_images)
 
-    # ★ 合計枚数チェック（最重要） ★
         if existing_count + new_count > 5:
-            form.add_error(None, f"写真は最大5枚までです。（既存{existing_count}枚＋新規{new_count}枚）")
+            messages.error(self.request, "写真は1回の訪問につき最大5枚まで登録できます。")
             return self.form_invalid(form)
 
-    # Visit 本体を保存
         response = super().form_valid(form)
 
-    # 新規画像を追加保存
         for image in new_images:
             VisitImage.objects.create(visit=visit, image=image)
 
         return response
-
 
     def get_success_url(self):
         restaurant = self.object.restaurant
@@ -683,6 +693,23 @@ def visit_chart_genre(request):
     plt.close("all")
     buf.seek(0)
     return HttpResponse(buf.getvalue(), content_type="image/png")
+
+
+@login_required
+def delete_visit_image(request, image_id):
+    image = get_object_or_404(
+        VisitImage,
+        id=image_id,
+        visit__restaurant__user=request.user
+    )
+
+    if request.method == "POST":
+        deleted_id = f"image-{image_id}"
+        image.delete()
+        return JsonResponse({"success": True, "deleted_id": deleted_id})
+
+    return JsonResponse({"success": False}, status=400)
+
 
 
 # class VisitRevisitView(View):

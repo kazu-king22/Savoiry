@@ -3,7 +3,8 @@ from .models import Restaurant, Visit
 from django.forms.widgets import  DateInput, ClearableFileInput
 from django import forms
 from .models import Tag
-
+from django.utils import timezone
+import datetime
 
 class MultiFileInput(ClearableFileInput):
     allow_multiple_selected = True
@@ -61,12 +62,34 @@ class VisitForm(forms.ModelForm):
     class Meta:
         model = Visit
         fields = ['date', 'comment', 'rating', 'feeling']
-        labels = {'date':'訪問日', 'comment':'感想・思い出', 'rating':'お気に入り度', 'feeling':'評価',}
-        widgets = {'date': forms.DateInput(attrs={'type': 'date'}),}
+        labels = {
+            'date': '訪問日',
+            'comment': '感想・思い出',
+            'rating': 'お気に入り度',
+            'feeling': '評価',
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['rating'].required = False
+
+    # ★ 未来日チェックを追加（最重要） ★
+    def clean_date(self):
+        visit_date = self.cleaned_data.get("date")
+
+        if not visit_date:
+            return visit_date  # 未入力はOK（後でビューで今日を補完してる場合もある）
+
+        today = timezone.localdate()
+
+        if visit_date > today:
+            raise forms.ValidationError("今日より先は登録できません。")
+
+        return visit_date
+
 
 
 class TagForm(forms.ModelForm):

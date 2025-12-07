@@ -292,3 +292,171 @@
   opacity: 0.85;
 }
 
+.existing-images {
+  margin-top: 15px;
+}
+
+.existing-image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.existing-image-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* === 訪問編集：既存写真表示エリア === */
+
+.existing-image-list {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+}
+
+.existing-image-item {
+  position: relative;
+}
+
+.existing-image-item img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* 写真削除ボタン（×） */
+.open-delete-modal {
+  position: absolute;
+  top: 1%;
+  right: -8px;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==============================
+   写真サムネイル（visit-photo）共通
+================================ */
+.visit-photo {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.visit-photo:hover {
+  opacity: 0.8;
+}
+
+/* ==============================
+   モーダルで画像拡大表示
+================================ */
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55); /* 背景も少し濃くして強調 */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* ★ ここをガッツリ大きく変更 ★ */
+.confirm-content {
+  background: #fff;
+  padding: 55px 60px;       /* ← 余白を約2倍 */
+  width: 95%;               /* ← 画面幅ほぼいっぱい */
+  max-width: 650px;         /* ← PCでも大きいサイズに */
+  border-radius: 20px;      /* ← ふわっと大きい丸み */
+  text-align: center;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+/* テキストも大きく */
+.confirm-content p {
+  font-size: 35px;          /* ← 約2倍の大きさ */
+  font-weight: 600;
+  margin-bottom: 35px;
+  color: #333 !important;
+}
+
+/* ボタンエリアも拡大 */
+.confirm-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 50px;                /* ← 間隔も広げる */
+}
+
+/* ボタン自体を巨大化 */
+.btn-cancel,
+.btn-ok {
+  padding: 18px 35px;       /* ← ボタンの高さも幅も2倍 */
+  font-size: 30px;          /* ← 文字も大きい */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #ddd;
+  color: #333;
+}
+
+.btn-ok {
+  background: #e63946;
+  color: #fff;
+}
