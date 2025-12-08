@@ -6,6 +6,10 @@
 {% endblock %}
 
 {% block content %}
+<!-- トースト（削除後の通知用） -->
+<div id="toast" class="toast"></div>
+
+<!-- ここから一覧の内容 -->
 <div class="list-container-want">
   <h2>気になるお店</h2>
 
@@ -47,4 +51,26 @@
     <p class="no-data-want">まだ「気になる」お店はありません</p>
   {% endif %}
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const toast = document.getElementById("toast");
+
+  {% if messages %}
+    // 最初の1つだけ使う
+    const msg = "{{ messages.0 }}";
+
+    if (msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+  {% endif %}
+});
+</script>
+
+
 {% endblock %}

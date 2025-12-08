@@ -129,12 +129,16 @@ document.addEventListener('DOMContentLoaded', function() {
 <button type="submit" class="btn-went">行った</button>
 </form>
 
-<form method="post" action="{% url 'restaurants:restaurant_delete' restaurant.pk %}">
-  {% csrf_token %}
-  <button type="submit" class="btn-delete"
-            onclick="return confirm('このお店を削除しますか？');">
-      削除
-</form>
+<!-- 削除ボタン：モーダルを開くだけ -->
+<button type="button"
+        class="btn-delete open-shop-delete-modal"
+        data-delete-url="{% url 'restaurants:restaurant_delete' restaurant.pk %}">
+  削除
+</button>
+
+
+<p class="note">※このボタンを押すと、<br>「気になる一覧」から削除されます。</p>
+
   </div>
   <p class="note">※このボタンを押すと、<br>「気になる一覧」から削除されます。</p>
  </div>
@@ -182,6 +186,57 @@ document.addEventListener("DOMContentLoaded", function() {
       modal.style.display = "none";
     }
   });
+});
+</script>
+
+<!-- 店舗削除モーダル（このページ専用） -->
+<div id="shop-delete-modal" class="confirm-modal">
+  <div class="confirm-content">
+    <p>本当にこのお店を削除しますか？</p>
+
+    <div class="confirm-buttons">
+      <button type="button" class="btn-cancel" id="cancel-shop-delete">キャンセル</button>
+      <button type="button" class="btn-ok" id="confirm-shop-delete">削除する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const modal = document.getElementById("shop-delete-modal");
+  const cancelBtn = document.getElementById("cancel-shop-delete");
+  const okBtn = document.getElementById("confirm-shop-delete");
+
+  let deleteUrl = null;
+
+  // 削除ボタンを押したとき → モーダル表示
+  document.querySelector(".open-shop-delete-modal").addEventListener("click", function() {
+    deleteUrl = this.dataset.deleteUrl;
+    modal.style.display = "flex";
+  });
+
+  // キャンセル
+  cancelBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  // 削除実行
+  okBtn.addEventListener("click", () => {
+    if (!deleteUrl) return;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = deleteUrl;
+
+    // CSRF挿入
+    const csrf = document.querySelector("[name=csrfmiddlewaretoken]").cloneNode(true);
+    form.appendChild(csrf);
+
+    document.body.appendChild(form);
+    form.submit();
+  });
+
 });
 </script>
 

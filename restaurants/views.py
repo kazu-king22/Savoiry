@@ -202,13 +202,24 @@ class RestaurantDetailView(LoginRequiredMixin, View):
 
 
 
-class RestaurantDeleteView(LoginRequiredMixin, DeleteView):
-    model = Restaurant
-    template_name = "restaurants/restaurant_confirm_delete.html"
-    success_url = reverse_lazy("restaurants:restaurant_list_want")
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DeleteView
 
-    def get_queryset(self):
-        return Restaurant.objects.filter(user=self.request.user)
+class RestaurantDeleteView(LoginRequiredMixin, View):
+
+    def post(self, request, pk):
+        restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
+
+        restaurant_name = restaurant.store_name
+        restaurant.delete()
+
+        messages.success(request, f" {restaurant_name} を「気になる」から削除しました。")
+
+        return redirect("restaurants:restaurant_list_want")
+
+
 
 
 class RestaurantResetView(LoginRequiredMixin, View):
@@ -222,6 +233,8 @@ class RestaurantResetView(LoginRequiredMixin, View):
 
         restaurant.status = "want"
         restaurant.save()
+
+        messages.success(request, f" {restaurant.store_name} を「気になる」に戻しました。")
 
         return redirect(reverse_lazy("restaurants:restaurant_list_want"))
 
