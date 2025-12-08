@@ -14,8 +14,6 @@
     <img src="/media/portfolio_screenshot1.jpg" alt="アプリのスクショ">
     <img src="/media/portfolio_screenshot2.jpg" alt="アプリのスクショ">
     <img src="/media/portfolio_screenshot3.jpg" alt="アプリのスクショ">
-    <img src="/media/portfolio_screenshot4.jpeg" alt="アプリのスクショ">
-    <img src="/media/portfolio_screenshot5.jpg" alt="アプリのスクショ">
     </div>
 
     <p>
@@ -33,9 +31,12 @@
     <a href="/media/Savoiry_ER図.svg" target="_blank">ER図</a>
     </div>
 
-    <div class="link-button">
-        <button class="btn" onclick="location.href='{% url 'accounts:login' %}'">アプリにアクセス</button>
-    </div>
+    <div class="access-container">
+    <a href="{% url 'accounts:login' %}" class="access-btn">
+        アプリにアクセス
+    </a>
+</div>
+
 </body>
 </html>
 
