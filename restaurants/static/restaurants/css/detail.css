@@ -462,3 +462,43 @@
   background: #e63946;
   color: #fff;
 }
+
+/* =========================================
+   新規選択画像プレビュー（追加しただけ）
+========================================= */
+.preview-area {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.preview-item {
+  position: relative;
+}
+
+.preview-item img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* 既存写真削除ボタンと完全に同じデザイン */
+.preview-remove {
+  position: absolute !important;
+  top: 1px !important;
+  right: -8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(0,0,0,0.75) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 28px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
