@@ -1,7 +1,9 @@
 # accounts/validators.py
 # accounts/validators.py
+from django.contrib.auth.password_validation import UserAttributeSimilarityValidator
 from django.core.exceptions import ValidationError
 import re
+from django.utils.translation import gettext as _
 
 class AlphaNumericMixValidator:
     """英字と数字の両方を含めるバリデータ"""
@@ -25,3 +27,13 @@ class NotSameAsCurrentPasswordValidator:
 
     def get_help_text(self):
         return self.message
+    
+class CustomUserAttributeSimilarityValidator(UserAttributeSimilarityValidator):
+    def validate(self, password, user=None):
+        try:
+            super().validate(password, user)
+        except ValidationError:
+            raise ValidationError(
+                _("このパスワードはユーザー名と似すぎています。"),
+                code="password_too_similar",
+            )

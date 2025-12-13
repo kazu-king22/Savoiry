@@ -24,7 +24,8 @@
         <div class="input-wrapper">
           <input type="text" name="area" list="area-list"
                  placeholder="例：渋谷・天神など"
-                 value="{{ request.GET.area }}">
+                 value="{{ request.GET.area }}"
+                 required>
         </div>
       </p>
 
@@ -34,7 +35,8 @@
         <div class="input-wrapper">
           <input type="text" name="genre" list="genre-list"
                  placeholder="例：ラーメン・カフェなど"
-                 value="{{ request.GET.genre }}">
+                 value="{{ request.GET.genre }}"
+                 required>
         </div>
       </p>
 

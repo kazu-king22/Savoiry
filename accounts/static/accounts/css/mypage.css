@@ -163,3 +163,65 @@ h3 {
   text-align: center;
   color: white;
 }
+
+
+/* 削除モーダルのレイアウト */
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55); /* 背景も少し濃くして強調 */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* ★ ここをガッツリ大きく変更 ★ */
+.confirm-content {
+  background: #fff;
+  padding: 55px 60px;       /* ← 余白を約2倍 */
+  width: 95%;               /* ← 画面幅ほぼいっぱい */
+  max-width: 650px;         /* ← PCでも大きいサイズに */
+  border-radius: 20px;      /* ← ふわっと大きい丸み */
+  text-align: center;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+/* テキストも大きく */
+.confirm-content p {
+  font-size: 35px;          /* ← 約2倍の大きさ */
+  font-weight: 600;
+  margin-bottom: 35px;
+  color: #333 !important;
+}
+
+/* ボタンエリアも拡大 */
+.confirm-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 50px;                /* ← 間隔も広げる */
+}
+
+/* ボタン自体を巨大化 */
+.btn-cancel,
+.btn-ok {
+  padding: 18px 35px;       /* ← ボタンの高さも幅も2倍 */
+  font-size: 30px;          /* ← 文字も大きい */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #ddd;
+  color: #333;
+}
+
+.btn-ok {
+  background: #e63946;
+  color: #fff;
+}

@@ -26,7 +26,11 @@ class SignUpForm(UserCreationForm):
     password1 = forms.CharField(
         label="パスワード",
         required=True,
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(
+        attrs={
+            "placeholder": "8文字以上・英数字を含む"
+        }
+    ),
         error_messages={
             "required": "パスワードを入力してください。",
         },
@@ -35,7 +39,11 @@ class SignUpForm(UserCreationForm):
     password2 = forms.CharField(
         label="パスワード（確認）",
         required=True,
-        widget=forms.PasswordInput,
+         widget=forms.PasswordInput(
+        attrs={
+            "placeholder": "確認のため、もう一度入力"
+        }
+    ),
         error_messages={
             "required": "パスワード(確認)を入力してください。",
         },
@@ -122,6 +130,16 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         self.fields['old_password'].label = "現在のパスワード"
         self.fields['new_password1'].label = "新しいパスワード"
         self.fields['new_password2'].label = "新しいパスワード（確認）"
+        
+        self.fields['old_password'].widget.attrs.update({
+            'placeholder': '現在のパスワードを入力'
+        })
+        self.fields['new_password1'].widget.attrs.update({
+            'placeholder': '8文字以上・英数字を含む'
+        })
+        self.fields['new_password2'].widget.attrs.update({
+            'placeholder': '確認のため、もう一度入力'
+        })
 
         self.fields['old_password'].error_messages.update({
             'required': "現在のパスワードを入力してください。",
