@@ -84,9 +84,11 @@
 <!-- 休業日（カスタムUI） -->
 <p>
   <label for="holiday-box">休業日</label>
+
   <div id="holiday-box" class="holiday-box"
        data-initial="{{ form.instance.holiday|default:'' }}">
-    選択してください
+    <span class="holiday-text">選択してください</span>
+    <span class="holiday-arrow">▼</span>
   </div>
 </p>
 
@@ -96,9 +98,8 @@
   {% endfor %}
 </div>
 
-<!-- hidden inputs を入れるコンテナ -->
+<!-- hidden inputs -->
 <div id="holiday-hidden-container"></div>
-
 
 
 

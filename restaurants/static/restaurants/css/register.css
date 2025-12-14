@@ -234,6 +234,8 @@ input::placeholder {
   margin: 5px auto 10px;
   box-sizing: border-box;
   text-align: left;
+  position: relative;
+  cursor: pointer;
 }
 
 /* 選択肢一覧 */
@@ -264,6 +266,19 @@ input::placeholder {
 
 .hidden {
   display: none;
+}
+
+.holiday-arrow {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.holiday-box.open .holiday-arrow {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 /* モーダル背景 */

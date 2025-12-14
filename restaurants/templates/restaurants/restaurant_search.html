@@ -67,7 +67,8 @@
 
         <div id="holiday-box" class="holiday-box"
              data-initial="{% if request.GET.holiday %}{{ request.GET.holiday|join:'、' }}{% endif %}">
-             選択してください
+          <span class="holiday-text">選択してください</span>
+          <span class="holiday-arrow">▼</span>
         </div>
       </p>
 
@@ -162,58 +163,76 @@ document.addEventListener("DOMContentLoaded", function () {
   const list = document.getElementById("holiday-options");
   const hiddenContainer = document.getElementById("holiday-hidden-container");
 
-  if (box && list && hiddenContainer) {
+  if (!box || !list || !hiddenContainer) return;
 
-    // 初期値反映
-    const initial = box.dataset.initial;
-    if (initial) {
-      const initialValues = initial.split("、").map(s => s.trim());
-      box.textContent = initial;
+  // 表示テキスト用
+  const text = box.querySelector(".holiday-text");
 
-      list.querySelectorAll(".holiday-option").forEach(opt => {
-        if (initialValues.includes(opt.dataset.value)) {
-          opt.classList.add("selected");
+  /* =========================
+     初期値反映
+  ========================= */
+  const initial = box.dataset.initial;
 
-          const input = document.createElement("input");
-          input.type = "hidden";
-          input.name = "holiday";
-          input.value = opt.dataset.value;
-          hiddenContainer.appendChild(input);
-        }
-      });
-    }
+  if (initial) {
+    const initialValues = initial.split("、").map(s => s.trim());
+    text.textContent = initial;
 
-    // 開閉
-    box.addEventListener("click", () => {
-      list.classList.toggle("hidden");
-    });
-
-    // 選択処理
     list.querySelectorAll(".holiday-option").forEach(opt => {
-      opt.addEventListener("click", () => {
-        opt.classList.toggle("selected");
+      if (initialValues.includes(opt.dataset.value)) {
+        opt.classList.add("selected");
 
-        hiddenContainer.innerHTML = "";
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "holiday";
+        input.value = opt.dataset.value;
+        hiddenContainer.appendChild(input);
+      }
+    });
+  }
 
-        const selected = Array.from(
-          list.querySelectorAll(".holiday-option.selected")
-        ).map(item => item.dataset.value);
+  /* =========================
+     開閉処理
+  ========================= */
+  box.addEventListener("click", function () {
+    list.classList.toggle("hidden");
+    box.classList.toggle("open"); // 矢印回転用
+  });
 
-        box.textContent = selected.length ? selected.join("、") : "選択してください";
+  /* =========================
+     選択処理
+  ========================= */
+  list.querySelectorAll(".holiday-option").forEach(opt => {
+    opt.addEventListener("click", function (e) {
+      e.stopPropagation(); // ← boxクリックと干渉させない
 
-        selected.forEach(value => {
-          const input = document.createElement("input");
-          input.type = "hidden";
-          input.name = "holiday";
-          input.value = value;
-          hiddenContainer.appendChild(input);
-        });
+      opt.classList.toggle("selected");
+
+      // hidden input 初期化
+      hiddenContainer.innerHTML = "";
+
+      const selected = Array.from(
+        list.querySelectorAll(".holiday-option.selected")
+      ).map(item => item.dataset.value);
+
+      // 表示テキスト更新
+      text.textContent = selected.length
+        ? selected.join("、")
+        : "選択してください";
+
+      // hidden input 再生成
+      selected.forEach(value => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "holiday";
+        input.value = value;
+        hiddenContainer.appendChild(input);
       });
     });
-
-  }
+  });
 
 });
 </script>
+
+
 
 {% endblock %}

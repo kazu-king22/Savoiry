@@ -84,15 +84,17 @@
     </datalist>
 
 <!-- 休業日（カスタムUI） -->
+<!-- 休業日（カスタムUI） -->
 <p>
   <label for="holiday-box">休業日</label>
 
-  <!-- 表示ボックス（初期値が入る） -->
   <div id="holiday-box" class="holiday-box"
-       data-initial="{{ object.holiday|default:'' }}">
-       選択してください
+       data-initial="{% if object.holiday %}{{ object.holiday|join:'、' }}{% endif %}">
+    <span class="holiday-text">選択してください</span>
+    <span class="holiday-arrow">▼</span>
   </div>
 </p>
+
 
 <!-- 選択肢リスト -->
 <div id="holiday-options" class="holiday-options hidden">

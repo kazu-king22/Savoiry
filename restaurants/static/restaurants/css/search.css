@@ -117,9 +117,9 @@ input::placeholder {
 
 /* 休業日ボックス（input と統一デザイン） */
 .holiday-box {
-  width: 115%;       /* ← 他の input と同じ幅 */
-  max-width: 505px;  /* ← 全体の最大幅も揃う */
-  padding: 8px 13px;     /* ← 他と同じ */
+  width: 115%;
+  max-width: 505px;
+  padding: 8px 40px 8px 13px; 
   background: #fff;
   color: black;
   border: 1px solid #ccc;
@@ -128,6 +128,8 @@ input::placeholder {
   margin: 25px -6px;
   box-sizing: border-box;
   text-align: left;
+  position: relative;        
+  cursor: pointer;           
 }
 
 
@@ -160,4 +162,21 @@ input::placeholder {
 
 .hidden {
   display: none;
+}
+
+/* ▼ ▲ 矢印 */
+.holiday-arrow {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 28px;
+  color: #666;
+  transition: transform 0.2s ease;
+  pointer-events: none; 
+}
+
+/* 開閉状態 */
+.holiday-box.open .holiday-arrow {
+  transform: translateY(-50%) rotate(180deg);
 }
