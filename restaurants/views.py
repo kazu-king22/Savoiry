@@ -53,7 +53,7 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
         # ★ 休業日の複数選択を文字列に変換して保存
         # -----------------------------
         holidays = self.request.POST.getlist("holiday")
-        restaurant.holiday = ",".join(holidays)
+        restaurant.holiday = "、".join(holidays)
 
         restaurant.save()
 

@@ -89,10 +89,10 @@
   <label for="holiday-box">休業日</label>
 
   <div id="holiday-box" class="holiday-box"
-       data-initial="{% if object.holiday %}{{ object.holiday|join:'、' }}{% endif %}">
-    <span class="holiday-text">選択してください</span>
-    <span class="holiday-arrow">▼</span>
-  </div>
+     data-initial="{{ object.holiday|default:'' }}">
+  <span class="holiday-text">選択してください</span>
+  <span class="holiday-arrow">▼</span>
+</div>
 </p>
 
 
