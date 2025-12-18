@@ -10,19 +10,24 @@
 
  <!-- 写真ギャラリー -->
 <div class="photo-gallery">
-  {% if visits %}
+
+  {% if has_images %}
     {% for visit in visits %}
       {% for image in visit.images.all %}
         <img src="{{ image.image.url }}"
              alt="訪問画像"
              class="visit-photo"
              data-visit-date="{{ visit.date|date:'Y/m/d' }}">
-      {% empty %} 
-        <p class="no-photo">写真はまだ登録されていません</p>
       {% endfor %}
     {% endfor %}
+  {% else %}
+    <div class="no-photo">
+      写真はまだ登録されていません
+    </div>
   {% endif %}
+
 </div>
+
 
 
   <!-- 店舗情報 -->

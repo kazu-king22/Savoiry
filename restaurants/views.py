@@ -355,13 +355,18 @@ class WentRestaurantDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         restaurant = get_object_or_404(Restaurant, pk=pk, user=request.user)
 
+        visits = Visit.objects.filter(
+            restaurant=restaurant
+        ).order_by('-date').prefetch_related("images")
 
-        visits = Visit.objects.filter(restaurant=restaurant).order_by('-date')
+        has_images = any(visit.images.exists() for visit in visits)
 
         return render(request, "restaurants/restaurant_detail_went.html", {
             "restaurant": restaurant,
             "visits": visits,
+            "has_images": has_images,
         })
+
 
 
 class VisitUpdateView(LoginRequiredMixin, UpdateView):
