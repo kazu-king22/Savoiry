@@ -25,7 +25,13 @@
           </blockquote>
           <script async src="https://www.tiktok.com/embed.js"></script>
         {% else %}
-          <a href="{{ restaurant.url }}" target="_blank">{{ restaurant.url }}</a>
+          <p class="store-url">
+          <a href="{{ restaurant.url }}"
+          target="_blank"
+          rel="noopener noreferrer">
+          登録したサイトを見る
+          </a>
+          </p>
         {% endif %}
       {% endif %}
 

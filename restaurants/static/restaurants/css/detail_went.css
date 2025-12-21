@@ -17,6 +17,7 @@
   display: flex;
   overflow-x: auto;
   gap: 12px;
+  padding: 0 12px;
   margin-bottom: 18px;
 }
 
@@ -113,6 +114,7 @@
   text-decoration: underline;
 }
 
+/* 写真なし表示（横長・プレースホルダー） */
 .no-photo {
   width: 100%;
   height: 200px;              
@@ -129,6 +131,7 @@
   background: #f8f8f8;
   margin-bottom: 18px;         
 }
+
 
 /* ==========================
    再訪・削除ボタン（統一）

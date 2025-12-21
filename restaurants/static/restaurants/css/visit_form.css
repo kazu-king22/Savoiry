@@ -44,3 +44,23 @@ form {
   text-decoration: underline;
   font-size: 30px;
 }
+
+.store-url {
+  margin: 8px 0;
+}
+
+.store-url a {
+  font-size: 35px;
+  color: #244272;          /* Savoiryのテーマ色 */
+  text-decoration: underline;
+}
+
+.store-url {
+  margin: 8px 0;
+}
+
+.store-url a {
+  font-size: 35px;
+  color: #244272;          /* Savoiryのテーマ色 */
+  text-decoration: underline;
+}

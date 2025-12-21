@@ -35,11 +35,22 @@
     <h2>{{ restaurant.store_name }}</h2>
 
     <p class="meta-line">
-      {% if restaurant.area %}{{ restaurant.area }}　{% endif %}
-      {% if restaurant.genre %}{{ restaurant.genre }}　{% endif %}
-      {% if restaurant.scene %}{{ restaurant.scene }}　{% endif %}
-      {% if restaurant.companions %}{{ restaurant.companions }}{% endif %}
-    </p>
+  {% if restaurant.area %}
+    {{ restaurant.area }}　
+  {% endif %}
+
+  {% if restaurant.genre %}
+    {{ restaurant.genre }}　
+  {% endif %}
+
+  {% if restaurant.scene and restaurant.scene != "None" %}
+    {{ restaurant.scene }}　
+  {% endif %}
+
+  {% if restaurant.companions and restaurant.companions != "None" %}
+    {{ restaurant.companions }}
+  {% endif %}
+</p>
 
     {% if restaurant.tags.all %}
       <p class="meta-line">

@@ -514,9 +514,15 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        # ▼ 休業日の複数選択を保存
+    # ▼ 休業日の複数選択を保存
         holidays = self.request.POST.getlist("holiday")
         form.instance.holiday = "、".join(holidays)
+
+    # ▼ ★ None文字列対策（ここが重要）
+        if form.instance.companions in [None, "None"]:
+            form.instance.companions = ""
+        if form.instance.scene in [None, "None"]:
+            form.instance.scene = ""
 
         response = super().form_valid(form)
 
@@ -528,7 +534,7 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
 
         from .models import Tag
         for tagname in tags:
-            tag_obj, created = Tag.objects.get_or_create(name=tagname)
+            tag_obj, _ = Tag.objects.get_or_create(name=tagname)
             restaurant.tags.add(tag_obj)
 
         return response
@@ -573,7 +579,7 @@ def visit_chart_monthly(request):
         buf.seek(0)
         return HttpResponse(buf.getvalue(), content_type="image/png")
 
-    months = [f"{v['month'].month}月" for v in visits_by_month]
+    months = [f"{v['month'].year}年{v['month'].month}月" for v in visits_by_month]
     counts = [v["count"] for v in visits_by_month]
 
     fig, ax = plt.subplots(figsize=(9, 4))

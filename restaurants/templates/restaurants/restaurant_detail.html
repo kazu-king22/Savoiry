@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 
+<!-- DEBUG: restaurant_detail.html -->
+
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'restaurants/css/detail.css' %}">
 {% endblock %}
@@ -25,7 +28,13 @@
         </blockquote>
         <script async src="https://www.tiktok.com/embed.js"></script>
       {% else %}
-        <a href="{{ restaurant.url }}" target="_blank">{{ restaurant.url }}</a>
+         <p class="store-url">
+          <a href="{{ restaurant.url }}"
+          target="_blank"
+          rel="noopener noreferrer">
+          登録したサイトを見る
+          </a>
+          </p>
       {% endif %}
     {% endif %}
 

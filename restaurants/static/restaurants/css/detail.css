@@ -502,3 +502,13 @@
   justify-content: center;
   cursor: pointer;
 }
+
+.store-url {
+  margin: 8px 0;
+}
+
+.store-url a {
+  font-size: 35px;
+  color: #244272;          /* Savoiryのテーマ色 */
+  text-decoration: underline;
+}

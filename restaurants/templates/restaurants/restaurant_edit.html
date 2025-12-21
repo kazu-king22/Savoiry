@@ -59,8 +59,10 @@
     <p>
       <label for="id_companions">グループ</label>
       <input type="text" id="id_companions" name="companions"
-             value="{{ object.companions }}"
-             list="group-list">
+       value="{{ object.companions|default_if_none:'' }}"
+       placeholder="例：友人・家族など"
+       list="group-list">
+
     </p>
 
     <datalist id="group-list">
@@ -73,8 +75,10 @@
     <p>
       <label for="id_scene">シーン</label>
       <input type="text" id="id_scene" name="scene"
-             value="{{ object.scene }}"
-             list="scene-list">
+       value="{{ object.scene|default_if_none:'' }}"
+       placeholder="例：ランチ・デートなど"
+       list="scene-list">
+
     </p>
 
     <datalist id="scene-list">
@@ -83,7 +87,6 @@
       {% endfor %}
     </datalist>
 
-<!-- 休業日（カスタムUI） -->
 <!-- 休業日（カスタムUI） -->
 <p>
   <label for="holiday-box">休業日</label>
