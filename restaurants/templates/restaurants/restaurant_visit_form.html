@@ -16,8 +16,8 @@
       {% if restaurant.url %}
         {% if "instagram.com" in restaurant.url %}
           <blockquote class="instagram-media"
-                      data-instgrm-permalink="{{ restaurant.url }}"
-                      data-instgrm-version="14"></blockquote>
+            data-instgrm-permalink="{{ restaurant.url }}"
+            data-instgrm-version="14"></blockquote>
           <script async src="//www.instagram.com/embed.js"></script>
         {% elif "tiktok.com" in restaurant.url %}
           <blockquote class="tiktok-embed" cite="{{ restaurant.url }}">
@@ -26,11 +26,9 @@
           <script async src="https://www.tiktok.com/embed.js"></script>
         {% else %}
           <p class="store-url">
-          <a href="{{ restaurant.url }}"
-          target="_blank"
-          rel="noopener noreferrer">
-          登録したサイトを見る
-          </a>
+            <a href="{{ restaurant.url }}" target="_blank" rel="noopener noreferrer">
+              登録したサイトを見る
+            </a>
           </p>
         {% endif %}
       {% endif %}
@@ -69,160 +67,83 @@
         <!-- 写真アップロード -->
         <div class="photo-upload">
           <label for="id_images" class="upload-label">＋</label>
-          <input type="file" name="images" id="id_images" multiple hidden>
-          <p class="upload-text">写真を追加<br>(1回の訪問につき5枚まで)</p>
+
+          <input
+            type="file"
+            name="images"
+            id="id_images"
+            multiple
+            hidden
+            data-existing-count="{% if is_edit %}{{ original_visit.images.count }}{% else %}0{% endif %}"
+          >
+
+          <p class="upload-text">
+            写真を追加<br>(1回の訪問につき5枚まで)
+          </p>
+
           <div id="image-count" class="image-count"></div>
         </div>
 
         {% if is_edit %}
-<div class="existing-images">
-  <p>登録済みの写真（{{ original_visit.images.count }}枚）</p>
+        <!-- 登録済み画像 -->
+        <div class="existing-images">
+          <p>登録済みの写真（{{ original_visit.images.count }}枚）</p>
 
-  <div class="existing-image-list">
-    {% for img in original_visit.images.all %}
-      <div class="existing-image-item" id="image-{{ img.id }}">
-        <img src="{{ img.image.url }}" class="visit-photo" alt="登録済み写真">
+          <div class="existing-image-list">
+            {% for img in original_visit.images.all %}
+              <div class="existing-image-item" id="image-{{ img.id }}">
+                <img src="{{ img.image.url }}" class="visit-photo" alt="登録済み写真">
 
+                <button type="button"
+                  class="delete-image-btn"
+                  data-image-id="{{ img.id }}">
+                  ×
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
 
-        <!-- 削除ボタン（×） -->
-        <button type="button"
-        class="delete-image-btn"
-        data-image-id="{{ img.id }}">
-  ×
-</button>
+        <!-- 訪問日 -->
+        <div class="visit-date-section">
+          <label for="id_date">訪問日（必須）</label>
 
+          {% if is_edit %}
+            <input type="date" name="date" id="id_date"
+              class="visit-date"
+              value="{{ original_visit.date|date:'Y-m-d' }}">
+          {% else %}
+            <div class="date-wrapper">
+              <input type="date" name="date" id="id_date"
+                class="visit-date" required>
+              <span class="date-placeholder">選択してください</span>
+            </div>
+          {% endif %}
 
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  let targetImageId = null;
-
-  // 削除ボタンが押されたらモーダルを表示
-  document.querySelectorAll(".delete-image-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      targetImageId = btn.dataset.imageId;
-      document.getElementById("delete-confirm-modal").style.display = "flex";
-    });
-  });
-
-  // キャンセル
-  document.getElementById("cancel-delete").addEventListener("click", () => {
-    document.getElementById("delete-confirm-modal").style.display = "none";
-    targetImageId = null;
-  });
-
-  // 削除実行
-  document.getElementById("ok-delete").addEventListener("click", () => {
-
-    fetch(`/savoiry/restaurants/visit/image/${targetImageId}/delete/`, {
-      method: "POST",
-      headers: { "X-CSRFToken": "{{ csrf_token }}" }
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        document.getElementById(`image-${targetImageId}`).remove();
-      }
-    });
-
-    // モーダル閉じる
-    document.getElementById("delete-confirm-modal").style.display = "none";
-  });
-});
-</script>
-
-
-{% endif %}
-
-        {% if is_edit %}
-  <p id="image-count-display" style="color:#444; margin-top:8px; font-size: 20px;">
-    現在：既存 {{ original_visit.images.count }} 枚
-  </p>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-      const existingCount = {{ original_visit.images.count }};
-      const input = document.getElementById("id_images");
-      const display = document.getElementById("image-count-display");
-
-      if (input) {
-        input.addEventListener("change", () => {
-          const newCount = input.files.length;
-          const total = existingCount + newCount;
-
-          display.textContent =
-            `既存 ${existingCount} 枚 ＋ 新規 ${newCount} 枚 ＝ 合計 ${total} 枚`;
-
-          // 5枚超えたら赤色
-          display.style.color = total > 5 ? "red" : "#444";
-        });
-      }
-    });
-  </script>
-{% endif %}
-
-
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const imageInput = document.getElementById('id_images');
-          const imageCount = document.getElementById('image-count');
-          imageInput.addEventListener('change', function() {
-            const count = this.files.length;
-            imageCount.textContent = count > 0 ? `${count}枚選択中` : '';
-          });
-        });
-        </script>
-
-  <!-- 訪問日 -->
-<div class="visit-date-section">
-  <label for="id_date">訪問日</label>
-
-  {% if is_edit %}
-    <input type="date" name="date" id="id_date" class="visit-date"
-           value="{{ original_visit.date|date:'Y-m-d' }}">
-  {% else %}
-    <div class="date-wrapper">
-      <input type="date" name="date" id="id_date" class="visit-date" required>
-      <span class="date-placeholder">選択してください</span>
-    </div>
-  {% endif %}
-
-  <!-- ★ 未来日エラー表示 ★ -->
-  {% if form.date.errors %}
-    <p class="error-text" style="color:red; margin-top:6px;">
-      {{ form.date.errors.0 }}
-    </p>
-  {% endif %}
-</div>
-
+          {% if form.date.errors %}
+            <p class="error-text" style="color:red;">
+              {{ form.date.errors.0 }}
+            </p>
+          {% endif %}
+        </div>
 
         <!-- コメント -->
-        <textarea name="comment" placeholder="感想・思い出を入力" class="comment-box">{% if is_edit and original_visit.comment %}{{ original_visit.comment }}{% endif %}</textarea>
-        </textarea>
+        <textarea name="comment" class="comment-box"
+          placeholder="感想・思い出を入力">{% if is_edit %}{{ original_visit.comment }}{% endif %}</textarea>
 
         <!-- 星評価 -->
         <div class="stars">
-  {% for i in "12345" %}
-    {% with num=forloop.counter %}
-      <span class="star 
-        {% if is_edit and original_visit.rating|add:0 >= num %}
-          filled
-        {% endif %}"
-        data-value="{{ num }}"
-      >★</span>
-    {% endwith %}
-  {% endfor %}
-</div>
-
-<input type="hidden" name="rating" id="rating-value"
-       value="{{ original_visit.rating|default_if_none:0 }}">
-
+          {% for i in "12345" %}
+            {% with num=forloop.counter %}
+              <span class="star {% if is_edit and original_visit.rating|add:0 >= num %}filled{% endif %}"
+                data-value="{{ num }}">★</span>
+            {% endwith %}
+          {% endfor %}
         </div>
+
+        <input type="hidden" name="rating" id="rating-value"
+          value="{{ original_visit.rating|default_if_none:0 }}">
 
         <!-- 気持ち評価 -->
         <div class="feeling-select">
@@ -235,32 +156,20 @@ document.addEventListener("DOMContentLoaded", function () {
           </select>
         </div>
 
-        <!-- =============================
-             ボタン切り替え部分（超重要）
-        ============================== -->
         {% if is_edit %}
-          <!-- 編集時：グレーの「保存」 -->
           <button type="submit" class="btn-edit">保存</button>
-
-          <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" 
-             class="cancel-link">
-            キャンセル
-          </a>
-
         {% else %}
-          <!-- 新規 or 再訪：青の「行った」 -->
           <button type="submit" class="btn-went">行った</button>
-          <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}" 
-             class="cancel-link">
-            キャンセル
-          </a>
-
         {% endif %}
+
+        <a href="{% url 'restaurants:restaurant_detail_went' restaurant.pk %}"
+          class="cancel-link">キャンセル</a>
 
       </form>
     </div>
   </div>
 </div>
+
 
 <!-- 画像拡大モーダル（共通） -->
 <div id="image-modal" class="image-modal">
@@ -268,10 +177,10 @@ document.addEventListener("DOMContentLoaded", function () {
   <img id="modal-img" class="modal-content">
 </div>
 
-
+<!-- 星評価 -->
 <script src="{% static 'restaurants/js/star_rating.js' %}"></script>
 
-<!-- 写真削除確認モーダル -->
+<!-- 削除確認モーダル -->
 <div id="delete-confirm-modal" class="confirm-modal">
   <div class="confirm-content">
     <p>この写真を削除しますか？</p>
@@ -282,44 +191,86 @@ document.addEventListener("DOMContentLoaded", function () {
   </div>
 </div>
 
-
+<!-- =========================
+     画像5枚制限制御JS（唯一）
+========================= -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  let targetImageId = null;
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("id_images");
+  const label = document.querySelector(".upload-label");
+  const display = document.getElementById("image-count");
 
-  // 削除ボタンが押されたらモーダルを表示
+  if (!input) return;
+
+  const MAX = 5;
+  let existingCount = Number(input.dataset.existingCount || 0);
+
+  function update() {
+    const newCount = input.files.length;
+    const total = existingCount + newCount;
+
+    display.textContent =
+      `既存 ${existingCount} 枚 ＋ 新規 ${newCount} 枚（${total}/5）`;
+
+    if (total >= MAX) {
+      label.style.pointerEvents = "none";
+      label.style.opacity = "0.4";
+    } else {
+      label.style.pointerEvents = "auto";
+      label.style.opacity = "1";
+    }
+
+    if (total > MAX) {
+      alert("写真は1回の訪問につき5枚までです");
+      input.value = "";
+      update();
+    }
+  }
+
+  input.addEventListener("change", update);
+  update();
+
+  document.addEventListener("imageDeleted", () => {
+    existingCount--;
+    if (existingCount < 0) existingCount = 0;
+    update();
+  });
+});
+</script>
+
+<!-- 削除処理 -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let targetId = null;
+
   document.querySelectorAll(".delete-image-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      targetImageId = btn.dataset.imageId;
+      targetId = btn.dataset.imageId;
       document.getElementById("delete-confirm-modal").style.display = "flex";
     });
   });
 
-  // キャンセル
-  document.getElementById("cancel-delete").addEventListener("click", () => {
+  document.getElementById("cancel-delete").onclick = () => {
     document.getElementById("delete-confirm-modal").style.display = "none";
-    targetImageId = null;
-  });
+    targetId = null;
+  };
 
-  // 削除実行
-  document.getElementById("ok-delete").addEventListener("click", () => {
-
-    fetch(`/savoiry/restaurants/visit/image/${targetImageId}/delete/`, {
+  document.getElementById("ok-delete").onclick = () => {
+    fetch(`/savoiry/restaurants/visit/image/${targetId}/delete/`, {
       method: "POST",
       headers: { "X-CSRFToken": "{{ csrf_token }}" }
     })
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        document.getElementById(`image-${targetImageId}`).remove();
+        document.getElementById(`image-${targetId}`).remove();
+        document.dispatchEvent(new Event("imageDeleted"));
       }
     });
 
-    // モーダル閉じる
     document.getElementById("delete-confirm-modal").style.display = "none";
-  });
+  };
 });
 </script>
-
 
 {% endblock %}
