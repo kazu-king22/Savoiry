@@ -512,3 +512,10 @@
   color: #244272;          /* Savoiryのテーマ色 */
   text-decoration: underline;
 }
+
+/* 写真選択数 表示 */
+.image-count {
+  margin-top: 10px;
+  font-size: 25px;      
+  text-align: center;
+}
