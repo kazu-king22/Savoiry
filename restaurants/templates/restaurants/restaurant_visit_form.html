@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'restaurants/css/detail.css' %}">
+<link rel="stylesheet" href="{% static 'restaurants/css/visit_form.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -53,10 +53,6 @@
           <p class="line">休業日　{{ restaurant.holiday }}</p>
         {% endif %}
       </div>
-
-      <a href="{% url 'restaurants:restaurant_list_want' %}" class="back-link">
-        ← 一覧へ戻る
-      </a>
     </div>
 
     <!-- 訪問フォーム -->
@@ -83,6 +79,9 @@
 
           <div id="image-count" class="image-count"></div>
         </div>
+
+        <!-- ✅ 新規プレビュー：既存写真と同じレイアウトに統一 -->
+        <div id="preview-area" class="existing-image-list"></div>
 
         {% if is_edit %}
         <!-- 登録済み画像 -->
@@ -122,9 +121,7 @@
           {% endif %}
 
           {% if form.date.errors %}
-            <p class="error-text" style="color:red;">
-              {{ form.date.errors.0 }}
-            </p>
+            <p class="error-text">{{ form.date.errors.0 }}</p>
           {% endif %}
         </div>
 
@@ -170,14 +167,12 @@
   </div>
 </div>
 
-
 <!-- 画像拡大モーダル（共通） -->
 <div id="image-modal" class="image-modal">
   <span class="close-modal">×</span>
   <img id="modal-img" class="modal-content">
 </div>
 
-<!-- 星評価 -->
 <script src="{% static 'restaurants/js/star_rating.js' %}"></script>
 
 <!-- 削除確認モーダル -->
@@ -192,25 +187,33 @@
 </div>
 
 <!-- =========================
-     画像5枚制限制御JS（唯一）
+     画像5枚制限制御 + プレビュー生成（統合）
 ========================= -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("id_images");
   const label = document.querySelector(".upload-label");
   const display = document.getElementById("image-count");
+  const preview = document.getElementById("preview-area");
 
   if (!input) return;
 
   const MAX = 5;
+
+  // ★ 既存画像数（編集時のみ入る）
   let existingCount = Number(input.dataset.existingCount || 0);
 
-  function update() {
-    const newCount = input.files.length;
-    const total = existingCount + newCount;
+  // ★ 新規選択ファイル
+  let files = [];
+
+  // =========================
+  // 表示・非活性制御
+  // =========================
+  function updateCount() {
+    const total = existingCount + files.length;
 
     display.textContent =
-      `既存 ${existingCount} 枚 ＋ 新規 ${newCount} 枚（${total}/5）`;
+      `既存 ${existingCount} 枚 ＋ 新規 ${files.length} 枚（${total}/5）`;
 
     if (total >= MAX) {
       label.style.pointerEvents = "none";
@@ -219,26 +222,92 @@ document.addEventListener("DOMContentLoaded", () => {
       label.style.pointerEvents = "auto";
       label.style.opacity = "1";
     }
-
-    if (total > MAX) {
-      alert("写真は1回の訪問につき5枚までです");
-      input.value = "";
-      update();
-    }
   }
 
-  input.addEventListener("change", update);
-  update();
+  // =========================
+  // input.files を同期
+  // =========================
+  function syncInput() {
+    const dt = new DataTransfer();
+    files.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+  }
 
+  // =========================
+  // プレビュー描画
+  // =========================
+  function renderPreview() {
+    if (!preview) return;
+    preview.innerHTML = "";
+
+    files.forEach((file, index) => {
+      const reader = new FileReader();
+
+      reader.onload = e => {
+        const item = document.createElement("div");
+        item.className = "existing-image-item";
+
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.className = "visit-photo";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "delete-image-btn";
+        btn.textContent = "×";
+
+        btn.onclick = () => {
+          files.splice(index, 1);
+          syncInput();
+          renderPreview();
+          updateCount();
+        };
+
+        item.appendChild(img);
+        item.appendChild(btn);
+        preview.appendChild(item);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // =========================
+  // ファイル選択時
+  // =========================
+  input.addEventListener("change", () => {
+    const selected = Array.from(input.files);
+
+    if (existingCount + files.length + selected.length > MAX) {
+      alert("写真は1回の訪問につき5枚までです");
+      input.value = "";
+      return;
+    }
+
+    files = files.concat(selected);
+    syncInput();
+    renderPreview();
+    updateCount();
+  });
+
+  // =========================
+  // 既存画像削除イベント（編集画面）
+  // =========================
   document.addEventListener("imageDeleted", () => {
     existingCount--;
     if (existingCount < 0) existingCount = 0;
-    update();
+    updateCount();
   });
+
+  // 初期状態
+  updateCount();
 });
 </script>
 
-<!-- 削除処理 -->
+
+
+
+<!-- 既存画像削除処理 -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   let targetId = null;
@@ -264,7 +333,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       if (data.success) {
         document.getElementById(`image-${targetId}`).remove();
-        document.dispatchEvent(new Event("imageDeleted"));
       }
     });
 

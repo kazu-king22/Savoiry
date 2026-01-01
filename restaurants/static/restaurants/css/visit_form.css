@@ -1,48 +1,506 @@
-.visit-form-container {
-  width: 90%;
-  max-width: 360px;
-  margin: 0 auto;
-  background-color: white;
-  color: black;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+
+.detail-container {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  margin: 0 auto 40px auto;
   text-align: center;
+  color: white;
 }
 
-h2 {
-  color: #244272;
+
+.detail-card {
+  background-color: #fff;
+  color: black;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 550px; /* カードの最大幅 */
+}
+
+
+.restaurant-info h2 {
+  font-size: 45px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+
+.instagram-media,
+.tiktok-embed {
+  width: 100%;
+  margin: 10px 0;
+}
+
+
+.restaurant-details {
+  text-align: left;
+  font-size: 30px;
+  
+}
+
+.restaurant-details .line {
+  margin: 7px 0;
+  word-spacing: 1px;
+}
+
+
+.back-link {
+  display: block;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-top: 15px;
+}
+
+
+.photo-upload {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
   margin-bottom: 15px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.upload-label {
+  display: inline-block;
+  background-color: #fff;
+  color: #244272;
+  font-size: 35px;
+  font-weight: bold;
+  border: 2px solid #244272;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  line-height: 40px;
+  cursor: pointer;
 }
 
-.btn-save {
+.upload-text {
+  font-size: 25px;
+  color: #555;
+  margin-top: 8px;
+}
+
+
+.visit-date-section {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.visit-date-section label {
+  font-weight: bold;
+  font-size: 30px;
+  margin: -6px;
+  color: #333;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.visit-date {
+    width: 96%; 
+    padding: 8px; 
+    margin: -8px; 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
+    font-size: 30px;  /* ✅ margin:auto が効くように */;
+}
+
+
+/* コメント入力欄 */
+.comment-box {
+  width: 100%;
+  height: 180px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  margin: -8px;
+  font-size: 30px;
+  margin-top: 10px;
+  vertical-align: top;
+}
+
+/* 星評価 */
+.rating {
+  margin-top: 50px;
+  font-size: 30px;
+  color: #444;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.star {
+  font-size: 50px;
+  color: #ccc;           
+  transition: color 0.2s;
+}
+
+.star.selected,
+.star.hovered {
+  color: #eeb61a;        
+}
+
+
+.feeling-select {
+  margin: 30px 0;
+  text-align: left;
+  font-size: 30px;
+  color: #333;
+}
+
+.feeling-select label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.feeling-select select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 30px;
+}
+
+/* ボタン配置 */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn-went,
+.btn-delete,
+.btn-edit {
+  width: 48%;
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 35px;
+  border-radius: 3px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+/* 「行った」ボタン */
+.btn-went,
+.btn-edit {
   background-color: #eeb61a;
   color: black;
+  margin-top: 30px;
+}
+
+/* 「削除」ボタン */
+.btn-delete {
+  background-color: #d42f2f;
+  color: white;
+  margin-top: 50px;
+}
+
+.note {
+  font-size: 25px;
+  color: #333;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.back-link {
+  display: block;
+  text-align: center;
+  color: white;
+  margin-top: 10px;
   font-weight: bold;
-  border: none;
-  padding: 10px;
+  text-decoration: underline;
+  width: 100%;
+}
+
+.back-link a {
+  color: white;
+  font-size: 40px; 
+}
+
+.back-link a:hover {
+  opacity: 0.8;
+}
+
+.cancel-link {
+  display: block;
+  color: black;
+  text-decoration: underline;
+  font-size: 25px;
+   margin-top: 30px;
+}
+
+.date-wrapper {
+  position: relative;
+}
+
+/* 訪問日の入力欄のデザイン（気持ち評価と同じ雰囲気に） */
+.date-wrapper input[type="date"] {
+  width: 95%;
+  padding: 12px;
+  background: #f0f0f0;  /* ← 気持ち評価と同じ系統 */
   border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 30px;
+  color: #333;
+}
+
+/* 擬似プレースホルダー */
+.date-placeholder {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+  font-size: 27px;
+}
+
+/* 入力されたら placeholder を隠す */
+.date-wrapper input[type="date"]:valid + .date-placeholder {
+  display: none;
+}
+
+.edit-btn-wrapper {
+  text-align: center;
+  margin: 25px 0;
+}
+
+.edit-btn {
+  width: 48%;
+  display: inline-block;
+  background-color: #777;
+  color: white;
+  margin-top: 25px;
+  padding: 10px 50px;
+  border-radius: 10px;
+  font-size: 30px;
+  text-decoration: none;
+}
+
+.edit-btn:hover {
+  opacity: 0.85;
+}
+
+.existing-images {
+  margin-top: 15px;
+}
+
+.existing-image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.existing-image-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* === 訪問編集：既存写真表示エリア === */
+
+.existing-image-list {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+}
+
+.existing-image-item {
+  position: relative;
+}
+
+.existing-image-item img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* 写真の削除ボタン（最優先で適用されるようにする） */
+.existing-image-item .delete-image-btn {
+  position: absolute !important;
+  top: 1px !important;
+  right: -8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(0,0,0,0.75) !important;
+  padding: 0 !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 28px !important;
+  line-height: 1 !important;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ==============================
+   写真サムネイル（visit-photo）共通
+================================ */
+.visit-photo {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.visit-photo:hover {
+  opacity: 0.8;
+}
+
+/* ==============================
+   モーダルで画像拡大表示
+================================ */
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55); /* 背景も少し濃くして強調 */
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* ★ ここをガッツリ大きく変更 ★ */
+.confirm-content {
+  background: #fff;
+  padding: 55px 60px;       /* ← 余白を約2倍 */
+  width: 95%;               /* ← 画面幅ほぼいっぱい */
+  max-width: 650px;         /* ← PCでも大きいサイズに */
+  border-radius: 20px;      /* ← ふわっと大きい丸み */
+  text-align: center;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+}
+
+/* テキストも大きく */
+.confirm-content p {
+  font-size: 35px;          /* ← 約2倍の大きさ */
+  font-weight: 600;
+  margin-bottom: 35px;
+  color: #333 !important;
+}
+
+/* ボタンエリアも拡大 */
+.confirm-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 50px;                /* ← 間隔も広げる */
+}
+
+/* ボタン自体を巨大化 */
+.btn-cancel,
+.btn-ok {
+  padding: 18px 35px;       /* ← ボタンの高さも幅も2倍 */
+  font-size: 30px;          /* ← 文字も大きい */
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
 }
 
 .btn-cancel {
-  display: inline-block;
-  color: #244272;
-  text-decoration: underline;
-  font-size: 14px;
+  background: #ddd;
+  color: #333;
 }
 
-.cancel-link {
-  display: inline-block;
-  color: black;
-  text-decoration: underline;
-  font-size: 30px;
+.btn-ok {
+  background: #e63946;
+  color: #fff;
+}
+
+/* =========================================
+   新規選択画像プレビュー（追加しただけ）
+========================================= */
+.preview-area {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.preview-item {
+  position: relative;
+}
+
+.preview-item img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* 既存写真削除ボタンと完全に同じデザイン */
+.preview-remove {
+  position: absolute !important;
+  top: 1px !important;
+  right: -8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(0,0,0,0.75) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 28px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .store-url {
@@ -55,12 +513,9 @@ form {
   text-decoration: underline;
 }
 
-.store-url {
-  margin: 8px 0;
-}
-
-.store-url a {
-  font-size: 35px;
-  color: #244272;          /* Savoiryのテーマ色 */
-  text-decoration: underline;
+/* 写真選択数 表示 */
+.image-count {
+  margin-top: 10px;
+  font-size: 25px;      
+  text-align: center;
 }
