@@ -191,10 +191,18 @@
 ========================= -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+
+  let deleteIndex = null;
+
   const input = document.getElementById("id_images");
   const label = document.querySelector(".upload-label");
   const display = document.getElementById("image-count");
   const preview = document.getElementById("preview-area");
+
+  const deleteModal = document.getElementById("delete-confirm-modal");
+  const cancelBtn = document.getElementById("cancel-delete");
+  const okBtn = document.getElementById("ok-delete");
+
 
   if (!input) return;
 
@@ -257,11 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.textContent = "×";
 
         btn.onclick = () => {
-          files.splice(index, 1);
-          syncInput();
-          renderPreview();
-          updateCount();
+        deleteIndex = index;
+        document.getElementById("delete-confirm-modal").style.display = "flex";
         };
+
 
         item.appendChild(img);
         item.appendChild(btn);
@@ -299,6 +306,26 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCount();
   });
 
+  // キャンセル
+  cancelBtn.addEventListener("click", () => {
+  deleteModal.style.display = "none";
+  deleteIndex = null;
+  });
+
+  // 削除する
+  okBtn.addEventListener("click", () => {
+  if (deleteIndex === null) return;
+
+  files.splice(deleteIndex, 1);
+  syncInput();
+  renderPreview();
+  updateCount();
+
+  deleteModal.style.display = "none";
+  deleteIndex = null;
+  });
+
+
   // 初期状態
   updateCount();
 });
@@ -333,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       if (data.success) {
         document.getElementById(`image-${targetId}`).remove();
+        document.dispatchEvent(new Event("imageDeleted"));
       }
     });
 
@@ -340,5 +368,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 </script>
+
+<script src="{% static 'restaurants/js/image_modal.js' %}"></script>
+
 
 {% endblock %}

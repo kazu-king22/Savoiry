@@ -164,37 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script src="{% static 'restaurants/js/star_rating.js' %}"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const modal   = document.getElementById("image-modal");
-  const modalImg = document.getElementById("modal-img");
-  const closeBtn = document.querySelector(".close-modal");
-
-  // ▼ ここを修正：.visit-photo を対象にする
-  const thumbnails = document.querySelectorAll(".visit-photo");
-
-  thumbnails.forEach((img) => {
-    img.addEventListener("click", function () {
-      modal.style.display = "flex";
-      modalImg.src = this.src;
-    });
-  });
-
-  // ✕で閉じる
-  if (closeBtn) {
-    closeBtn.addEventListener("click", function () {
-      modal.style.display = "none";
-    });
-  }
-
-  // 背景クリックでも閉じる
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) {
-      modal.style.display = "none";
-    }
-  });
-});
-</script>
 
 <!-- 店舗削除モーダル（このページ専用） -->
 <div id="shop-delete-modal" class="confirm-modal">
@@ -355,5 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
+<script src="{% static 'restaurants/js/image_modal.js' %}"></script>
 
 {% endblock %}
