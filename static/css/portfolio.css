@@ -43,7 +43,7 @@
     .screenshot img {
         width: 85%;
         height: auto;
-        max-height: 500px;
+        max-height: 600px;
     }
 }
 
@@ -128,4 +128,34 @@ p {
     margin: 0 auto 30px;
     line-height: 1.8;
     font-size: 20px;
+}
+
+/* ============================
+   ポートフォリオ見出し
+============================ */
+.portfolio-header {
+    margin: 30px 0 50px;
+    text-align: center;
+}
+
+.portfolio-label {
+    font-size: 16px;
+    letter-spacing: 0.15em;
+    color: #888;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.portfolio-title {
+    color: #F4C542;
+    font-size: 52px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.portfolio-subtitle {
+    font-size: 18px;
+    color: #555;
+    margin-top: 6px;
+    text-align: center;
 }

@@ -33,11 +33,31 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["area_list"] = SuggestWord.objects.filter(word_type="area").values_list("word", flat=True)
-        context["genre_list"] = SuggestWord.objects.filter(word_type="genre").values_list("word", flat=True)
-        context["group_list"] = SuggestWord.objects.filter(word_type="group").values_list("word", flat=True)
-        context["scene_list"] = SuggestWord.objects.filter(word_type="scene").values_list("word", flat=True)
-        context["tag_list"] = SuggestWord.objects.filter(word_type="tag").values_list("word", flat=True)
+        context["area_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="area"
+        ).values_list("word", flat=True)
+
+        context["genre_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="genre"
+        ).values_list("word", flat=True)
+
+        context["group_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="group"
+        ).values_list("word", flat=True)
+
+        context["scene_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="scene"
+        ).values_list("word", flat=True)
+
+        context["tag_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="tag"
+        ).values_list("word", flat=True)
+ 
 
         return context
 
@@ -68,6 +88,7 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
                 value = value.strip()
                 if value:
                     SuggestWord.objects.get_or_create(
+                        user=self.request.user,
                         word_type=word_type,
                         word=value
                     )
@@ -253,11 +274,30 @@ class RestaurantSearchView(LoginRequiredMixin, TemplateView):
         context["want_count"] = Restaurant.objects.filter(user=user, status="want").count()
         context["went_count"] = Restaurant.objects.filter(user=user, status="went").count()
 
-        context["area_list"] = SuggestWord.objects.filter(word_type="area").values_list("word", flat=True)
-        context["genre_list"] = SuggestWord.objects.filter(word_type="genre").values_list("word", flat=True)
-        context["group_list"] = SuggestWord.objects.filter(word_type="group").values_list("word", flat=True)
-        context["scene_list"] = SuggestWord.objects.filter(word_type="scene").values_list("word", flat=True)
-        context["tag_list"] = SuggestWord.objects.filter(word_type="tag").values_list("word", flat=True)
+        context["area_list"] = SuggestWord.objects.filter(
+            user=user,
+            word_type="area"
+        ).values_list("word", flat=True)
+        
+        context["genre_list"] = SuggestWord.objects.filter(
+            user=user,
+            word_type="genre"
+        ).values_list("word", flat=True)
+
+        context["group_list"] = SuggestWord.objects.filter(
+            user=user,
+            word_type="group"
+        ).values_list("word", flat=True)
+
+        context["scene_list"] = SuggestWord.objects.filter(
+            user=user,
+            word_type="scene"
+        ).values_list("word", flat=True)
+
+        context["tag_list"] = SuggestWord.objects.filter(
+            user=user,
+            word_type="tag"
+        ).values_list("word", flat=True)
 
         # ★ 休業日の選択肢（検索画面用）
         context["holiday_choices"] = Restaurant.DAY_CHOICES
@@ -326,6 +366,20 @@ class RestaurantSearchResultView(LoginRequiredMixin, ListView):
 
         # 初期状態も全体
         return ["restaurants/restaurant_search_result_all.html"]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        status = self.request.GET.get("status")
+
+    # 「全て」のときだけ分けて渡す
+        if status == "all" or status is None:
+            restaurants = context["restaurants"]
+            context["want_restaurants"] = restaurants.filter(status="want")
+            context["went_restaurants"] = restaurants.filter(status="went")
+
+        return context
+
 
 
 
@@ -502,11 +556,31 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["area_list"] = SuggestWord.objects.filter(word_type="area").values_list("word", flat=True)
-        context["genre_list"] = SuggestWord.objects.filter(word_type="genre").values_list("word", flat=True)
-        context["group_list"] = SuggestWord.objects.filter(word_type="group").values_list("word", flat=True)
-        context["scene_list"] = SuggestWord.objects.filter(word_type="scene").values_list("word", flat=True)
-        context["tag_list"] = SuggestWord.objects.filter(word_type="tag").values_list("word", flat=True)
+        context["area_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="area"
+        ).values_list("word", flat=True)
+
+        context["genre_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="genre"
+        ).values_list("word", flat=True)
+
+        context["group_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="group"
+        ).values_list("word", flat=True)
+
+        context["scene_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="scene"
+        ).values_list("word", flat=True)
+
+        context["tag_list"] = SuggestWord.objects.filter(
+            user=self.request.user,
+            word_type="tag"
+        ).values_list("word", flat=True)
+
 
         # タグ（編集時）
         restaurant = self.object
@@ -514,19 +588,51 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-    # ▼ 休業日の複数選択を保存
+        # ▼ 休業日の複数選択を保存
         holidays = self.request.POST.getlist("holiday")
         form.instance.holiday = "、".join(holidays)
 
-    # ▼ ★ None文字列対策（ここが重要）
+        # ▼ None文字列対策
         if form.instance.companions in [None, "None"]:
             form.instance.companions = ""
         if form.instance.scene in [None, "None"]:
             form.instance.scene = ""
 
+        # ① Restaurant を保存
         response = super().form_valid(form)
 
-        # ▼ タグ更新処理
+    # ② ▼ 候補ワードを SuggestWord に保存（★追加）
+        user = self.request.user
+
+        if form.instance.area:
+            SuggestWord.objects.get_or_create(
+                user=user,
+                word_type="area",
+                word=form.instance.area
+            )
+
+        if form.instance.genre:
+            SuggestWord.objects.get_or_create(
+                user=user,
+                word_type="genre",
+                word=form.instance.genre
+            )
+
+        if form.instance.companions:
+            SuggestWord.objects.get_or_create(
+                user=user,
+                word_type="group",
+                word=form.instance.companions
+            )
+
+        if form.instance.scene:
+            SuggestWord.objects.get_or_create(
+                user=user,
+                word_type="scene",
+                word=form.instance.scene
+            )
+
+    # ▼ タグ更新処理（既存）
         restaurant = self.object
         tags = self.request.POST.getlist("tags")
         tags = [t.strip() for t in tags if t.strip()]
@@ -536,6 +642,13 @@ class RestaurantEditView(LoginRequiredMixin, UpdateView):
         for tagname in tags:
             tag_obj, _ = Tag.objects.get_or_create(name=tagname)
             restaurant.tags.add(tag_obj)
+
+        # ★ タグも候補として保存
+            SuggestWord.objects.get_or_create(
+                user=user,
+                word_type="tag",
+                word=tagname
+            )
 
         return response
 
@@ -592,7 +705,7 @@ def visit_chart_monthly(request):
     ax.tick_params(axis='y', labelsize=30, width=1.2)
 
     ax.set_xticks(x_positions)
-    ax.set_xticklabels(months, fontsize=30, fontweight="bold")
+    ax.set_xticklabels(months, fontsize=17, fontweight="bold")
 
     ax.set_ylim(0, 20)
     ax.set_yticks(range(0, 21, 5))

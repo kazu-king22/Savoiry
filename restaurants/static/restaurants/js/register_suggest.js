@@ -96,10 +96,10 @@ if (initial) {
 
   /* ---------- 開閉 ---------- */
   box.addEventListener("click", function () {
-    list.classList.toggle("hidden");
-    box.classList.toggle("open");
-    arrow.textContent = list.classList.contains("hidden") ? "▼" : "▲";
+    const isOpen = box.classList.toggle("open");
+    list.classList.toggle("hidden", !isOpen);
   });
+
 
   /* ---------- 選択 ---------- */
   list.querySelectorAll(".holiday-option").forEach(opt => {

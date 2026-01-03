@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 User = get_user_model()
 
@@ -104,15 +105,20 @@ class SuggestWord(models.Model):
         ('scene', 'Scene'),
         ('tag', 'Tag'),
     ]
-
+    
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="suggest_words"
+    )
     word_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     word = models.CharField(max_length=50)
 
     class Meta:
-        unique_together = ('word_type', 'word')
+        unique_together = ('user', 'word_type', 'word')
 
     def __str__(self):
-        return f"{self.word_type}: {self.word}"
+        return f"{self.user} | {self.word_type}: {self.word}"
 
 
 

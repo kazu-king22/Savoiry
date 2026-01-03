@@ -11,26 +11,28 @@
 <div class="search-page">
   <h2 class="search-title">検索結果（全て）</h2>
 
-
   <!-- 気になるお店 -->
   <h2 class="section-title" style="margin-top:120px;">気になるお店</h2>
 
-  {% for restaurant in restaurants %}
-    {% if restaurant.status == "want" %}
+  {% if want_restaurants %}
+    {% for restaurant in want_restaurants %}
       {% include "restaurants/partials/card_want.html" with restaurant=restaurant %}
-    {% endif %}
-  {% endfor %}
+    {% endfor %}
+  {% else %}
+    <p class="no-data-want">該当するお店は見つかりませんでした。</p>
+  {% endif %}
 
- <!-- 行ったお店 -->
+  <!-- 行ったお店 -->
   <h2 class="section-title">行ったお店</h2>
 
-  {% for restaurant in restaurants %}
-    {% if restaurant.status == "went" %}
+  {% if went_restaurants %}
+    {% for restaurant in went_restaurants %}
       {% with visit=restaurant.visits.last %}
         {% include "restaurants/partials/card_went.html" with restaurant=restaurant visit=visit %}
       {% endwith %}
-    {% endif %}
-  {% endfor %}
-
+    {% endfor %}
+  {% else %}
+    <p class="no-data-went">該当するお店は見つかりませんでした。</p>
+  {% endif %}
 </div>
 {% endblock %}
